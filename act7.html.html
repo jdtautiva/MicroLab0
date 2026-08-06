@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El mercado del último asiento – Universidad Andrés Bello</title>
+<style>
+  /* ── Reset y variables ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue: #1a5fa8;
+    --blue-light: #dbeafe;
+    --orange: #d97706;
+    --orange-light: #fef3c7;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --yellow: #ca8a04;
+    --yellow-light: #fef9c3;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-400: #94a3b8;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+    --shadow-md: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.05);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+  /* Focus visible global */
+  :focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+  /* ── Encabezado institucional ── */
+  .inst-header {
+    background: #fff;
+    border-bottom: 4px solid var(--blue);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .inst-header img { height: 56px; width: auto; max-width: 180px; }
+  .inst-header-fallback {
+    width: 56px;
+    height: 56px;
+    background: var(--blue);
+    border-radius: 8px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.2rem;
+  }
+  .inst-header-text h1 { font-size: .95rem; font-weight: 700; color: var(--blue); }
+  .inst-header-text p { font-size: .8rem; color: var(--gray-600); }
+
+  @media (max-width: 480px) {
+    .inst-header { padding: .85rem 1rem; gap: 1rem; }
+    .inst-header img, .inst-header-fallback { height: 44px; }
+    .inst-header-fallback { width: 44px; }
+  }
+
+  /* ── Layout principal ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+
+  /* ── Sección intro ── */
+  .activity-title {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .activity-title h2 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--gray-800);
+    margin-bottom: 6px;
+  }
+  .activity-title .topic-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    padding: 3px 12px;
+    border-radius: 20px;
+  }
+  .card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .intro-box {
+    background: var(--blue-light);
+    border-left: 4px solid var(--blue);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    margin-bottom: 16px;
+  }
+  .intro-box p { font-size: .95rem; color: var(--gray-800); }
+  .question-box {
+    background: var(--gray-100);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    border: 1px solid var(--gray-200);
+  }
+  .question-box .q { font-weight: 700; font-size: 1rem; margin-bottom: 8px; }
+  .question-box .hint { font-size: .88rem; color: var(--gray-600); }
+
+  /* ── Participantes ── */
+  .participants-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 640px) {
+    .participants-grid { grid-template-columns: 1fr; }
+  }
+  .participant-group h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .participant-group.buyers h3 { color: var(--blue); }
+  .participant-group.sellers h3 { color: var(--orange); }
+  .participants-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .participant-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--gray-200);
+    background: #fff;
+    transition: all .2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .participant-card.active-buyer {
+    border-color: var(--blue);
+    background: var(--blue-light);
+  }
+  .participant-card.active-seller {
+    border-color: var(--orange);
+    background: var(--orange-light);
+  }
+  .participant-card.inactive {
+    opacity: .45;
+  }
+  .participant-card.matched {
+    border-color: var(--green);
+    background: var(--green-light);
+  }
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .avatar.buyer-av { background: var(--blue); color: #fff; }
+  .avatar.seller-av { background: var(--orange); color: #fff; }
+  .participant-info { flex: 1; min-width: 0; }
+  .participant-name { font-weight: 600; font-size: .88rem; }
+  .participant-value { font-size: .8rem; color: var(--gray-600); }
+  .participant-status {
+    font-size: .75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .status-active-buyer { background: var(--blue); color: #fff; }
+  .status-active-seller { background: var(--orange); color: #fff; }
+  .status-inactive { background: var(--gray-200); color: var(--gray-600); }
+  .status-matched { background: var(--green); color: #fff; }
+  .status-queue { background: var(--red-light); color: var(--red); border: 1px solid var(--red); }
+  .status-unsold { background: var(--yellow-light); color: var(--yellow); border: 1px solid var(--yellow); }
+
+  /* ── Panel de precio ── */
+  .price-panel {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .price-panel h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .price-display {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .price-display .price-label { font-size: .85rem; color: var(--gray-600); font-weight: 500; }
+  .price-display .price-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--blue);
+    line-height: 1.1;
+  }
+  .slider-wrapper { margin-bottom: 12px; }
+  input[type="range"] {
+    width: 100%;
+    height: 6px;
+    border-radius: 4px;
+    appearance: none;
+    background: linear-gradient(to right, var(--blue) 0%, var(--blue) 50%, var(--gray-200) 50%);
+    cursor: pointer;
+    accent-color: var(--blue);
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--blue);
+    box-shadow: 0 2px 6px rgba(26,95,168,.4);
+    cursor: pointer;
+  }
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: .75rem;
+    color: var(--gray-400);
+    margin-top: 4px;
+  }
+  .price-input-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .price-input-row label { font-size: .85rem; color: var(--gray-600); font-weight: 500; }
+  .price-num-input {
+    width: 110px;
+    padding: 8px 10px;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    text-align: center;
+  }
+  .price-num-input:focus { border-color: var(--blue); }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 480px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  .stat-box {
+    background: var(--gray-100);
+    border-radius: var(--radius-sm);
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .stat-box .stat-label { font-size: .72rem; color: var(--gray-600); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+  .stat-box .stat-value { font-size: 1.5rem; font-weight: 800; margin-top: 2px; }
+  .stat-box.qd .stat-value { color: var(--blue); }
+  .stat-box.qs .stat-value { color: var(--orange); }
+  .stat-box.diff .stat-value { color: var(--gray-800); }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: .9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s ease;
+    min-height: 44px;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  .btn-primary { background: var(--blue); color: #fff; }
+  .btn-primary:hover:not(:disabled) { background: #154d8a; }
+  .btn-secondary { background: var(--gray-100); color: var(--gray-700); border: 2px solid var(--gray-200); }
+  .btn-secondary:hover:not(:disabled) { background: var(--gray-200); }
+  .btn-success { background: var(--green); color: #fff; }
+  .btn-success:hover:not(:disabled) { background: #15803d; }
+  .btn-warning { background: var(--orange); color: #fff; }
+  .btn-warning:hover:not(:disabled) { background: #b45309; }
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-danger:hover:not(:disabled) { background: #b91c1c; }
+  .btn-full { width: 100%; }
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  /* ── Resultado del mercado ── */
+  .market-result {
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    transition: all .3s ease;
+    box-shadow: var(--shadow-md);
+  }
+  .market-result.shortage {
+    background: var(--red-light);
+    border: 2px solid var(--red);
+  }
+  .market-result.surplus {
+    background: var(--yellow-light);
+    border: 2px solid var(--yellow);
+  }
+  .market-result.equilibrium {
+    background: var(--green-light);
+    border: 2px solid var(--green);
+  }
+  .market-result.neutral {
+    background: var(--gray-100);
+    border: 2px solid var(--gray-200);
+  }
+  .market-result .result-icon { font-size: 2rem; margin-bottom: 8px; }
+  .market-result .result-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 6px; }
+  .market-result .result-msg { font-size: .9rem; }
+  .market-result .result-hint { font-size: .85rem; margin-top: 10px; font-style: italic; color: var(--gray-600); }
+
+  /* ── Tickets visualización ── */
+  .tickets-section { margin-bottom: 20px; }
+  .tickets-section h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-700);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tickets-area {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 16px;
+  }
+  .tickets-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    min-height: 50px;
+    align-items: center;
+  }
+  .ticket {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    transition: all .25s ease;
+    border: 2px solid transparent;
+  }
+  .ticket.available { background: var(--gray-100); border-color: var(--gray-200); }
+  .ticket.sold { background: var(--green-light); border-color: var(--green); }
+  .ticket.unsold { background: var(--yellow-light); border-color: var(--yellow); }
+  .queue-area {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--red);
+    display: none;
+  }
+  .queue-area.visible { display: block; }
+  .queue-label { font-size: .8rem; font-weight: 600; color: var(--red); margin-bottom: 8px; }
+  .queue-buyers { display: flex; flex-wrap: wrap; gap: 6px; }
+  .queue-person {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--red-light);
+    border: 2px solid var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+  .unsold-area {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--yellow);
+    display: none;
+  }
+  .unsold-area.visible { display: block; }
+  .unsold-label { font-size: .8rem; font-weight: 600; color: var(--yellow); margin-bottom: 8px; }
+  .unsold-tickets { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* ── Equilibrio coordinado ── */
+  .equilibrium-banner {
+    display: none;
+    text-align: center;
+    padding: 24px;
+    background: var(--green-light);
+    border: 3px solid var(--green);
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    animation: fadeIn .5s ease;
+  }
+  .equilibrium-banner.visible { display: block; }
+  .seal {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--green);
+    border: 3px solid var(--green);
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: var(--radius-sm);
+    margin-top: 10px;
+    letter-spacing: .05em;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(22,163,74,.4); }
+    50% { box-shadow: 0 0 0 8px rgba(22,163,74,0); }
+  }
+  @keyframes fadeIn {
+    from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:none; }
+  }
+
+  /* ── Pistas ── */
+  .hints-section {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 16px;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .hints-section.visible { display: block; }
+  .hints-section h3 { font-size: .95rem; font-weight: 700; color: var(--gray-700); margin-bottom: 10px; }
+  .hint-item {
+    background: var(--gray-50);
+    border-left: 3px solid var(--blue);
+    padding: 8px 12px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin-bottom: 6px;
+    font-size: .87rem;
+    color: var(--gray-700);
+  }
+
+  /* ── Historial ── */
+  .history-section {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .history-section h3 { font-size: .95rem; font-weight: 700; color: var(--gray-700); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .history-table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  th {
+    background: var(--gray-100);
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--gray-600);
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    white-space: nowrap;
+  }
+  th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+  th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  .badge-shortage { background: var(--red-light); color: var(--red); padding: 2px 8px; border-radius: 20px; font-weight: 600; font-size: .78rem; }
+  .badge-surplus { background: var(--yellow-light); color: var(--yellow); padding: 2px 8px; border-radius: 20px; font-weight: 600; font-size: .78rem; }
+  .badge-equilibrium { background: var(--green-light); color: var(--green); padding: 2px 8px; border-radius: 20px; font-weight: 600; font-size: .78rem; }
+
+  /* ── Progreso ── */
+  .progress-bar-wrap { margin-bottom: 20px; }
+  .progress-bar-wrap label { font-size: .82rem; color: var(--gray-600); font-weight: 500; margin-bottom: 4px; display: block; }
+  .progress-bar {
+    height: 8px;
+    background: var(--gray-200);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--blue), var(--green));
+    border-radius: 4px;
+    transition: width .4s ease;
+  }
+
+  /* ── Retroalimentación y razonamiento ── */
+  .feedback-section {
+    background: var(--gray-100);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    border: 1px solid var(--gray-200);
+    display: none;
+  }
+  .feedback-section.visible { display: block; }
+  .feedback-section h3 { font-size: .9rem; font-weight: 700; color: var(--gray-700); margin-bottom: 8px; }
+  .feedback-section p { font-size: .88rem; color: var(--gray-700); line-height: 1.6; }
+
+  /* ── Razonamiento económico ── */
+  .reasoning-section {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 20px;
+    margin-bottom: 20px;
+    display: none;
+    border-left: 4px solid var(--blue);
+  }
+  .reasoning-section.visible { display: block; }
+  .reasoning-section h3 { font-size: .95rem; font-weight: 700; color: var(--blue); margin-bottom: 10px; }
+  .reasoning-section p { font-size: .88rem; color: var(--gray-700); margin-bottom: 6px; }
+
+  /* ── Gráfico ── */
+  .graph-section {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    padding: 24px;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .graph-section.visible { display: block; animation: fadeIn .6s ease; }
+  .graph-section h3 { font-size: 1rem; font-weight: 700; color: var(--blue); margin-bottom: 4px; }
+  .graph-section .graph-desc { font-size: .82rem; color: var(--gray-600); margin-bottom: 16px; }
+  #equilibrium-svg { display: block; width: 100%; max-height: 400px; }
+
+  /* ── Pregunta de discusión final ── */
+  .transition-section {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    padding: 24px;
+    margin-bottom: 20px;
+    display: none;
+    border-left: 5px solid var(--blue);
+  }
+  .transition-section.visible { display: block; animation: fadeIn .5s ease; }
+  .transition-section h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+  .transition-section .t-question {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    line-height: 1.6;
+  }
+
+  /* ── Desafío y badge ── */
+  .challenge-section {
+    background: var(--blue-light);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    border: 1px solid #93c5fd;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .challenge-section .ch-icon { font-size: 1.5rem; }
+  .challenge-section .ch-text { flex: 1; }
+  .challenge-section .ch-text p { font-size: .88rem; color: var(--gray-700); }
+  .challenge-section .ch-text strong { color: var(--blue); }
+  .attempt-counter {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--blue);
+    background: #fff;
+    border-radius: var(--radius-sm);
+    padding: 6px 14px;
+    border: 2px solid var(--blue);
+  }
+  .badge-coordinator {
+    display: none;
+    text-align: center;
+    padding: 24px;
+    background: linear-gradient(135deg, #fef9c3, #dcfce7);
+    border: 2px solid var(--green);
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    animation: fadeIn .6s ease;
+  }
+  .badge-coordinator.visible { display: block; }
+  .badge-coordinator .badge-icon { font-size: 3rem; }
+  .badge-coordinator h3 { font-size: 1.3rem; font-weight: 900; color: var(--green); margin: 8px 0 4px; }
+  .badge-coordinator p { font-size: .9rem; color: var(--gray-700); }
+
+  /* ── Comparación de mercados ── */
+  .comparison-section {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 20px;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .comparison-section.visible { display: block; }
+  .comparison-section h3 { font-size: .95rem; font-weight: 700; color: var(--gray-700); margin-bottom: 12px; }
+  .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .comparison-grid { grid-template-columns: 1fr; } }
+  .comp-box { background: var(--gray-100); border-radius: var(--radius-sm); padding: 14px; text-align: center; }
+  .comp-box .comp-label { font-size: .78rem; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: .05em; }
+  .comp-box .comp-val { font-size: 1.3rem; font-weight: 800; color: var(--blue); }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--blue);
+    color: rgba(255,255,255,.85);
+    text-align: center;
+    padding: 1.25rem;
+    font-size: .82rem;
+  }
+
+  /* ── Animaciones ── */
+  .participant-card { transition: all .25s ease; }
+  .fade-in { animation: fadeIn .4s ease; }
+
+  /* Reduce motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+
+  /* ── Botón mostrar gráfico ── */
+  #show-graph-btn { display: none; }
+  #show-graph-btn.visible { display: inline-flex; }
+
+  /* ── Nuevo mercado ── */
+  #new-market-btn, #comparison-section { }
+</style>
+</head>
+<body>
+
+<!-- ══ ENCABEZADO INSTITUCIONAL ══ -->
+<header class="inst-header" role="banner">
+  <img
+    id="logo-img"
+    src="https://facultades.unab.cl/economiaynegocios/wp-content/uploads/2022/03/logo-fen-negro.png"
+    alt="Logo de la Facultad de Economía y Negocios de la Universidad Andrés Bello"
+    onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';"
+  >
+  <div id="logo-fallback" class="inst-header-fallback" aria-hidden="true">FEN</div>
+  <div class="inst-header-text">
+    <h1>Universidad Andrés Bello</h1>
+    <p>Facultad de Economía y Negocios</p>
+  </div>
+</header>
+
+<!-- ══ CONTENIDO PRINCIPAL ══ -->
+<main id="main-content">
+<div class="container">
+
+  <!-- Título de la actividad -->
+  <div class="activity-title">
+    <span class="topic-badge">Equilibrio competitivo</span>
+    <h2>🎟️ El mercado del último asiento</h2>
+  </div>
+
+  <!-- Barra de progreso -->
+  <div class="progress-bar-wrap" aria-label="Progreso de la actividad">
+    <label id="progress-label">Progreso: exploración del mercado</label>
+    <div class="progress-bar" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" aria-labelledby="progress-label">
+      <div class="progress-fill" id="progress-fill" style="width:10%"></div>
+    </div>
+  </div>
+
+  <!-- Desafío -->
+  <div class="challenge-section" role="note" aria-label="Desafío opcional">
+    <div class="ch-icon">🎯</div>
+    <div class="ch-text">
+      <p><strong>Desafío opcional:</strong> Encuentra el equilibrio en <strong>4 intentos o menos</strong>. Puedes intentarlo tantas veces como necesites en modo libre.</p>
+    </div>
+    <div class="attempt-counter" aria-live="polite" aria-atomic="true" id="attempt-counter">Intento: 0</div>
+  </div>
+
+  <!-- Sección intro -->
+  <section id="intro" aria-labelledby="intro-heading">
+    <div class="card">
+      <h3 id="intro-heading">📋 Situación del mercado</h3>
+      <div class="intro-box" role="note">
+        <p><strong>Quedan diez entradas disponibles para un evento universitario muy esperado.</strong> Hay diez compradores interesados, pero cada uno valora la entrada de manera diferente. También existen diez vendedores potenciales, cada uno con un costo mínimo distinto para ofrecer una entrada.</p>
+        <p style="margin-top:8px">Tú eres el <strong>organizador del mercado</strong>. Debes fijar el precio.</p>
+      </div>
+      <div class="question-box">
+        <div class="q">❓ ¿Qué precio permitiría vender la mayor cantidad posible de entradas sin dejar compradores esperando ni entradas sin vender?</div>
+        <div class="hint">Selecciona un precio y observa cuántos compradores desean comprar y cuántos vendedores desean vender. Ajusta el precio hasta coordinar el mercado.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Participantes -->
+  <section id="market-participants" aria-label="Compradores y vendedores del mercado">
+    <div class="participants-grid">
+
+      <!-- Compradores -->
+      <div class="participant-group buyers card" style="padding:16px">
+        <h3>👥 Compradores <span style="color:var(--gray-400);font-weight:400;font-size:.85rem">(disposición máxima a pagar)</span></h3>
+        <div class="participants-list" id="buyers-list" role="list" aria-label="Lista de compradores">
+        </div>
+      </div>
+
+      <!-- Vendedores -->
+      <div class="participant-group sellers card" style="padding:16px">
+        <h3>🏪 Vendedores <span style="color:var(--gray-400);font-weight:400;font-size:.85rem">(costo mínimo aceptable)</span></h3>
+        <div class="participants-list" id="sellers-list" role="list" aria-label="Lista de vendedores">
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Panel de precio -->
+  <section id="price-control" aria-labelledby="price-heading">
+    <div class="price-panel">
+      <h3 id="price-heading">💰 Fija el precio del mercado</h3>
+
+      <div class="price-display">
+        <div class="price-label">Precio seleccionado</div>
+        <div class="price-value" id="price-display" aria-live="polite" aria-atomic="true">$18.000</div>
+      </div>
+
+      <div class="slider-wrapper">
+        <label for="price-slider" class="sr-only">Ajustar precio con control deslizante</label>
+        <input
+          type="range"
+          id="price-slider"
+          min="8000"
+          max="30000"
+          step="1000"
+          value="18000"
+          aria-label="Precio del mercado"
+          aria-valuemin="8000"
+          aria-valuemax="30000"
+          aria-valuenow="18000"
+          aria-valuetext="$18.000"
+        >
+        <div class="slider-labels">
+          <span>$8.000</span>
+          <span>$30.000</span>
+        </div>
+      </div>
+
+      <div class="price-input-row">
+        <label for="price-number">O escribe el precio:</label>
+        <input
+          type="number"
+          id="price-number"
+          class="price-num-input"
+          min="8000"
+          max="30000"
+          step="1000"
+          value="18000"
+          aria-label="Precio en pesos"
+        >
+      </div>
+
+      <div class="stats-grid" aria-live="polite" aria-atomic="true">
+        <div class="stat-box qd">
+          <div class="stat-label">Cantidad demandada (Q<sub>D</sub>)</div>
+          <div class="stat-value" id="stat-qd">—</div>
+        </div>
+        <div class="stat-box qs">
+          <div class="stat-label">Cantidad ofrecida (Q<sub>S</sub>)</div>
+          <div class="stat-value" id="stat-qs">—</div>
+        </div>
+        <div class="stat-box diff">
+          <div class="stat-label">Diferencia (Q<sub>D</sub> − Q<sub>S</sub>)</div>
+          <div class="stat-value" id="stat-diff">—</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="try-price-btn" aria-label="Probar este precio en el mercado">
+          ▶ Probar precio
+        </button>
+        <button class="btn btn-secondary" id="hint-btn" aria-label="Solicitar una pista">
+          💡 Solicitar pista
+        </button>
+        <button class="btn btn-warning" id="show-graph-btn" aria-label="Mostrar el gráfico de oferta y demanda">
+          📈 Mostrar gráfico
+        </button>
+        <button class="btn btn-success" id="new-market-btn" aria-label="Generar un nuevo mercado con valores aleatorios">
+          🔄 Nuevo mercado
+        </button>
+        <button class="btn btn-danger" id="reset-btn" aria-label="Reiniciar la actividad completamente">
+          ↺ Reiniciar
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resultado del mercado -->
+  <section id="market-result" aria-live="polite" aria-atomic="true" aria-label="Estado actual del mercado">
+    <div class="market-result neutral" id="result-box" role="status">
+      <div class="result-icon">⚖️</div>
+      <div class="result-title">Fija un precio y presiona "Probar precio"</div>
+      <div class="result-msg">Observa cómo el precio modifica simultáneamente el comportamiento de compradores y vendedores.</div>
+    </div>
+  </section>
+
+  <!-- Visualización de entradas -->
+  <section id="ticket-allocation" aria-label="Asignación de entradas">
+    <div class="tickets-section">
+      <h3>🎟️ Entradas disponibles y asignación</h3>
+      <div class="tickets-area">
+        <div class="tickets-row" id="tickets-row" role="list" aria-label="Estado de las diez entradas"></div>
+        <div class="queue-area" id="queue-area">
+          <div class="queue-label">🚶 Compradores en fila de espera (sin entrada)</div>
+          <div class="queue-buyers" id="queue-buyers" role="list" aria-label="Compradores sin entrada"></div>
+        </div>
+        <div class="unsold-area" id="unsold-area">
+          <div class="unsold-label">📦 Entradas sin vender</div>
+          <div class="unsold-tickets" id="unsold-tickets" role="list" aria-label="Entradas no vendidas"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Banner de equilibrio coordinado -->
+  <div class="equilibrium-banner" id="eq-banner" role="alert" aria-live="assertive">
+    <div style="font-size:2rem">🎉</div>
+    <h3 style="font-size:1.2rem;font-weight:800;color:var(--green);margin-bottom:8px">¡Mercado coordinado!</h3>
+    <p>Cada comprador activo recibió su entrada y cada vendedor activo concretó su venta.</p>
+    <p>No quedan personas en fila ni entradas sobrantes.</p>
+    <div class="seal" role="img" aria-label="Sello: Mercado coordinado">✓ MERCADO COORDINADO</div>
+  </div>
+
+  <!-- Insignia final -->
+  <div class="badge-coordinator" id="badge-coordinator" role="alert" aria-live="polite">
+    <div class="badge-icon">🏅</div>
+    <h3>Coordinador del Mercado</h3>
+    <p id="badge-msg">Encontraste el precio de equilibrio.</p>
+  </div>
+
+  <!-- Pistas -->
+  <section id="hints-section" class="hints-section" aria-label="Pistas para encontrar el equilibrio">
+    <h3>💡 Pistas disponibles</h3>
+    <div id="hints-container"></div>
+  </section>
+
+  <!-- Retroalimentación -->
+  <section id="feedback" class="feedback-section" aria-live="polite" aria-label="Retroalimentación del mercado">
+    <h3>📌 Retroalimentación</h3>
+    <p id="feedback-text"></p>
+  </section>
+
+  <!-- Razonamiento económico -->
+  <section id="reasoning-section" class="reasoning-section" aria-label="Razonamiento económico">
+    <h3>🧠 Razonamiento económico</h3>
+    <p>Un precio <strong>bajo</strong> atrae compradores, pero desalienta a los vendedores → escasez.</p>
+    <p>Un precio <strong>alto</strong> atrae vendedores, pero desalienta a los compradores → excedente.</p>
+    <p>El <strong>equilibrio</strong> aparece cuando ambos lados desean transar la misma cantidad de entradas.</p>
+  </section>
+
+  <!-- Historial de intentos -->
+  <section id="attempt-history" aria-labelledby="history-heading">
+    <div class="history-section">
+      <h3 id="history-heading">📊 Historial de intentos</h3>
+      <div class="history-table-wrap">
+        <table aria-label="Historial de precios probados">
+          <thead>
+            <tr>
+              <th scope="col">Intento</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Q<sub>D</sub></th>
+              <th scope="col">Q<sub>S</sub></th>
+              <th scope="col">Diferencia</th>
+              <th scope="col">Resultado</th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody">
+            <tr id="history-empty-row">
+              <td colspan="6" style="text-align:center;color:var(--gray-400);font-style:italic">Aún no has probado ningún precio.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gráfico de oferta y demanda -->
+  <section id="equilibrium-graph" class="graph-section" aria-labelledby="graph-heading">
+    <h3 id="graph-heading">📈 Gráfico de oferta y demanda</h3>
+    <p class="graph-desc" id="graph-desc">El gráfico muestra las curvas escalonadas de demanda (azul) y oferta (naranja) construidas a partir de las valoraciones individuales de cada participante, con el punto de equilibrio marcado en verde.</p>
+    <svg id="equilibrium-svg" viewBox="0 0 560 380" role="img" aria-labelledby="graph-title graph-desc-svg">
+      <title id="graph-title">Gráfico de oferta y demanda</title>
+      <desc id="graph-desc-svg">Curvas escalonadas de demanda (azul descendente) y oferta (naranja ascendente) que se intersectan en el punto de equilibrio.</desc>
+    </svg>
+    <p id="graph-eq-label" style="text-align:center;font-size:.88rem;color:var(--gray-600);margin-top:8px"></p>
+  </section>
+
+  <!-- Comparación de mercados -->
+  <section id="comparison-section" class="comparison-section" aria-label="Comparación entre mercados">
+    <h3>🔁 Comparación con el mercado anterior</h3>
+    <div class="comparison-grid">
+      <div class="comp-box">
+        <div class="comp-label">Mercado anterior – Precio de equilibrio</div>
+        <div class="comp-val" id="prev-eq-price">—</div>
+      </div>
+      <div class="comp-box">
+        <div class="comp-label">Mercado anterior – Cantidad de equilibrio</div>
+        <div class="comp-val" id="prev-eq-qty">—</div>
+      </div>
+      <div class="comp-box">
+        <div class="comp-label">Nuevo mercado – Precio de equilibrio</div>
+        <div class="comp-val" id="curr-eq-price">—</div>
+      </div>
+      <div class="comp-box">
+        <div class="comp-label">Nuevo mercado – Cantidad de equilibrio</div>
+        <div class="comp-val" id="curr-eq-qty">—</div>
+      </div>
+    </div>
+    <p style="font-size:.85rem;color:var(--gray-600);margin-top:12px">El equilibrio depende de las valoraciones y costos de los participantes: cada mercado tiene su propio precio y cantidad de equilibrio.</p>
+  </section>
+
+  <!-- Pregunta de discusión para iniciar la clase -->
+  <section id="transition-question" class="transition-section" aria-labelledby="tq-heading">
+    <h3 id="tq-heading">💬 Pregunta de discusión para iniciar la clase</h3>
+    <div class="t-question">¿Por qué el precio de equilibrio puede coordinar las decisiones de compradores y vendedores sin que una autoridad determine quién intercambia?</div>
+  </section>
+
+  <!-- Definiciones finales -->
+  <section id="definitions" aria-labelledby="def-heading" style="display:none">
+    <div class="card" id="definitions-card">
+      <h3 id="def-heading">📚 Definiciones clave</h3>
+      <dl style="display:grid;gap:14px">
+        <div>
+          <dt style="font-weight:700;color:var(--blue)">Precio de equilibrio</dt>
+          <dd style="font-size:.88rem;color:var(--gray-700)">Precio al cual la cantidad demandada coincide con la cantidad ofrecida.</dd>
+        </div>
+        <div>
+          <dt style="font-weight:700;color:var(--blue)">Cantidad de equilibrio</dt>
+          <dd style="font-size:.88rem;color:var(--gray-700)">Número de unidades que compradores y vendedores desean intercambiar al precio de equilibrio.</dd>
+        </div>
+        <div>
+          <dt style="font-weight:700;color:var(--red)">Escasez</dt>
+          <dd style="font-size:.88rem;color:var(--gray-700)">Situación en la que la cantidad demandada es mayor que la cantidad ofrecida.</dd>
+        </div>
+        <div>
+          <dt style="font-weight:700;color:var(--yellow)">Excedente</dt>
+          <dd style="font-size:.88rem;color:var(--gray-700)">Situación en la que la cantidad ofrecida es mayor que la cantidad demandada.</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+</div><!-- /container -->
+</main>
+
+<!-- ══ PIE DE PÁGINA ══ -->
+<footer role="contentinfo">
+  <p>Desarrollado por Julián Díaz Tautiva, PhD.</p>
+</footer>
+
+<!-- ══ ARIA live region oculta para lectores de pantalla ══ -->
+<div id="sr-announcer" aria-live="assertive" aria-atomic="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"></div>
+
+<script>
+// ══════════════════════════════════════════════
+//  ESTADO GLOBAL
+// ══════════════════════════════════════════════
+const AVATARS_BUYERS  = ['👩','👨','👩','👦','👧','👨','👩','👦','👧','👦'];
+const AVATARS_SELLERS = ['🏪','🏬','🏭','🏢','🏣','🏦','🏨','🏩','🏪','🏬'];
+
+const DEFAULT_BUYERS = [
+  {name:'Camila',  dap:30000},
+  {name:'Diego',   dap:28000},
+  {name:'Fernanda',dap:26000},
+  {name:'Tomás',   dap:24000},
+  {name:'Valentina',dap:22000},
+  {name:'Martín',  dap:20000},
+  {name:'Sofía',   dap:18000},
+  {name:'Benjamín',dap:16000},
+  {name:'Antonia', dap:14000},
+  {name:'Nicolás', dap:12000},
+];
+const DEFAULT_SELLERS = [
+  {name:'Vendedor 1', cost:8000},
+  {name:'Vendedor 2', cost:10000},
+  {name:'Vendedor 3', cost:12000},
+  {name:'Vendedor 4', cost:14000},
+  {name:'Vendedor 5', cost:16000},
+  {name:'Vendedor 6', cost:18000},
+  {name:'Vendedor 7', cost:20000},
+  {name:'Vendedor 8', cost:22000},
+  {name:'Vendedor 9', cost:24000},
+  {name:'Vendedor 10',cost:26000},
+];
+
+let state = {
+  buyers: JSON.parse(JSON.stringify(DEFAULT_BUYERS)),
+  sellers: JSON.parse(JSON.stringify(DEFAULT_SELLERS)),
+  price: 18000,
+  lastTriedPrice: null,
+  qd: null,
+  qs: null,
+  attempts: [],
+  equilibriumFound: false,
+  graphVisible: false,
+  transitionVisible: false,
+  hintsShown: 0,
+  marketIndex: 0,
+  prevEquilibrium: null,
+  reasoningShown: false,
+};
+
+// ══════════════════════════════════════════════
+//  UTILIDADES
+// ══════════════════════════════════════════════
+const fmt = v => '$' + v.toLocaleString('es-CL');
+
+function calcQD(price, buyers) {
+  return buyers.filter(b => b.dap >= price).length;
+}
+function calcQS(price, sellers) {
+  return sellers.filter(s => s.cost <= price).length;
+}
+
+function findEquilibrium(buyers, sellers) {
+  const prices = [...new Set([...buyers.map(b=>b.dap), ...sellers.map(s=>s.cost)])].sort((a,b)=>a-b);
+  const range = [];
+  for (let p = 8000; p <= 30000; p += 1000) {
+    const qd = calcQD(p, buyers);
+    const qs = calcQS(p, sellers);
+    if (qd === qs) range.push({price:p, qty:qd});
+  }
+  if (!range.length) {
+    // Buscar punto más cercano
+    let best = null, bestDiff = Infinity;
+    for (let p = 8000; p <= 30000; p += 1000) {
+      const d = Math.abs(calcQD(p,buyers) - calcQS(p,sellers));
+      if (d < bestDiff) { bestDiff = d; best = p; }
+    }
+    return {price:best, qty:calcQD(best,buyers), isRange:false};
+  }
+  if (range.length === 1) return {price:range[0].price, qty:range[0].qty, isRange:false};
+  return {price:range[Math.floor(range.length/2)].price, qty:range[0].qty, isRange:true, range};
+}
+
+function announce(msg) {
+  const el = document.getElementById('sr-announcer');
+  el.textContent = '';
+  setTimeout(() => { el.textContent = msg; }, 50);
+}
+
+// ══════════════════════════════════════════════
+//  RENDER PARTICIPANTES
+// ══════════════════════════════════════════════
+function renderParticipants(price, tried) {
+  const bl = document.getElementById('buyers-list');
+  const sl = document.getElementById('sellers-list');
+  bl.innerHTML = '';
+  sl.innerHTML = '';
+
+  state.buyers.forEach((b, i) => {
+    const active = tried ? b.dap >= price : null;
+    const li = document.createElement('div');
+    li.className = 'participant-card' + (tried ? (active ? ' active-buyer' : ' inactive') : '');
+    li.setAttribute('role','listitem');
+    li.setAttribute('aria-label', `${b.name}, disposición a pagar ${fmt(b.dap)}${tried ? (active ? ', compra a este precio' : ', no compra a este precio') : ''}`);
+    li.innerHTML = `
+      <div class="avatar buyer-av" aria-hidden="true">${AVATARS_BUYERS[i]}</div>
+      <div class="participant-info">
+        <div class="participant-name">${b.name}</div>
+        <div class="participant-value">DAP: ${fmt(b.dap)}</div>
+      </div>
+      ${tried ? `<span class="participant-status ${active ? 'status-active-buyer' : 'status-inactive'}" aria-hidden="true">${active ? '✓ Compra' : '✗ No compra'}</span>` : ''}
+    `;
+    bl.appendChild(li);
+  });
+
+  state.sellers.forEach((s, i) => {
+    const active = tried ? s.cost <= price : null;
+    const li = document.createElement('div');
+    li.className = 'participant-card' + (tried ? (active ? ' active-seller' : ' inactive') : '');
+    li.setAttribute('role','listitem');
+    li.setAttribute('aria-label', `${s.name}, costo mínimo ${fmt(s.cost)}${tried ? (active ? ', vende a este precio' : ', no vende a este precio') : ''}`);
+    li.innerHTML = `
+      <div class="avatar seller-av" aria-hidden="true">${AVATARS_SELLERS[i]}</div>
+      <div class="participant-info">
+        <div class="participant-name">${s.name}</div>
+        <div class="participant-value">Costo mín.: ${fmt(s.cost)}</div>
+      </div>
+      ${tried ? `<span class="participant-status ${active ? 'status-active-seller' : 'status-inactive'}" aria-hidden="true">${active ? '✓ Vende' : '✗ No vende'}</span>` : ''}
+    `;
+    sl.appendChild(li);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  RENDER TICKETS
+// ══════════════════════════════════════════════
+function renderTickets(qd, qs, tried) {
+  const row = document.getElementById('tickets-row');
+  const queueArea = document.getElementById('queue-area');
+  const unsoldArea = document.getElementById('unsold-area');
+  const queueBuyers = document.getElementById('queue-buyers');
+  const unsoldTickets = document.getElementById('unsold-tickets');
+  row.innerHTML = '';
+  queueBuyers.innerHTML = '';
+  unsoldTickets.innerHTML = '';
+
+  if (!tried) {
+    for (let i=0;i<10;i++) {
+      const t = document.createElement('div');
+      t.className = 'ticket available';
+      t.setAttribute('role','listitem');
+      t.setAttribute('aria-label','Entrada disponible');
+      t.innerHTML = '🎟️';
+      row.appendChild(t);
+    }
+    queueArea.classList.remove('visible');
+    unsoldArea.classList.remove('visible');
+    return;
+  }
+
+  const transacted = Math.min(qd, qs);
+  // Entradas vendidas
+  for (let i=0;i<transacted;i++) {
+    const t = document.createElement('div');
+    t.className = 'ticket sold';
+    t.setAttribute('role','listitem');
+    t.setAttribute('aria-label','Entrada vendida');
+    t.innerHTML = '✅';
+    row.appendChild(t);
+  }
+  // Entradas sin vender (si excedente)
+  const extra = Math.max(0, qs - qd);
+  for (let i=0;i<extra;i++) {
+    const t = document.createElement('div');
+    t.className = 'ticket unsold';
+    t.setAttribute('role','listitem');
+    t.setAttribute('aria-label','Entrada sin vender');
+    t.innerHTML = '🎟️';
+    row.appendChild(t);
+  }
+  // Compradores sin entrada (si escasez)
+  const waiting = Math.max(0, qd - qs);
+  if (waiting > 0) {
+    queueArea.classList.add('visible');
+    for (let i=0;i<waiting;i++) {
+      const p = document.createElement('div');
+      p.className = 'queue-person';
+      p.setAttribute('role','listitem');
+      p.setAttribute('aria-label','Comprador esperando');
+      p.innerHTML = '👤';
+      queueBuyers.appendChild(p);
+    }
+  } else {
+    queueArea.classList.remove('visible');
+  }
+
+  if (extra > 0) {
+    unsoldArea.classList.add('visible');
+    for (let i=0;i<extra;i++) {
+      const t = document.createElement('div');
+      t.className = 'ticket unsold';
+      t.setAttribute('role','listitem');
+      t.setAttribute('aria-label','Entrada excedente');
+      t.innerHTML = '🎟️';
+      unsoldTickets.appendChild(t);
+    }
+  } else {
+    unsoldArea.classList.remove('visible');
+  }
+}
+
+// ══════════════════════════════════════════════
+//  RENDER RESULTADO
+// ══════════════════════════════════════════════
+function renderResult(price, qd, qs) {
+  const box = document.getElementById('result-box');
+  const eqBanner = document.getElementById('eq-banner');
+  const diff = qd - qs;
+
+  box.className = 'market-result';
+  if (diff > 0) {
+    box.classList.add('shortage');
+    box.innerHTML = `
+      <div class="result-icon" aria-hidden="true">⚠️</div>
+      <div class="result-title">Escasez: hay más compradores que entradas ofrecidas</div>
+      <div class="result-msg">A este precio, <strong>${qd}</strong> compradores quieren una entrada, pero solo <strong>${qs}</strong> vendedores están dispuestos a ofrecerla. Faltan <strong>${diff}</strong> entradas.</div>
+      <div class="result-hint">Hay más compradores que vendedores. Prueba con un precio más alto.</div>
+    `;
+    eqBanner.classList.remove('visible');
+  } else if (diff < 0) {
+    box.classList.add('surplus');
+    box.innerHTML = `
+      <div class="result-icon" aria-hidden="true">📦</div>
+      <div class="result-title">Excedente: hay más entradas ofrecidas que compradores</div>
+      <div class="result-msg">A este precio, <strong>${qd}</strong> compradores quieren una entrada, pero <strong>${qs}</strong> vendedores desean vender. Sobran <strong>${Math.abs(diff)}</strong> entradas.</div>
+      <div class="result-hint">Hay más vendedores que compradores. Prueba con un precio más bajo.</div>
+    `;
+    eqBanner.classList.remove('visible');
+  } else {
+    box.classList.add('equilibrium');
+    box.innerHTML = `
+      <div class="result-icon" aria-hidden="true">✅</div>
+      <div class="result-title">Equilibrio: la cantidad demandada coincide con la cantidad ofrecida</div>
+      <div class="result-msg">A ${fmt(price)}, <strong>${qd}</strong> compradores y <strong>${qs}</strong> vendedores quieren transar. ¡El precio coordinó las decisiones!</div>
+      <div class="result-hint">El precio coordinó las decisiones de compradores y vendedores.</div>
+    `;
+    eqBanner.classList.add('visible');
+  }
+}
+
+// ══════════════════════════════════════════════
+//  RETROALIMENTACIÓN
+// ══════════════════════════════════════════════
+function showFeedback(qd, qs, price) {
+  const el = document.getElementById('feedback-text');
+  const sec = document.getElementById('feedback');
+  const diff = qd - qs;
+  let msg;
+  if (diff > 0) {
+    msg = `A este precio, demasiados compradores compiten por pocas entradas. Observa cómo el precio modifica simultáneamente el comportamiento de compradores y vendedores. Prueba ajustar el precio al alza para reducir la diferencia.`;
+  } else if (diff < 0) {
+    msg = `El precio actual incentiva a muchos vendedores, pero pocos compradores desean pagar ${fmt(price)}. Prueba ajustar el precio a la baja para atraer más compradores.`;
+  } else {
+    msg = `El equilibrio no es un precio elegido arbitrariamente: surgió de las decisiones de ambos lados del mercado. Cada participante actuó según sus propios incentivos y el resultado fue la coordinación.`;
+  }
+  el.textContent = msg;
+  sec.classList.add('visible');
+  announce(msg);
+}
+
+// ══════════════════════════════════════════════
+//  HISTORIAL
+// ══════════════════════════════════════════════
+function addToHistory(price, qd, qs) {
+  const diff = qd - qs;
+  state.attempts.push({price, qd, qs, diff});
+  const tbody = document.getElementById('history-tbody');
+  const emptyRow = document.getElementById('history-empty-row');
+  if (emptyRow) emptyRow.remove();
+
+  let badge, label;
+  if (diff > 0) { badge='badge-shortage'; label='Escasez'; }
+  else if (diff < 0) { badge='badge-surplus'; label='Excedente'; }
+  else { badge='badge-equilibrium'; label='Equilibrio'; }
+
+  const tr = document.createElement('tr');
+  tr.className = 'fade-in';
+  tr.innerHTML = `
+    <td style="text-align:center">${state.attempts.length}</td>
+    <td style="font-weight:600">${fmt(price)}</td>
+    <td style="color:var(--blue);font-weight:700">${qd}</td>
+    <td style="color:var(--orange);font-weight:700">${qs}</td>
+    <td style="text-align:center;font-weight:600">${diff > 0 ? '+'+diff : diff}</td>
+    <td><span class="${badge}">${label}</span></td>
+  `;
+  tbody.appendChild(tr);
+  updateAttemptCounter();
+}
+
+function updateAttemptCounter() {
+  const n = state.attempts.length;
+  const el = document.getElementById('attempt-counter');
+  el.textContent = `Intentos: ${n}`;
+  if (n <= 4) el.style.borderColor = 'var(--green)';
+  else el.style.borderColor = 'var(--orange)';
+}
+
+// ══════════════════════════════════════════════
+//  PISTAS
+// ══════════════════════════════════════════════
+const ALL_HINTS = [
+  'Si hay compradores esperando, el precio probablemente es demasiado bajo.',
+  'Si quedan entradas sin vender, el precio probablemente es demasiado alto.',
+  'Busca un precio donde el número de compradores coincida con el número de vendedores.',
+  'El precio coordina el mercado porque afecta a ambos lados en direcciones opuestas.',
+];
+
+function showNextHint() {
+  if (state.hintsShown >= ALL_HINTS.length) return;
+  const sec = document.getElementById('hints-section');
+  const con = document.getElementById('hints-container');
+  const div = document.createElement('div');
+  div.className = 'hint-item fade-in';
+  div.textContent = `Pista ${state.hintsShown+1}: ${ALL_HINTS[state.hintsShown]}`;
+  con.appendChild(div);
+  sec.classList.add('visible');
+  state.hintsShown++;
+  announce(`Pista ${state.hintsShown}: ${ALL_HINTS[state.hintsShown-1]}`);
+  if (state.hintsShown >= ALL_HINTS.length) {
+    document.getElementById('hint-btn').disabled = true;
+    document.getElementById('hint-btn').textContent = '💡 Sin más pistas';
+  }
+}
+
+// ══════════════════════════════════════════════
+//  GRÁFICO SVG
+// ══════════════════════════════════════════════
+function drawGraph() {
+  const svg = document.getElementById('equilibrium-svg');
+  svg.innerHTML = '';
+
+  const W=560, H=380;
+  const PAD = {top:30, right:30, bottom:60, left:70};
+  const gW = W - PAD.left - PAD.right;
+  const gH = H - PAD.top - PAD.bottom;
+
+  const buyers  = [...state.buyers].sort((a,b)=>b.dap-a.dap);
+  const sellers = [...state.sellers].sort((a,b)=>a.cost-b.cost);
+
+  const allPrices = [...buyers.map(b=>b.dap), ...sellers.map(s=>s.cost)];
+  const priceMin = Math.min(...allPrices) - 2000;
+  const priceMax = Math.max(...allPrices) + 2000;
+  const qMin = 0, qMax = 12;
+
+  function xScale(q)  { return PAD.left + (q - qMin) / (qMax - qMin) * gW; }
+  function yScale(p)  { return PAD.top + gH - (p - priceMin) / (priceMax - priceMin) * gH; }
+
+  // Fondo
+  const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+  rect.setAttribute('x',PAD.left); rect.setAttribute('y',PAD.top);
+  rect.setAttribute('width',gW); rect.setAttribute('height',gH);
+  rect.setAttribute('fill','#f8fafc'); rect.setAttribute('rx','4');
+  svg.appendChild(rect);
+
+  // Grilla horizontal
+  for (let p = priceMin + 2000; p <= priceMax; p += 4000) {
+    const y = yScale(p);
+    const l = document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1',PAD.left); l.setAttribute('y1',y);
+    l.setAttribute('x2',PAD.left+gW); l.setAttribute('y2',y);
+    l.setAttribute('stroke','#e2e8f0'); l.setAttribute('stroke-width','1');
+    svg.appendChild(l);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',PAD.left-6); t.setAttribute('y',y+4);
+    t.setAttribute('text-anchor','end'); t.setAttribute('font-size','10');
+    t.setAttribute('fill','#94a3b8');
+    t.textContent = '$'+(p/1000)+'k';
+    svg.appendChild(t);
+  }
+  // Grilla vertical
+  for (let q=1;q<=10;q++) {
+    const x = xScale(q);
+    const l = document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1',x); l.setAttribute('y1',PAD.top);
+    l.setAttribute('x2',x); l.setAttribute('y2',PAD.top+gH);
+    l.setAttribute('stroke','#e2e8f0'); l.setAttribute('stroke-width','1');
+    svg.appendChild(l);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',x); t.setAttribute('y',PAD.top+gH+16);
+    t.setAttribute('text-anchor','middle'); t.setAttribute('font-size','10');
+    t.setAttribute('fill','#94a3b8');
+    t.textContent = q;
+    svg.appendChild(t);
+  }
+
+  // Curva de demanda (escalonada, de arriba a abajo)
+  // Cada buyer aporta: qty aumenta 1 cuando precio baja a su DAP
+  function buildDemandPath() {
+    let d = '';
+    let q = 0;
+    const pts = [];
+    // empieza arriba-izquierda
+    pts.push({q:0, p:buyers[0].dap + 2000});
+    buyers.forEach((b,i)=>{
+      pts.push({q:i,   p:b.dap});
+      pts.push({q:i+1, p:b.dap});
+    });
+    pts.push({q:buyers.length, p:priceMin});
+
+    pts.forEach((pt,i)=>{
+      const cmd = i===0 ? 'M' : 'L';
+      d += `${cmd}${xScale(pt.q)},${yScale(pt.p)} `;
+    });
+    return d;
+  }
+
+  function buildSupplyPath() {
+    let d = '';
+    const pts = [];
+    pts.push({q:0, p:priceMin});
+    sellers.forEach((s,i)=>{
+      pts.push({q:i,   p:s.cost});
+      pts.push({q:i+1, p:s.cost});
+    });
+    pts.push({q:sellers.length, p:sellers[sellers.length-1].cost + 2000});
+
+    pts.forEach((pt,i)=>{
+      const cmd = i===0 ? 'M' : 'L';
+      d += `${cmd}${xScale(pt.q)},${yScale(pt.p)} `;
+    });
+    return d;
+  }
+
+  // Área bajo demanda (sombreado suave)
+  const demandFill = document.createElementNS('http://www.w3.org/2000/svg','path');
+  const dfPts = buildDemandPath() + `L${xScale(buyers.length)},${yScale(priceMin)} L${xScale(0)},${yScale(priceMin)} Z`;
+  demandFill.setAttribute('d', dfPts);
+  demandFill.setAttribute('fill','rgba(26,95,168,.06)');
+  svg.appendChild(demandFill);
+
+  // Curva demanda
+  const demandPath = document.createElementNS('http://www.w3.org/2000/svg','path');
+  demandPath.setAttribute('d', buildDemandPath());
+  demandPath.setAttribute('fill','none');
+  demandPath.setAttribute('stroke','#1a5fa8');
+  demandPath.setAttribute('stroke-width','2.5');
+  demandPath.setAttribute('stroke-linejoin','round');
+  svg.appendChild(demandPath);
+
+  // Curva oferta
+  const supplyPath = document.createElementNS('http://www.w3.org/2000/svg','path');
+  supplyPath.setAttribute('d', buildSupplyPath());
+  supplyPath.setAttribute('fill','none');
+  supplyPath.setAttribute('stroke','#d97706');
+  supplyPath.setAttribute('stroke-width','2.5');
+  supplyPath.setAttribute('stroke-linejoin','round');
+  svg.appendChild(supplyPath);
+
+  // Hallar equilibrio
+  const eq = findEquilibrium(state.buyers, state.sellers);
+  const eqQ = eq.qty;
+  const eqP = eq.price;
+
+  // Líneas punteadas al equilibrio
+  const vLine = document.createElementNS('http://www.w3.org/2000/svg','line');
+  vLine.setAttribute('x1',xScale(eqQ)); vLine.setAttribute('y1',PAD.top);
+  vLine.setAttribute('x2',xScale(eqQ)); vLine.setAttribute('y2',yScale(eqP));
+  vLine.setAttribute('stroke','#16a34a'); vLine.setAttribute('stroke-width','1.5');
+  vLine.setAttribute('stroke-dasharray','5,4');
+  svg.appendChild(vLine);
+
+  const hLine = document.createElementNS('http://www.w3.org/2000/svg','line');
+  hLine.setAttribute('x1',PAD.left); hLine.setAttribute('y1',yScale(eqP));
+  hLine.setAttribute('x2',xScale(eqQ)); hLine.setAttribute('y2',yScale(eqP));
+  hLine.setAttribute('stroke','#16a34a'); hLine.setAttribute('stroke-width','1.5');
+  hLine.setAttribute('stroke-dasharray','5,4');
+  svg.appendChild(hLine);
+
+  // Punto de equilibrio
+  const eqCirc = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  eqCirc.setAttribute('cx',xScale(eqQ)); eqCirc.setAttribute('cy',yScale(eqP));
+  eqCirc.setAttribute('r','7'); eqCirc.setAttribute('fill','#16a34a');
+  eqCirc.setAttribute('stroke','#fff'); eqCirc.setAttribute('stroke-width','2');
+  svg.appendChild(eqCirc);
+
+  // Etiquetas E*
+  const eLabel = document.createElementNS('http://www.w3.org/2000/svg','text');
+  eLabel.setAttribute('x',xScale(eqQ)+10); eLabel.setAttribute('y',yScale(eqP)-8);
+  eLabel.setAttribute('font-size','11'); eLabel.setAttribute('fill','#16a34a');
+  eLabel.setAttribute('font-weight','bold');
+  eLabel.textContent = `E* (${fmt(eqP)}, Q=${eqQ})`;
+  svg.appendChild(eLabel);
+
+  // Etiquetas curvas
+  const dLabel = document.createElementNS('http://www.w3.org/2000/svg','text');
+  dLabel.setAttribute('x',xScale(3)); dLabel.setAttribute('y',yScale(buyers[2].dap) - 8);
+  dLabel.setAttribute('font-size','11'); dLabel.setAttribute('fill','#1a5fa8');
+  dLabel.setAttribute('font-weight','700');
+  dLabel.textContent = 'Demanda';
+  svg.appendChild(dLabel);
+
+  const sLabel = document.createElementNS('http://www.w3.org/2000/svg','text');
+  sLabel.setAttribute('x',xScale(7)); sLabel.setAttribute('y',yScale(sellers[6].cost) - 8);
+  sLabel.setAttribute('font-size','11'); sLabel.setAttribute('fill','#d97706');
+  sLabel.setAttribute('font-weight','700');
+  sLabel.textContent = 'Oferta';
+  svg.appendChild(sLabel);
+
+  // Ejes
+  const axisY = document.createElementNS('http://www.w3.org/2000/svg','line');
+  axisY.setAttribute('x1',PAD.left); axisY.setAttribute('y1',PAD.top);
+  axisY.setAttribute('x2',PAD.left); axisY.setAttribute('y2',PAD.top+gH);
+  axisY.setAttribute('stroke','#334155'); axisY.setAttribute('stroke-width','1.5');
+  svg.appendChild(axisY);
+
+  const axisX = document.createElementNS('http://www.w3.org/2000/svg','line');
+  axisX.setAttribute('x1',PAD.left); axisX.setAttribute('y1',PAD.top+gH);
+  axisX.setAttribute('x2',PAD.left+gW); axisX.setAttribute('y2',PAD.top+gH);
+  axisX.setAttribute('stroke','#334155'); axisX.setAttribute('stroke-width','1.5');
+  svg.appendChild(axisX);
+
+  // Títulos de ejes
+  const xTitle = document.createElementNS('http://www.w3.org/2000/svg','text');
+  xTitle.setAttribute('x',PAD.left+gW/2); xTitle.setAttribute('y',H-10);
+  xTitle.setAttribute('text-anchor','middle'); xTitle.setAttribute('font-size','12');
+  xTitle.setAttribute('fill','#334155'); xTitle.setAttribute('font-weight','600');
+  xTitle.textContent = 'Cantidad (entradas)';
+  svg.appendChild(xTitle);
+
+  const yTitle = document.createElementNS('http://www.w3.org/2000/svg','text');
+  yTitle.setAttribute('x', -(PAD.top + gH/2));
+  yTitle.setAttribute('y', 16);
+  yTitle.setAttribute('text-anchor','middle');
+  yTitle.setAttribute('transform','rotate(-90)');
+  yTitle.setAttribute('font-size','12'); yTitle.setAttribute('fill','#334155');
+  yTitle.setAttribute('font-weight','600');
+  yTitle.textContent = 'Precio ($)';
+  svg.appendChild(yTitle);
+
+  document.getElementById('graph-eq-label').textContent =
+    `Precio de equilibrio: ${fmt(eqP)} · Cantidad de equilibrio: ${eqQ} unidades`;
+}
+
+// ══════════════════════════════════════════════
+//  MOSTRAR GRÁFICO
+// ══════════════════════════════════════════════
+function showGraph() {
+  const sec = document.getElementById('equilibrium-graph');
+  sec.classList.add('visible');
+  drawGraph();
+  state.graphVisible = true;
+  document.getElementById('show-graph-btn').classList.remove('visible');
+  document.getElementById('definitions').style.display = 'block';
+  updateProgress();
+}
+
+// ══════════════════════════════════════════════
+//  PROGRESO
+// ══════════════════════════════════════════════
+function updateProgress() {
+  const fill = document.getElementById('progress-fill');
+  const label = document.getElementById('progress-label');
+  const pb = fill.closest('[role="progressbar"]');
+  let pct = 10;
+  let lbl = 'Progreso: exploración del mercado';
+  if (state.attempts.length >= 1) { pct = 30; lbl = 'Probando precios…'; }
+  if (state.attempts.length >= 3) { pct = 50; lbl = 'Analizando el mercado…'; }
+  if (state.equilibriumFound) { pct = 75; lbl = 'Equilibrio encontrado 🎉'; }
+  if (state.graphVisible) { pct = 90; lbl = 'Gráfico explorado'; }
+  if (state.transitionVisible) { pct = 100; lbl = '¡Actividad completada!'; }
+  fill.style.width = pct + '%';
+  label.textContent = lbl;
+  pb.setAttribute('aria-valuenow', pct);
+}
+
+// ══════════════════════════════════════════════
+//  GENERAR NUEVO MERCADO
+// ══════════════════════════════════════════════
+const BUYER_NAMES = ['Ana','Carlos','Elena','Luis','Paloma','Rodrigo','Javiera','Felipe','Constanza','Sebastián'];
+function generateNewMarket() {
+  // Guardar equilibrio anterior si existe
+  const eq = findEquilibrium(state.buyers, state.sellers);
+  state.prevEquilibrium = eq;
+
+  // Generar nuevos valores aleatorios con lógica
+  const baseTop = 18000 + Math.round(Math.random() * 14000 / 1000) * 1000;
+  const step = 2000;
+  const newBuyers = BUYER_NAMES.map((name,i) => ({name, dap: baseTop - i*step}));
+
+  const baseCostBot = 6000 + Math.round(Math.random() * 6000 / 1000) * 1000;
+  const newSellers = Array.from({length:10},(_,i)=>({
+    name:`Vendedor ${i+1}`, cost: baseCostBot + i*step
+  }));
+
+  state.buyers = newBuyers;
+  state.sellers = newSellers;
+  state.attempts = [];
+  state.equilibriumFound = false;
+  state.graphVisible = false;
+  state.transitionVisible = false;
+  state.hintsShown = 0;
+  state.marketIndex++;
+  state.price = 18000;
+
+  // UI
+  document.getElementById('price-slider').value = 18000;
+  document.getElementById('price-number').value = 18000;
+  document.getElementById('price-display').textContent = fmt(18000);
+  document.getElementById('history-tbody').innerHTML =
+    '<tr id="history-empty-row"><td colspan="6" style="text-align:center;color:var(--gray-400);font-style:italic">Aún no has probado ningún precio.</td></tr>';
+  document.getElementById('hints-container').innerHTML = '';
+  document.getElementById('hints-section').classList.remove('visible');
+  document.getElementById('feedback-section') && document.getElementById('feedback-section').classList.remove('visible');
+  document.getElementById('feedback').classList.remove('visible');
+  document.getElementById('reasoning-section').classList.remove('visible');
+  document.getElementById('equilibrium-graph').classList.remove('visible');
+  document.getElementById('eq-banner').classList.remove('visible');
+  document.getElementById('badge-coordinator').classList.remove('visible');
+  document.getElementById('transition-question').classList.remove('visible');
+  document.getElementById('definitions').style.display = 'none';
+  document.getElementById('show-graph-btn').classList.remove('visible');
+  document.getElementById('hint-btn').disabled = false;
+  document.getElementById('hint-btn').textContent = '💡 Solicitar pista';
+  document.getElementById('stat-qd').textContent = '—';
+  document.getElementById('stat-qs').textContent = '—';
+  document.getElementById('stat-diff').textContent = '—';
+
+  const resultBox = document.getElementById('result-box');
+  resultBox.className = 'market-result neutral';
+  resultBox.innerHTML = `<div class="result-icon">⚖️</div><div class="result-title">Fija un precio y presiona "Probar precio"</div><div class="result-msg">Observa cómo el precio modifica simultáneamente el comportamiento de compradores y vendedores.</div>`;
+
+  renderParticipants(18000, false);
+  renderTickets(0,0,false);
+  updateAttemptCounter();
+  updateProgress();
+
+  // Comparación
+  if (state.prevEquilibrium && state.marketIndex > 1) {
+    const newEq = findEquilibrium(state.buyers, state.sellers);
+    document.getElementById('prev-eq-price').textContent = fmt(state.prevEquilibrium.price);
+    document.getElementById('prev-eq-qty').textContent   = state.prevEquilibrium.qty + ' unidades';
+    document.getElementById('curr-eq-price').textContent = fmt(newEq.price);
+    document.getElementById('curr-eq-qty').textContent   = newEq.qty + ' unidades';
+    document.getElementById('comparison-section').classList.add('visible');
+  }
+}
+
+// ══════════════════════════════════════════════
+//  REINICIAR
+// ══════════════════════════════════════════════
+function resetActivity() {
+  state.buyers  = JSON.parse(JSON.stringify(DEFAULT_BUYERS));
+  state.sellers = JSON.parse(JSON.stringify(DEFAULT_SELLERS));
+  state.attempts = [];
+  state.equilibriumFound = false;
+  state.graphVisible = false;
+  state.transitionVisible = false;
+  state.hintsShown = 0;
+  state.marketIndex = 0;
+  state.prevEquilibrium = null;
+  state.price = 18000;
+
+  document.getElementById('price-slider').value = 18000;
+  document.getElementById('price-number').value = 18000;
+  document.getElementById('price-display').textContent = fmt(18000);
+  document.getElementById('history-tbody').innerHTML =
+    '<tr id="history-empty-row"><td colspan="6" style="text-align:center;color:var(--gray-400);font-style:italic">Aún no has probado ningún precio.</td></tr>';
+  document.getElementById('hints-container').innerHTML = '';
+  document.getElementById('hints-section').classList.remove('visible');
+  document.getElementById('feedback').classList.remove('visible');
+  document.getElementById('reasoning-section').classList.remove('visible');
+  document.getElementById('equilibrium-graph').classList.remove('visible');
+  document.getElementById('eq-banner').classList.remove('visible');
+  document.getElementById('badge-coordinator').classList.remove('visible');
+  document.getElementById('transition-question').classList.remove('visible');
+  document.getElementById('comparison-section').classList.remove('visible');
+  document.getElementById('definitions').style.display = 'none';
+  document.getElementById('show-graph-btn').classList.remove('visible');
+  document.getElementById('hint-btn').disabled = false;
+  document.getElementById('hint-btn').textContent = '💡 Solicitar pista';
+  document.getElementById('stat-qd').textContent = '—';
+  document.getElementById('stat-qs').textContent = '—';
+  document.getElementById('stat-diff').textContent = '—';
+
+  const resultBox = document.getElementById('result-box');
+  resultBox.className = 'market-result neutral';
+  resultBox.innerHTML = `<div class="result-icon">⚖️</div><div class="result-title">Fija un precio y presiona "Probar precio"</div><div class="result-msg">Observa cómo el precio modifica simultáneamente el comportamiento de compradores y vendedores.</div>`;
+
+  renderParticipants(18000, false);
+  renderTickets(0,0,false);
+  updateAttemptCounter();
+  updateProgress();
+  announce('Actividad reiniciada. Puedes comenzar de nuevo.');
+}
+
+// ══════════════════════════════════════════════
+//  ACTUALIZAR SLIDER/INPUT
+// ══════════════════════════════════════════════
+function updateSlider(val) {
+  const v = Math.round(val / 1000) * 1000;
+  state.price = v;
+  document.getElementById('price-display').textContent = fmt(v);
+  document.getElementById('price-slider').value = v;
+  document.getElementById('price-number').value = v;
+  document.getElementById('price-slider').setAttribute('aria-valuenow', v);
+  document.getElementById('price-slider').setAttribute('aria-valuetext', fmt(v));
+
+  // Actualizar gradiente slider
+  const pct = (v - 8000) / (30000 - 8000) * 100;
+  document.getElementById('price-slider').style.background =
+    `linear-gradient(to right, var(--blue) 0%, var(--blue) ${pct}%, var(--gray-200) ${pct}%)`;
+
+  // Actualizar stats en tiempo real (sin registrar intento)
+  const qd = calcQD(v, state.buyers);
+  const qs = calcQS(v, state.sellers);
+  document.getElementById('stat-qd').textContent = qd;
+  document.getElementById('stat-qs').textContent = qs;
+  document.getElementById('stat-diff').textContent = qd - qs >= 0 ? '+'+(qd-qs) : ''+(qd-qs);
+}
+
+// ══════════════════════════════════════════════
+//  PROBAR PRECIO
+// ══════════════════════════════════════════════
+function tryPrice() {
+  const price = state.price;
+  const qd = calcQD(price, state.buyers);
+  const qs = calcQS(price, state.sellers);
+  state.qd = qd;
+  state.qs = qs;
+  state.lastTriedPrice = price;
+
+  renderParticipants(price, true);
+  renderTickets(qd, qs, true);
+  renderResult(price, qd, qs);
+  showFeedback(qd, qs, price);
+  addToHistory(price, qd, qs);
+
+  // Mostrar razonamiento después de 2 intentos
+  if (state.attempts.length >= 2) {
+    document.getElementById('reasoning-section').classList.add('visible');
+  }
+
+  // Equilibrio
+  if (qd === qs) {
+    if (!state.equilibriumFound) {
+      state.equilibriumFound = true;
+      document.getElementById('show-graph-btn').classList.add('visible');
+
+      // Badge
+      const bm = document.getElementById('badge-coordinator');
+      bm.classList.add('visible');
+      const n = state.attempts.length;
+      document.getElementById('badge-msg').textContent =
+        n <= 4
+          ? `¡Encontraste el equilibrio en ${n} intento${n>1?'s':''}! Desafío superado. 🏆`
+          : `Encontraste el equilibrio en ${n} intentos. ¡Buen trabajo!`;
+
+      // Pregunta de transición después de un pequeño delay
+      setTimeout(() => {
+        document.getElementById('transition-question').classList.add('visible');
+        state.transitionVisible = true;
+        updateProgress();
+      }, 1200);
+    }
+  }
+
+  updateProgress();
+}
+
+// ══════════════════════════════════════════════
+//  EVENT LISTENERS
+// ══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Inicializar participantes
+  renderParticipants(18000, false);
+  renderTickets(0, 0, false);
+  updateSlider(18000);
+
+  // Slider
+  document.getElementById('price-slider').addEventListener('input', e => {
+    updateSlider(parseInt(e.target.value));
+  });
+
+  // Input numérico
+  document.getElementById('price-number').addEventListener('change', e => {
+    let v = parseInt(e.target.value);
+    if (isNaN(v)) v = 18000;
+    v = Math.max(8000, Math.min(30000, Math.round(v/1000)*1000));
+    updateSlider(v);
+  });
+  document.getElementById('price-number').addEventListener('keydown', e => {
+    if (e.key === 'Enter') tryPrice();
+  });
+
+  // Botón probar
+  document.getElementById('try-price-btn').addEventListener('click', tryPrice);
+
+  // Pista
+  document.getElementById('hint-btn').addEventListener('click', showNextHint);
+
+  // Mostrar gráfico
+  document.getElementById('show-graph-btn').addEventListener('click', showGraph);
+
+  // Nuevo mercado
+  document.getElementById('new-market-btn').addEventListener('click', generateNewMarket);
+
+  // Reiniciar
+  document.getElementById('reset-btn').addEventListener('click', resetActivity);
+});
+</script>
+</body>
+</html>

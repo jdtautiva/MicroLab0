@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tienes 24 horas – Elasticidad de la Oferta | UNAB FEN</title>
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --unab-blue: #003087;
+  --unab-gold: #C8A951;
+  --bakery-color: #D4722A;
+  --agri-color: #2E7D32;
+  --soft-color: #5E35B1;
+  --short-color: #E65100;
+  --long-color: #1565C0;
+  --restrict-color: #C62828;
+  --avail-color: #2E7D32;
+  --bg: #F5F6FA;
+  --card-bg: #FFFFFF;
+  --text: #1A1A2E;
+  --text-muted: #6B7280;
+  --border: #E2E8F0;
+  --radius: 12px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-hover: 0 6px 24px rgba(0,0,0,0.14);
+  --transition: 0.2s ease;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 16px;
+}
+a { color: var(--unab-blue); }
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+/* ===== SKIP LINK ===== */
+.skip-link {
+  position: absolute; top: -40px; left: 0; background: var(--unab-blue); color: #fff;
+  padding: 8px 16px; z-index: 9999; border-radius: 0 0 8px 0; font-weight: 600;
+}
+.skip-link:focus { top: 0; }
+
+/* ===== HEADER — basado en Actividad 1 ===== */
+.inst-header {
+  background: #fff;
+  border-bottom: 4px solid var(--unab-blue);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.inst-header img { height: 56px; width: auto; max-width: 180px; object-fit: contain; }
+.inst-header-fallback {
+  width: 56px; height: 56px;
+  background: var(--unab-blue);
+  border-radius: 8px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+.inst-header-text h1 { font-size: .95rem; font-weight: 700; color: var(--unab-blue); }
+.inst-header-text p { font-size: .8rem; color: var(--text-muted); }
+@media (max-width: 480px) {
+  .inst-header { padding: .85rem 1rem; gap: 1rem; }
+  .inst-header img { height: 46px; }
+  .inst-header-fallback { width: 46px; height: 46px; }
+}
+
+/* ===== MAIN LAYOUT ===== */
+main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+
+/* ===== URGENT ALERT ===== */
+.urgent-alert {
+  background: linear-gradient(135deg, #7B1FA2 0%, #4A148C 100%);
+  color: #fff; border-radius: var(--radius); padding: 28px 32px;
+  margin-bottom: 28px; position: relative; overflow: hidden;
+}
+.urgent-alert::before {
+  content: '⚡'; position: absolute; right: 24px; top: 50%;
+  transform: translateY(-50%); font-size: 72px; opacity: 0.12;
+}
+.alert-badge {
+  display: inline-block; background: #FF6F00; color: #fff;
+  font-size: 0.72rem; font-weight: 700; padding: 3px 10px;
+  border-radius: 20px; letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.urgent-alert h2 { font-size: clamp(1.1rem, 3vw, 1.5rem); font-weight: 700; margin-bottom: 12px; line-height: 1.3; }
+.urgent-alert p { font-size: 0.95rem; opacity: 0.9; max-width: 700px; }
+.timer-display {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 16px; font-size: 0.9rem; opacity: 0.95;
+}
+.timer-circle {
+  width: 42px; height: 42px; border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.5);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.95rem;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { border-color: rgba(255,255,255,0.5); }
+  50% { border-color: rgba(255,255,255,1); }
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-section { margin-bottom: 28px; }
+.progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.progress-label { font-weight: 600; font-size: 0.9rem; color: var(--text-muted); }
+.progress-bar-track {
+  height: 8px; background: var(--border); border-radius: 4px; overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; background: linear-gradient(90deg, var(--unab-blue), var(--unab-gold));
+  border-radius: 4px; transition: width 0.5s ease; width: 0%;
+}
+.sector-badges { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.sector-badge {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.8rem; padding: 4px 12px; border-radius: 20px;
+  background: var(--border); color: var(--text-muted); font-weight: 500;
+  transition: var(--transition);
+}
+.sector-badge.completed { background: var(--avail-color); color: #fff; }
+.sector-badge .badge-icon { font-size: 1rem; }
+
+/* ===== SECTION HEADERS ===== */
+.section-title {
+  font-size: clamp(1.1rem, 2.5vw, 1.3rem); font-weight: 700;
+  color: var(--unab-blue); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-subtitle { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; }
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--card-bg); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 20px; border: 1.5px solid var(--border);
+  transition: var(--transition);
+}
+.card:hover { box-shadow: var(--shadow-hover); }
+
+/* ===== STEPS ===== */
+.step-panel { display: none; }
+.step-panel.active { display: block; }
+
+/* ===== ACTION GRID ===== */
+.actions-intro { margin-bottom: 20px; }
+.actions-intro p { font-size: 0.95rem; line-height: 1.7; color: var(--text-muted); }
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px; margin-bottom: 24px;
+}
+.action-card {
+  background: var(--card-bg); border-radius: var(--radius);
+  border: 2.5px solid var(--border); padding: 18px;
+  cursor: pointer; transition: var(--transition);
+  position: relative; user-select: none;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.action-card:hover { border-color: var(--unab-blue); box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+.action-card:focus { outline: 3px solid var(--unab-blue); outline-offset: 2px; }
+.action-card.selected {
+  border-color: var(--unab-blue);
+  background: linear-gradient(135deg, #EEF2FF 0%, #E8F4FD 100%);
+  box-shadow: 0 4px 16px rgba(0,48,135,0.15);
+}
+.action-card.selected::after {
+  content: '✓'; position: absolute; top: 10px; right: 14px;
+  width: 24px; height: 24px; background: var(--unab-blue); color: #fff;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+}
+.action-card.incompatible {
+  opacity: 0.5; cursor: not-allowed; border-color: #e2e8f0;
+}
+.action-icon { font-size: 2rem; line-height: 1; }
+.action-name { font-weight: 700; font-size: 1rem; color: var(--text); }
+.action-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.meta-chip {
+  font-size: 0.72rem; padding: 2px 8px; border-radius: 20px;
+  font-weight: 600; letter-spacing: 0.02em;
+}
+.chip-time { background: #FFF3E0; color: #E65100; }
+.chip-cost { background: #E8F5E9; color: #2E7D32; }
+.chip-output { background: #E3F2FD; color: #1565C0; }
+.chip-shortrun { background: #FFF8E1; color: #F57F17; }
+.chip-longrun { background: #E8EAF6; color: #283593; }
+.action-restrict { font-size: 0.8rem; color: var(--restrict-color); font-weight: 500; }
+.action-warning {
+  background: #FFF3E0; border-left: 3px solid #FF6F00;
+  padding: 6px 10px; border-radius: 4px; font-size: 0.8rem; color: #E65100;
+  display: none;
+}
+.action-card.selected .action-warning { display: block; }
+
+/* ===== SECTOR CARDS ===== */
+.sectors-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;
+  margin-bottom: 24px;
+}
+.sector-card {
+  background: var(--card-bg); border-radius: var(--radius);
+  border: 2.5px solid var(--border); padding: 20px; cursor: pointer;
+  transition: var(--transition); text-align: center;
+}
+.sector-card:hover, .sector-card:focus { transform: translateY(-3px); box-shadow: var(--shadow-hover); outline: none; }
+.sector-card.active-sector { border-width: 3px; }
+.sector-card.done { opacity: 0.7; }
+.sector-card[data-sector="bakery"] { border-color: var(--bakery-color); }
+.sector-card[data-sector="bakery"]:hover, .sector-card[data-sector="bakery"].active-sector { background: #FFF8F3; }
+.sector-card[data-sector="agri"] { border-color: var(--agri-color); }
+.sector-card[data-sector="agri"]:hover, .sector-card[data-sector="agri"].active-sector { background: #F1F8F1; }
+.sector-card[data-sector="soft"] { border-color: var(--soft-color); }
+.sector-card[data-sector="soft"]:hover, .sector-card[data-sector="soft"].active-sector { background: #F3F0FB; }
+.sector-emoji { font-size: 2.8rem; margin-bottom: 8px; display: block; }
+.sector-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
+.sector-desc { font-size: 0.82rem; color: var(--text-muted); }
+.sector-status-badge {
+  margin-top: 10px; font-size: 0.75rem; font-weight: 700; padding: 3px 10px;
+  border-radius: 20px; display: inline-block;
+}
+.status-pending { background: #F3F4F6; color: var(--text-muted); }
+.status-active { background: var(--unab-blue); color: #fff; }
+.status-done { background: var(--avail-color); color: #fff; }
+
+/* ===== DASHBOARD ===== */
+.dashboard-layout {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;
+}
+@media (max-width: 640px) { .dashboard-layout { grid-template-columns: 1fr; } }
+.dashboard-card { background: var(--card-bg); border-radius: var(--radius); border: 1.5px solid var(--border); padding: 16px; }
+.dash-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+.dash-value { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+.dash-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+
+/* ===== METERS ===== */
+.meter-container { margin-bottom: 16px; }
+.meter-label { display: flex; justify-content: space-between; font-size: 0.83rem; font-weight: 600; margin-bottom: 4px; }
+.meter-track { height: 12px; background: var(--border); border-radius: 6px; overflow: hidden; position: relative; }
+.meter-fill { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
+.meter-budget .meter-fill { background: linear-gradient(90deg, #2E7D32, #66BB6A); }
+.meter-budget.warning .meter-fill { background: linear-gradient(90deg, #E65100, #FF8A65); }
+.meter-response .meter-fill { background: linear-gradient(90deg, var(--unab-blue), #42A5F5); }
+
+/* ===== RESPONSE METER VISUAL ===== */
+.response-meter {
+  margin: 20px 0; padding: 20px; background: var(--card-bg);
+  border-radius: var(--radius); border: 1.5px solid var(--border);
+}
+.response-meter-title { font-weight: 700; margin-bottom: 12px; font-size: 0.95rem; }
+.response-levels { display: flex; gap: 0; border-radius: 8px; overflow: hidden; height: 36px; }
+.rl { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; color: #fff; transition: var(--transition); }
+.rl-low { background: #EF5350; }
+.rl-mid { background: #FFA726; }
+.rl-high { background: #66BB6A; }
+.rl.inactive { opacity: 0.25; }
+.response-pointer { margin-top: 8px; font-size: 0.85rem; text-align: center; font-weight: 600; }
+
+/* ===== RESULTS ===== */
+.results-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;
+  margin: 16px 0;
+}
+.result-card {
+  background: var(--card-bg); border-radius: 10px; padding: 14px; border: 1.5px solid var(--border);
+  text-align: center;
+}
+.result-number { font-size: 1.8rem; font-weight: 700; }
+.result-number.good { color: var(--avail-color); }
+.result-number.warn { color: var(--short-color); }
+.result-number.bad { color: var(--restrict-color); }
+.result-label { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
+
+/* ===== FEEDBACK MESSAGES ===== */
+.feedback-box {
+  background: #EEF2FF; border-left: 4px solid var(--unab-blue);
+  padding: 12px 16px; border-radius: 4px; font-size: 0.9rem; margin: 12px 0;
+  display: none;
+}
+.feedback-box.visible { display: block; }
+.feedback-box.warning { background: #FFF3E0; border-color: #FF6F00; }
+.feedback-box.success { background: #E8F5E9; border-color: #2E7D32; }
+
+/* ===== COMPARISON TABLE ===== */
+.comparison-table {
+  width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 16px 0;
+}
+.comparison-table th, .comparison-table td {
+  padding: 10px 14px; border: 1px solid var(--border); text-align: left;
+}
+.comparison-table th { background: var(--unab-blue); color: #fff; font-weight: 600; }
+.comparison-table tr:nth-child(even) td { background: #F8FAFC; }
+.comparison-table .col-short { color: var(--short-color); font-weight: 700; }
+.comparison-table .col-long { color: var(--long-color); font-weight: 700; }
+.overflow-x { overflow-x: auto; }
+
+/* ===== ELASTICITY BADGES ===== */
+.elasticity-badge {
+  display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+}
+.elast-low { background: #FFEBEE; color: var(--restrict-color); }
+.elast-mid { background: #FFF8E1; color: #F57F17; }
+.elast-high { background: #E8F5E9; color: var(--avail-color); }
+.elast-vhigh { background: #E8EAF6; color: #283593; }
+
+/* ===== HINTS ===== */
+.hints-panel { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.hint-item {
+  background: #FFFDE7; border: 1px solid #FFD600;
+  border-radius: 8px; padding: 10px 14px; font-size: 0.85rem;
+  display: none;
+}
+.hint-item.revealed { display: block; }
+.hint-label { font-weight: 700; color: #F57F17; margin-bottom: 2px; font-size: 0.78rem; text-transform: uppercase; }
+
+/* ===== LONG RUN ===== */
+.long-run-actions {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 16px 0;
+}
+.lr-action {
+  background: #EEF2FF; border: 2px solid #C5CAE9; border-radius: 10px;
+  padding: 14px; cursor: pointer; transition: var(--transition);
+  text-align: center;
+}
+.lr-action:hover { border-color: var(--long-color); background: #E8EAF6; }
+.lr-action:focus { outline: 3px solid var(--long-color); outline-offset: 2px; }
+.lr-action.selected { border-color: var(--long-color); background: #E3EAF9; }
+.lr-action-icon { font-size: 1.8rem; margin-bottom: 6px; }
+.lr-action-name { font-weight: 700; font-size: 0.88rem; }
+.lr-action-boost { font-size: 0.78rem; color: var(--long-color); font-weight: 600; margin-top: 4px; }
+
+/* ===== FINAL AWARD ===== */
+.award-section {
+  text-align: center; padding: 40px 20px;
+  background: linear-gradient(135deg, #001a4d 0%, var(--unab-blue) 60%, #5E35B1 100%);
+  border-radius: var(--radius); color: #fff; margin-top: 24px;
+}
+.award-icon { font-size: 5rem; margin-bottom: 12px; }
+.award-title { font-size: clamp(1.3rem, 3vw, 2rem); font-weight: 700; margin-bottom: 8px; }
+.award-sub { font-size: 0.95rem; opacity: 0.9; max-width: 500px; margin: 0 auto; }
+
+/* ===== FORMULA DISPLAY ===== */
+.formula-box {
+  background: #F8FAFC; border: 1.5px dashed var(--unab-blue); border-radius: 10px;
+  padding: 16px 24px; text-align: center; margin: 16px 0; font-size: 1.05rem;
+}
+.formula-main { font-size: 1.4rem; font-weight: 700; color: var(--unab-blue); letter-spacing: 0.02em; }
+.formula-desc { font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; }
+
+/* ===== SVG CHARTS ===== */
+.chart-container { background: var(--card-bg); border-radius: var(--radius); padding: 20px; border: 1.5px solid var(--border); margin: 16px 0; }
+.chart-title { font-weight: 700; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; }
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 22px; border-radius: 8px; border: none; cursor: pointer;
+  font-size: 0.92rem; font-weight: 600; font-family: inherit;
+  transition: var(--transition); text-decoration: none;
+  min-height: 44px; /* touch target */
+}
+.btn:focus { outline: 3px solid var(--unab-gold); outline-offset: 2px; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary { background: var(--unab-blue); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: #001f6b; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,48,135,0.3); }
+.btn-primary:active:not(:disabled) { transform: translateY(0); }
+.btn-secondary { background: var(--card-bg); color: var(--unab-blue); border: 2px solid var(--unab-blue); }
+.btn-secondary:hover:not(:disabled) { background: #EEF2FF; }
+.btn-gold { background: var(--unab-gold); color: #1A1A2E; }
+.btn-gold:hover:not(:disabled) { background: #b8952f; }
+.btn-long { background: var(--long-color); color: #fff; }
+.btn-long:hover:not(:disabled) { background: #0d47a1; }
+.btn-danger { background: #f44336; color: #fff; }
+.btn-danger:hover:not(:disabled) { background: #c62828; }
+.btn-sm { padding: 7px 14px; font-size: 0.82rem; min-height: 36px; }
+.btn-full { width: 100%; justify-content: center; }
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+@media (max-width: 480px) { .btn-row .btn { flex: 1; justify-content: center; } }
+
+/* ===== SECTOR HEADER ===== */
+.sector-header {
+  padding: 16px 20px; border-radius: var(--radius); margin-bottom: 20px;
+  color: #fff; position: relative; overflow: hidden;
+}
+.sector-header[data-sector="bakery"] { background: linear-gradient(135deg, #BF360C, var(--bakery-color)); }
+.sector-header[data-sector="agri"] { background: linear-gradient(135deg, #1B5E20, var(--agri-color)); }
+.sector-header[data-sector="soft"] { background: linear-gradient(135deg, #311B92, var(--soft-color)); }
+.sector-header h3 { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+.sector-header p { font-size: 0.85rem; opacity: 0.9; margin-top: 4px; }
+.sector-stats {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;
+}
+.sector-stat {
+  background: rgba(255,255,255,0.18); padding: 5px 12px; border-radius: 20px;
+  font-size: 0.8rem; font-weight: 600;
+}
+
+/* ===== CHALLENGE BOX ===== */
+.challenge-box {
+  background: linear-gradient(135deg, #0D47A1 0%, var(--unab-blue) 100%);
+  color: #fff; border-radius: var(--radius); padding: 20px; margin: 16px 0;
+}
+.challenge-icon { font-size: 2rem; margin-bottom: 8px; }
+.challenge-title { font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
+.challenge-text { font-size: 0.9rem; opacity: 0.9; }
+
+/* ===== TIMELINE ===== */
+.timeline { display: flex; gap: 0; margin-bottom: 24px; }
+.timeline-step {
+  flex: 1; text-align: center; position: relative; font-size: 0.78rem;
+}
+.timeline-step::before {
+  content: ''; display: block; height: 3px; background: var(--border); margin-bottom: 8px;
+}
+.timeline-step.done::before { background: var(--avail-color); }
+.timeline-step.active::before { background: var(--unab-blue); }
+.timeline-dot {
+  width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border);
+  background: var(--card-bg); display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 700; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+}
+.timeline-step.done .timeline-dot { background: var(--avail-color); border-color: var(--avail-color); color: #fff; }
+.timeline-step.active .timeline-dot { background: var(--unab-blue); border-color: var(--unab-blue); color: #fff; }
+.timeline-label { color: var(--text-muted); font-weight: 500; padding-top: 14px; display: block; }
+.timeline-step.active .timeline-label { color: var(--unab-blue); font-weight: 700; }
+
+/* ===== INFO BOX ===== */
+.info-box {
+  background: #EEF2FF; border-left: 4px solid var(--unab-blue);
+  padding: 12px 16px; border-radius: 4px; font-size: 0.88rem; color: var(--text); line-height: 1.6;
+  margin: 12px 0;
+}
+
+/* ===== RESTRICTION BADGES ===== */
+.restrictions-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.restriction-chip {
+  background: #FFEBEE; color: var(--restrict-color); padding: 3px 10px;
+  border-radius: 20px; font-size: 0.76rem; font-weight: 600;
+}
+
+/* ===== FOOTER — basado en Actividad 1 ===== */
+footer {
+  background: var(--unab-blue);
+  color: rgba(255,255,255,.85);
+  text-align: center;
+  padding: 1.25rem;
+  font-size: .82rem;
+}
+
+/* ===== ANIMATE MOTION ===== */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn 0.35s ease forwards; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+.shake { animation: shake 0.3s ease; }
+
+/* ===== ANIMATION TOGGLE ===== */
+.anim-toggle { font-size: 0.8rem; color: var(--text-muted); cursor: pointer; }
+
+/* ===== CONCLUSIONS ===== */
+.conclusion-card {
+  background: linear-gradient(135deg, #E8F5E9 0%, #F1F8E9 100%);
+  border: 2px solid var(--avail-color); border-radius: var(--radius);
+  padding: 20px; margin: 16px 0;
+}
+.conclusion-card h4 { font-weight: 700; color: var(--avail-color); margin-bottom: 8px; font-size: 1rem; }
+.conclusion-card p { font-size: 0.9rem; line-height: 1.7; }
+</style>
+</head>
+<body>
+<a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+<!-- INSTITUTIONAL HEADER — basado en Actividad 1 -->
+<header class="inst-header" role="banner">
+  <img
+    id="logo-img"
+    src="https://facultades.unab.cl/economiaynegocios/wp-content/uploads/2022/03/logo-fen-negro.png"
+    alt="Logo de la Facultad de Economía y Negocios de la Universidad Andrés Bello"
+    onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';"
+  >
+  <div id="logo-fallback" class="inst-header-fallback" aria-hidden="true">FEN</div>
+  <div class="inst-header-text">
+    <h1>Universidad Andrés Bello</h1>
+    <p>Facultad de Economía y Negocios</p>
+  </div>
+</header>
+
+<main id="main-content">
+
+<!-- URGENT ALERT -->
+<section id="urgent-order" aria-label="Pedido urgente">
+  <div class="urgent-alert" role="alert">
+    <div class="alert-badge">⚡ Pedido urgente</div>
+    <h2>Una empresa acaba de recibir un pedido extraordinario de 1.000 unidades adicionales.</h2>
+    <p>El cliente necesita una respuesta inmediata. <strong>Tienes 24 horas para presentar un plan de producción.</strong><br>
+    Asumirás el rol de gerente de operaciones y deberás decidir qué acciones utilizar para responder al pedido.</p>
+    <div class="timer-display" aria-hidden="true">
+      <div class="timer-circle" id="timer-display">24h</div>
+      <span>Tiempo disponible para responder</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRESS -->
+<section class="progress-section" aria-label="Progreso de la actividad">
+  <div class="progress-header">
+    <span class="progress-label">Progreso de la actividad</span>
+    <span class="progress-label" id="progress-pct" aria-live="polite">0%</span>
+  </div>
+  <div class="progress-bar-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar-role">
+    <div class="progress-bar-fill" id="progress-bar"></div>
+  </div>
+  <div class="sector-badges" id="sector-badges">
+    <div class="sector-badge" id="badge-bakery"><span class="badge-icon">🍞</span> Panadería</div>
+    <div class="sector-badge" id="badge-agri"><span class="badge-icon">🌾</span> Agricultura</div>
+    <div class="sector-badge" id="badge-soft"><span class="badge-icon">💻</span> Software</div>
+    <div class="sector-badge" id="badge-longrun"><span class="badge-icon">📅</span> Largo plazo</div>
+  </div>
+</section>
+
+<!-- STEP 1: SELECT ACTIONS -->
+<section class="step-panel active" id="step-actions" aria-label="Paso 1: Selecciona acciones">
+  <div class="card fade-in">
+    <p class="section-title">🎯 Paso 1 de 4 — Elige tu estrategia</p>
+    <p class="section-subtitle">Selecciona las acciones que consideres factibles. Después, aplicarás tu estrategia en tres sectores diferentes y compararás los resultados.</p>
+
+    <div class="actions-intro">
+      <p><strong>¿Qué harías para producir 1.000 unidades adicionales en solo 24 horas?</strong><br>
+      Cada acción tiene un costo, un tiempo de implementación y un efecto diferente según el sector.</p>
+    </div>
+
+    <div class="actions-grid" id="actions-grid" role="group" aria-label="Acciones disponibles">
+      <!-- Cards generated by JS -->
+    </div>
+
+    <div class="hints-panel" id="hints-panel" aria-live="polite">
+      <!-- Hints revealed here -->
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary btn-sm" onclick="revealHint()" id="hint-btn">💡 Solicitar pista</button>
+      <button class="btn btn-primary" onclick="goToSectors()" id="btn-apply-actions">
+        Aplicar mi estrategia →
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 2: SECTORS -->
+<section class="step-panel" id="step-sectors" aria-label="Paso 2: Sectores">
+  <div class="card fade-in">
+    <p class="section-title">🏭 Paso 2 de 4 — Aplica tu estrategia por sector</p>
+    <p class="section-subtitle">Completa los tres sectores para ver cómo la misma estrategia produce resultados distintos.</p>
+
+    <div class="sectors-grid" role="group" aria-label="Sectores disponibles">
+      <div class="sector-card" data-sector="bakery" tabindex="0" role="button" aria-label="Sector panadería" onclick="startSector('bakery')" onkeydown="if(event.key==='Enter'||event.key===' ')startSector('bakery')">
+        <span class="sector-emoji" aria-hidden="true">🍞</span>
+        <div class="sector-name" style="color:var(--bakery-color)">Panadería</div>
+        <div class="sector-desc">Producción de panes y productos horneados</div>
+        <div class="sector-status-badge status-pending" id="status-bakery">Pendiente</div>
+      </div>
+      <div class="sector-card" data-sector="agri" tabindex="0" role="button" aria-label="Sector agricultura" onclick="startSector('agri')" onkeydown="if(event.key==='Enter'||event.key===' ')startSector('agri')">
+        <span class="sector-emoji" aria-hidden="true">🌾</span>
+        <div class="sector-name" style="color:var(--agri-color)">Agricultura</div>
+        <div class="sector-desc">Cultivos con ciclos biológicos naturales</div>
+        <div class="sector-status-badge status-pending" id="status-agri">Pendiente</div>
+      </div>
+      <div class="sector-card" data-sector="soft" tabindex="0" role="button" aria-label="Sector software" onclick="startSector('soft')" onkeydown="if(event.key==='Enter'||event.key===' ')startSector('soft')">
+        <span class="sector-emoji" aria-hidden="true">💻</span>
+        <div class="sector-name" style="color:var(--soft-color)">Software</div>
+        <div class="sector-desc">Venta de licencias digitales ya desarrolladas</div>
+        <div class="sector-status-badge status-pending" id="status-soft">Pendiente</div>
+      </div>
+    </div>
+
+    <div id="sector-workspace" class="fade-in" style="display:none"></div>
+
+    <div id="sector-results-panel" style="display:none" aria-live="polite"></div>
+
+    <div class="btn-row" id="sector-btn-row" style="display:none">
+      <button class="btn btn-secondary btn-sm" onclick="revealHint()" id="hint-btn2">💡 Solicitar pista</button>
+      <button class="btn btn-primary" id="btn-apply-sector" onclick="applySector()">
+        Ver impacto ▶
+      </button>
+      <button class="btn btn-secondary" id="btn-next-sector" onclick="nextSector()" style="display:none">
+        Siguiente sector →
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 3: LONG RUN -->
+<section class="step-panel" id="step-longrun" aria-label="Paso 3: Largo plazo">
+  <div class="card fade-in">
+    <p class="section-title">📅 Paso 3 de 4 — Avanza seis meses</p>
+    <p class="section-subtitle">Han pasado seis meses. Ahora puedes ajustar más insumos. ¿Cómo respondería cada sector ante el mismo pedido?</p>
+
+    <div class="info-box">
+      ⏳ <strong>En el largo plazo</strong>, las empresas pueden contratar y capacitar trabajadores, adquirir maquinaria, ampliar instalaciones, ajustar contratos y adoptar nuevas tecnologías. Por eso la cantidad ofrecida suele responder con mayor intensidad.
+    </div>
+
+    <div id="longrun-workspace"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-long" onclick="applyLongRun()">📊 Ver comparación final →</button>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4: COMPARISON & CONCLUSION -->
+<section class="step-panel" id="step-comparison" aria-label="Paso 4: Comparación y conclusiones">
+  <div class="card fade-in">
+    <p class="section-title">📊 Paso 4 de 4 — Comparación y conclusiones</p>
+    <p class="section-subtitle">Analiza la diferencia entre la respuesta de corto y largo plazo en cada sector.</p>
+
+    <div id="comparison-content"></div>
+
+    <div class="formula-box" id="formula-reveal" style="display:none">
+      <div class="formula-main" aria-label="Fórmula de elasticidad precio de la oferta">
+        E<sub>s</sub> = (%ΔQ<sub>s</sub>) / (%ΔP)
+      </div>
+      <p class="formula-desc">
+        <strong>Elasticidad precio de la oferta:</strong> mide cuánto cambia la cantidad ofrecida cuando cambia el precio.<br>
+        En esta actividad exploramos uno de sus principales determinantes: <strong>el tiempo disponible para ajustar la producción</strong>.
+      </p>
+    </div>
+
+    <div id="award-section" style="display:none">
+      <div class="award-section" role="status" aria-label="Insignia obtenida">
+        <div class="award-icon" aria-hidden="true">🏆</div>
+        <div class="award-title">Gerente de respuesta productiva</div>
+        <div class="award-sub">Completaste la actividad. Descubriste por qué la oferta es más elástica en el largo plazo y cómo las restricciones sectoriales determinan la capacidad de respuesta.</div>
+      </div>
+
+      <div class="btn-row" style="margin-top:20px;justify-content:center">
+        <button class="btn btn-secondary" onclick="resetActivity()">🔄 Reiniciar actividad</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FEEDBACK LIVE REGION -->
+<div id="feedback" role="status" aria-live="polite" style="position:absolute;left:-9999px;font-size:0"></div>
+
+<footer>
+  <p>Desarrollado por Julián Díaz Tautiva, PhD.</p>
+</footer>
+
+<script>
+/* ============================================================
+   ESTADO GLOBAL
+   ============================================================ */
+const STATE = {
+  selectedActions: new Set(),
+  currentSector: null,
+  sectorsCompleted: [],
+  sectorResults: {},
+  longRunResults: {},
+  hintIndex: 0,
+  animationsEnabled: true,
+  step: 1,
+};
+
+const ORDER = 1000;
+
+/* ============================================================
+   DATOS DE ACCIONES
+   ============================================================ */
+const ACTIONS = [
+  {
+    id: 'inventory',
+    name: 'Usar inventarios',
+    icon: '📦',
+    time: 'Inmediato',
+    cost: 0,
+    costLabel: 'Sin costo',
+    output: 'Alto si existen',
+    risk: 'Quedarse sin stock',
+    timeframe: 'short',
+    timeframeLabel: 'Corto plazo',
+    compatible: ['bakery', 'agri'],
+    effects: { bakery: 150, agri: 200, soft: 0 },
+    costAmount: { bakery: 0, agri: 0, soft: 0 },
+    warning: null,
+    restriction: 'Solo útil si hay stock disponible. Software usa copias digitales.',
+  },
+  {
+    id: 'workers',
+    name: 'Contratar trabajadores',
+    icon: '👷',
+    time: 'Horas o días',
+    cost: 500000,
+    costLabel: '$500.000',
+    output: 'Medio',
+    risk: 'Baja capacitación inicial',
+    timeframe: 'short',
+    timeframeLabel: 'Corto plazo',
+    compatible: ['bakery', 'agri', 'soft'],
+    effects: { bakery: 200, agri: 150, soft: 80 },
+    costAmount: { bakery: 500000, agri: 500000, soft: 700000 },
+    warning: null,
+    restriction: 'Efecto limitado si el puesto requiere alta especialización.',
+  },
+  {
+    id: 'machinery',
+    name: 'Comprar maquinaria',
+    icon: '⚙️',
+    time: 'Semanas o meses',
+    cost: 1500000,
+    costLabel: '$1.500.000',
+    output: 'Alto a largo plazo',
+    risk: 'No disponible en 24 h',
+    timeframe: 'long',
+    timeframeLabel: 'Largo plazo',
+    compatible: ['bakery', 'agri', 'soft'],
+    effects: { bakery: 0, agri: 0, soft: 0 },
+    costAmount: { bakery: 1500000, agri: 1500000, soft: 1200000 },
+    warning: 'La maquinaria puede ampliar la capacidad, pero no puede comprarse, instalarse y operar completamente dentro del plazo disponible.',
+    restriction: 'Requiere tiempo de instalación y puesta en marcha.',
+  },
+  {
+    id: 'overtime',
+    name: 'Pagar horas extraordinarias',
+    icon: '⏰',
+    time: 'Inmediato',
+    cost: 300000,
+    costLabel: '$300.000',
+    output: 'Medio',
+    risk: 'Fatiga del personal',
+    timeframe: 'short',
+    timeframeLabel: 'Corto plazo',
+    compatible: ['bakery', 'agri', 'soft'],
+    effects: { bakery: 300, agri: 120, soft: 200 },
+    costAmount: { bakery: 300000, agri: 300000, soft: 400000 },
+    warning: null,
+    restriction: 'Limitado por la capacidad física de los equipos y la fatiga.',
+  },
+  {
+    id: 'expand',
+    name: 'Aumentar capacidad en 6 meses',
+    icon: '🏗️',
+    time: 'Meses',
+    cost: 2000000,
+    costLabel: '$2.000.000',
+    output: 'Muy alto',
+    risk: 'No resuelve pedido actual',
+    timeframe: 'long',
+    timeframeLabel: 'Largo plazo',
+    compatible: ['bakery', 'agri', 'soft'],
+    effects: { bakery: 0, agri: 0, soft: 0 },
+    costAmount: { bakery: 2000000, agri: 2000000, soft: 1800000 },
+    warning: 'Esta decisión no resuelve el pedido actual, pero puede mejorar la respuesta ante pedidos futuros.',
+    restriction: 'Inversión de largo plazo que no tiene efecto inmediato.',
+  },
+  {
+    id: 'reject',
+    name: 'Rechazar parte del pedido',
+    icon: '❌',
+    time: 'Inmediato',
+    cost: 0,
+    costLabel: 'Sin costo directo',
+    output: 'Reduce compromiso',
+    risk: 'Pérdida de reputación',
+    timeframe: 'short',
+    timeframeLabel: 'Corto plazo',
+    compatible: ['bakery', 'agri', 'soft'],
+    effects: { bakery: 0, agri: 0, soft: 0 },
+    costAmount: { bakery: 0, agri: 0, soft: 0 },
+    warning: null,
+    restriction: 'Decisión estratégica que puede afectar la relación con el cliente.',
+  },
+];
+
+/* ============================================================
+   DATOS DE SECTORES
+   ============================================================ */
+const SECTORS = {
+  bakery: {
+    name: 'Panadería',
+    icon: '🍞',
+    color: '#D4722A',
+    normalProd: 2000,
+    inventory: 150,
+    maxShort: 500,
+    maxLong: 2000,
+    budget: 2000000,
+    desc: 'Producción diaria de panes y productos horneados',
+    situation: 'Una panadería produce diariamente panes y productos horneados.',
+    restrictions: ['Capacidad de los hornos', 'Tiempo de fermentación', 'Disponibilidad de trabajadores', 'Fatiga del personal', 'Inventario de materias primas'],
+    elasticityShort: 'Intermedia',
+    elasticityLong: 'Más elástica',
+    mainRestriction: 'Capacidad de los hornos y espacio de producción',
+  },
+  agri: {
+    name: 'Agricultura',
+    icon: '🌾',
+    color: '#2E7D32',
+    normalProd: 5000,
+    inventory: 200,
+    maxShort: 300,
+    maxLong: 4000,
+    budget: 3000000,
+    desc: 'Cultivos con ciclos biológicos y estacionalidad',
+    situation: 'Una empresa agrícola produce un cultivo que debe cosecharse y madurar antes de venderse.',
+    restrictions: ['Ciclo biológico del cultivo', 'Condiciones climáticas', 'Maduración requerida', 'Tierra disponible', 'Producción ya sembrada'],
+    elasticityShort: 'Inelástica',
+    elasticityLong: 'Más elástica (condicionada)',
+    mainRestriction: 'Ciclo biológico y maduración del cultivo',
+  },
+  soft: {
+    name: 'Software',
+    icon: '💻',
+    color: '#5E35B1',
+    normalProd: 10000,
+    inventory: 0,
+    maxShort: 8000,
+    maxLong: 50000,
+    budget: 2500000,
+    desc: 'Venta de licencias digitales de una aplicación ya desarrollada',
+    situation: 'Una empresa vende licencias o descargas de una aplicación ya desarrollada.',
+    restrictions: ['Capacidad de servidores', 'Atención al cliente', 'Seguridad del sistema', 'Procesamiento de pagos', 'Errores técnicos'],
+    elasticityShort: 'Elástica',
+    elasticityLong: 'Muy elástica',
+    mainRestriction: 'Capacidad de servidores y soporte al cliente',
+  },
+};
+
+const LONG_RUN_ACTIONS = [
+  { id: 'buy_machinery', name: 'Comprar maquinaria', icon: '⚙️', boost: { bakery: 800, agri: 1000, soft: 5000 }, cost: 1500000 },
+  { id: 'expand_inst', name: 'Expandir instalaciones', icon: '🏗️', boost: { bakery: 600, agri: 2000, soft: 15000 }, cost: 2000000 },
+  { id: 'train_workers', name: 'Capacitar trabajadores', icon: '📚', boost: { bakery: 300, agri: 500, soft: 8000 }, cost: 400000 },
+  { id: 'supply_contracts', name: 'Contratos de suministro', icon: '📋', boost: { bakery: 200, agri: 800, soft: 0 }, cost: 250000 },
+  { id: 'storage', name: 'Mejorar almacenamiento', icon: '🏭', boost: { bakery: 150, agri: 700, soft: 0 }, cost: 300000 },
+  { id: 'servers', name: 'Aumentar servidores', icon: '🖥️', boost: { bakery: 0, agri: 0, soft: 22000 }, cost: 800000 },
+];
+
+/* ============================================================
+   HINTS
+   ============================================================ */
+const HINTS = [
+  { label: 'Pista 1', text: 'Identifica qué recursos pueden modificarse en 24 horas.' },
+  { label: 'Pista 2', text: 'Los inventarios permiten vender hoy sin producir hoy.' },
+  { label: 'Pista 3', text: 'Una cosecha nueva no puede producirse instantáneamente.' },
+  { label: 'Pista 4', text: 'Comprar maquinaria ayuda en el largo plazo, no necesariamente en el pedido actual.' },
+  { label: 'Pista 5', text: 'En software, distribuir una copia adicional puede requerir pocos recursos físicos.' },
+];
+
+/* ============================================================
+   RENDER ACTIONS
+   ============================================================ */
+function renderActions() {
+  const grid = document.getElementById('actions-grid');
+  grid.innerHTML = '';
+  ACTIONS.forEach(a => {
+    const sel = STATE.selectedActions.has(a.id);
+    const tfClass = a.timeframe === 'long' ? 'chip-longrun' : 'chip-shortrun';
+    const tfLabel = a.timeframeLabel;
+    const div = document.createElement('div');
+    div.className = 'action-card' + (sel ? ' selected' : '');
+    div.setAttribute('tabindex', '0');
+    div.setAttribute('role', 'checkbox');
+    div.setAttribute('aria-checked', sel.toString());
+    div.setAttribute('aria-label', a.name);
+    div.setAttribute('data-id', a.id);
+    div.innerHTML = `
+      <div class="action-icon" aria-hidden="true">${a.icon}</div>
+      <div class="action-name">${a.name}</div>
+      <div class="action-meta">
+        <span class="meta-chip chip-time" aria-label="Tiempo: ${a.time}">⏱ ${a.time}</span>
+        <span class="meta-chip chip-cost" aria-label="Costo: ${a.costLabel}">💰 ${a.costLabel}</span>
+        <span class="meta-chip chip-output" aria-label="Efecto: ${a.output}">📈 ${a.output}</span>
+        <span class="meta-chip ${tfClass}" aria-label="Horizonte temporal: ${tfLabel}">${tfLabel}</span>
+      </div>
+      <div class="action-restrict" role="note" aria-label="Restricción">${a.restriction}</div>
+      ${a.warning ? `<div class="action-warning" role="alert">${a.warning}</div>` : ''}
+    `;
+    div.addEventListener('click', () => toggleAction(a.id));
+    div.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleAction(a.id); } });
+    grid.appendChild(div);
+  });
+  renderHintsPanel();
+}
+
+function toggleAction(id) {
+  if (STATE.selectedActions.has(id)) {
+    STATE.selectedActions.delete(id);
+  } else {
+    STATE.selectedActions.add(id);
+  }
+  renderActions();
+  announce(STATE.selectedActions.has(id) ? `Acción ${id} seleccionada` : `Acción ${id} deseleccionada`);
+}
+
+/* ============================================================
+   HINTS PANEL
+   ============================================================ */
+function renderHintsPanel() {
+  const panel = document.getElementById('hints-panel');
+  if (!panel) return;
+  panel.innerHTML = '';
+  HINTS.forEach((h, i) => {
+    const div = document.createElement('div');
+    div.className = 'hint-item' + (i < STATE.hintIndex ? ' revealed' : '');
+    div.innerHTML = `<div class="hint-label">${h.label}</div>${h.text}`;
+    panel.appendChild(div);
+  });
+  const btn = document.getElementById('hint-btn');
+  if (btn) btn.disabled = STATE.hintIndex >= HINTS.length;
+}
+
+function revealHint() {
+  if (STATE.hintIndex < HINTS.length) {
+    STATE.hintIndex++;
+    renderHintsPanel();
+    announce(HINTS[STATE.hintIndex - 1].text);
+  }
+}
+
+/* ============================================================
+   STEP NAVIGATION
+   ============================================================ */
+function showStep(id) {
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById(id);
+  if (panel) { panel.classList.add('active'); panel.classList.add('fade-in'); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goToSectors() {
+  if (STATE.selectedActions.size === 0) {
+    announce('Selecciona al menos una acción antes de continuar.');
+    const grid = document.getElementById('actions-grid');
+    if (grid) { grid.classList.add('shake'); setTimeout(() => grid.classList.remove('shake'), 400); }
+    return;
+  }
+  STATE.step = 2;
+  updateProgress();
+  showStep('step-sectors');
+}
+
+/* ============================================================
+   SECTOR WORKFLOW
+   ============================================================ */
+const SECTOR_ORDER = ['bakery', 'agri', 'soft'];
+
+function startSector(sid) {
+  if (STATE.sectorsCompleted.includes(sid)) return;
+  STATE.currentSector = sid;
+  const s = SECTORS[sid];
+  document.querySelectorAll('.sector-card').forEach(c => c.classList.remove('active-sector'));
+  const activeCard = document.querySelector(`.sector-card[data-sector="${sid}"]`);
+  if (activeCard) activeCard.classList.add('active-sector');
+  document.getElementById(`status-${sid}`).textContent = 'En progreso';
+  document.getElementById(`status-${sid}`).className = 'sector-status-badge status-active';
+
+  const ws = document.getElementById('sector-workspace');
+  ws.style.display = 'block';
+  ws.innerHTML = buildSectorWorkspace(sid, s);
+  document.getElementById('sector-results-panel').style.display = 'none';
+  document.getElementById('sector-btn-row').style.display = 'flex';
+  document.getElementById('btn-apply-sector').style.display = 'inline-flex';
+  document.getElementById('btn-next-sector').style.display = 'none';
+
+  // Recalculate budget with current action selection
+  updateSectorBudget(sid);
+  announce(`Sector ${s.name} iniciado. Revisa las acciones compatibles y aplica tu plan.`);
+}
+
+function buildSectorWorkspace(sid, s) {
+  const compatibleActions = ACTIONS.filter(a => STATE.selectedActions.has(a.id) && a.compatible.includes(sid));
+  const incompatibleActions = ACTIONS.filter(a => STATE.selectedActions.has(a.id) && !a.compatible.includes(sid));
+
+  return `
+    <div class="sector-header" data-sector="${sid}" role="region" aria-label="Información del sector ${s.name}">
+      <h3>${s.icon} ${s.name}</h3>
+      <p>${s.situation}</p>
+      <div class="sector-stats">
+        <span class="sector-stat">📦 Producción normal: ${s.normalProd.toLocaleString('es-CL')} unidades</span>
+        <span class="sector-stat">🗃️ Inventario: ${s.inventory} unidades</span>
+        <span class="sector-stat">💰 Presupuesto: $${s.budget.toLocaleString('es-CL')}</span>
+      </div>
+    </div>
+
+    <div class="restrictions-list" aria-label="Restricciones del sector">
+      <strong style="font-size:0.85rem;color:var(--restrict-color)">⚠️ Restricciones:</strong>
+      ${s.restrictions.map(r => `<span class="restriction-chip">${r}</span>`).join('')}
+    </div>
+
+    <div class="challenge-box" aria-label="Desafío de la actividad">
+      <div class="challenge-icon" aria-hidden="true">🎯</div>
+      <div class="challenge-title">Desafío: Cubre al menos 800 unidades sin superar el presupuesto</div>
+      <div class="challenge-text">Pedido: 1.000 unidades · Presupuesto: $${s.budget.toLocaleString('es-CL')}</div>
+    </div>
+
+    <div class="dashboard-layout">
+      <div class="dashboard-card">
+        <div class="dash-label">Pedido pendiente</div>
+        <div class="dash-value" id="dash-order">1.000 unidades</div>
+        <div class="dash-sub">unidades a cubrir</div>
+      </div>
+      <div class="dashboard-card">
+        <div class="dash-label">Presupuesto restante</div>
+        <div class="dash-value" id="dash-budget">$${s.budget.toLocaleString('es-CL')}</div>
+        <div class="dash-sub">disponible</div>
+      </div>
+      <div class="dashboard-card">
+        <div class="dash-label">Producción adicional estimada</div>
+        <div class="dash-value" id="dash-addprod">0 unidades</div>
+        <div class="dash-sub">con acciones seleccionadas</div>
+      </div>
+      <div class="dashboard-card">
+        <div class="dash-label">Unidades rechazadas</div>
+        <div class="dash-value" id="dash-rejected" style="color:var(--restrict-color)">1.000</div>
+        <div class="dash-sub">sin acciones aplicadas</div>
+      </div>
+    </div>
+
+    <div class="meter-container">
+      <div class="meter-label">
+        <span>Presupuesto utilizado</span>
+        <span id="budget-pct-label">0%</span>
+      </div>
+      <div class="meter-track meter-budget" id="budget-meter-track" role="meter" aria-label="Presupuesto utilizado" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="meter-fill" id="budget-meter-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div style="margin:12px 0">
+      <p class="section-title" style="font-size:1rem;margin-bottom:12px">Acciones de tu plan aplicadas a ${s.name}</p>
+      ${renderSectorActions(sid, compatibleActions, incompatibleActions)}
+    </div>
+  `;
+}
+
+function renderSectorActions(sid, compatibleActions, incompatibleActions) {
+  let html = '';
+  if (compatibleActions.length === 0) {
+    html += `<div class="feedback-box visible warning">Ninguna de las acciones seleccionadas es directamente aplicable en este sector dentro de las 24 horas. Considera ajustar tu estrategia.</div>`;
+  } else {
+    html += `<div class="actions-grid">`;
+    compatibleActions.forEach(a => {
+      const effect = a.effects[sid];
+      const cost = a.costAmount[sid];
+      const isLongRun = a.timeframe === 'long';
+      html += `
+        <div class="action-card ${isLongRun ? 'incompatible' : 'selected'}" style="cursor:default" aria-label="${a.name}: ${isLongRun ? 'solo disponible en largo plazo' : 'aplica en 24 horas'}">
+          <div class="action-icon" aria-hidden="true">${a.icon}</div>
+          <div class="action-name">${a.name}</div>
+          <div class="action-meta">
+            <span class="meta-chip chip-output">+${effect} unidades</span>
+            <span class="meta-chip chip-cost">$${cost.toLocaleString('es-CL')}</span>
+            <span class="meta-chip ${isLongRun ? 'chip-longrun' : 'chip-shortrun'}">${a.timeframeLabel}</span>
+          </div>
+          ${a.warning ? `<div class="action-warning" style="display:block" role="note">${a.warning}</div>` : ''}
+        </div>`;
+    });
+    html += `</div>`;
+  }
+  if (incompatibleActions.length > 0) {
+    html += `<div class="info-box" style="margin-top:8px">⚠️ Las siguientes acciones seleccionadas tienen compatibilidad limitada en este sector: ${incompatibleActions.map(a => a.name).join(', ')}.</div>`;
+  }
+  return html;
+}
+
+function updateSectorBudget(sid) {
+  const s = SECTORS[sid];
+  let totalCost = 0;
+  let totalProd = 0;
+  STATE.selectedActions.forEach(id => {
+    const a = ACTIONS.find(x => x.id === id);
+    if (!a || a.timeframe === 'long') return;
+    if (!a.compatible.includes(sid)) return;
+    totalCost += a.costAmount[sid] || 0;
+    totalProd += a.effects[sid] || 0;
+  });
+  // Add inventory
+  totalProd += s.inventory;
+  const covered = Math.min(ORDER, totalProd);
+  const rejected = ORDER - covered;
+  const budgetUsed = Math.min(totalCost, s.budget);
+  const budgetPct = Math.round((budgetUsed / s.budget) * 100);
+  const remaining = s.budget - totalCost;
+
+  const el = (id) => document.getElementById(id);
+  if (el('dash-budget')) el('dash-budget').textContent = `$${Math.max(0, remaining).toLocaleString('es-CL')}`;
+  if (el('dash-addprod')) el('dash-addprod').textContent = `${totalProd} unidades`;
+  if (el('dash-rejected')) el('dash-rejected').textContent = Math.max(0, rejected);
+  if (el('budget-meter-fill')) el('budget-meter-fill').style.width = `${Math.min(100, budgetPct)}%`;
+  if (el('budget-pct-label')) el('budget-pct-label').textContent = `${budgetPct}%`;
+  const mtrack = el('budget-meter-track');
+  if (mtrack) {
+    if (totalCost > s.budget) mtrack.classList.add('warning');
+    else mtrack.classList.remove('warning');
+    mtrack.setAttribute('aria-valuenow', Math.min(100, budgetPct));
+  }
+}
+
+function applySector() {
+  const sid = STATE.currentSector;
+  if (!sid) return;
+  const s = SECTORS[sid];
+
+  let totalCost = 0;
+  let additionalProd = 0;
+  const actionsUsed = [];
+  STATE.selectedActions.forEach(id => {
+    const a = ACTIONS.find(x => x.id === id);
+    if (!a || a.timeframe === 'long') return;
+    if (!a.compatible.includes(sid)) return;
+    totalCost += a.costAmount[sid] || 0;
+    additionalProd += a.effects[sid] || 0;
+    actionsUsed.push(a);
+  });
+  additionalProd += s.inventory;
+  const covered = Math.min(ORDER, additionalProd);
+  const rejected = ORDER - covered;
+  const responsePct = Math.round((additionalProd / ORDER) * 100);
+  const budgetOk = totalCost <= s.budget;
+  const challengeMet = covered >= 800 && budgetOk;
+
+  // Calculate elasticity classification
+  let elastLabel, elastClass;
+  if (additionalProd < ORDER * 0.4) { elastLabel = 'Oferta relativamente inelástica'; elastClass = 'elast-low'; }
+  else if (additionalProd < ORDER * 0.8) { elastLabel = 'Oferta de elasticidad intermedia'; elastClass = 'elast-mid'; }
+  else { elastLabel = 'Oferta relativamente elástica'; elastClass = 'elast-high'; }
+
+  STATE.sectorResults[sid] = { additionalProd, covered, rejected, totalCost, budgetOk, challengeMet, responsePct, actionsUsed, elastLabel, elastClass };
+
+  // Show results
+  const rp = document.getElementById('sector-results-panel');
+  rp.style.display = 'block';
+  rp.innerHTML = buildSectorResults(sid, s, STATE.sectorResults[sid]);
+
+  // Hide apply, show next
+  document.getElementById('btn-apply-sector').style.display = 'none';
+  document.getElementById('btn-next-sector').style.display = 'inline-flex';
+
+  // Mark completed
+  STATE.sectorsCompleted.push(sid);
+  document.getElementById(`status-${sid}`).textContent = '✓ Completado';
+  document.getElementById(`status-${sid}`).className = 'sector-status-badge status-done';
+  const card = document.querySelector(`.sector-card[data-sector="${sid}"]`);
+  if (card) card.classList.add('done');
+
+  // Update badge
+  const badgeKey = sid === 'bakery' ? 'bakery' : sid === 'agri' ? 'agri' : 'soft';
+  const badge = document.getElementById(`badge-${badgeKey}`);
+  if (badge) badge.classList.add('completed');
+
+  updateProgress();
+  announce(`Resultados del sector ${s.name}: cubriste ${covered} de 1.000 unidades.`);
+}
+
+function buildSectorResults(sid, s, r) {
+  const responseLevel = r.responsePct < 40 ? 'Baja' : r.responsePct < 80 ? 'Media' : 'Alta';
+  const responseLvlClass = r.responsePct < 40 ? 'rl-low' : r.responsePct < 80 ? 'rl-mid' : 'rl-high';
+  const feedbackMsg = getFeedback(sid, r);
+
+  return `
+    <div style="margin-top:20px">
+      <p class="section-title" style="font-size:1rem;color:var(--avail-color)">✅ Resultado — ${s.name}</p>
+      <div class="results-grid" role="list">
+        <div class="result-card" role="listitem">
+          <div class="result-number ${r.covered > 800 ? 'good' : r.covered > 400 ? 'warn' : 'bad'}" aria-label="${r.covered} unidades cubiertas">${r.covered}</div>
+          <div class="result-label">Unidades cubiertas</div>
+        </div>
+        <div class="result-card" role="listitem">
+          <div class="result-number good" aria-label="${r.additionalProd} unidades adicionales">${r.additionalProd}</div>
+          <div class="result-label">Producción adicional</div>
+        </div>
+        <div class="result-card" role="listitem">
+          <div class="result-number ${r.rejected > 0 ? 'bad' : 'good'}" aria-label="${r.rejected} unidades rechazadas">${r.rejected}</div>
+          <div class="result-label">Unidades rechazadas</div>
+        </div>
+        <div class="result-card" role="listitem">
+          <div class="result-number ${r.budgetOk ? 'good' : 'bad'}" aria-label="Costo $${r.totalCost.toLocaleString('es-CL')}">$${(r.totalCost/1000000).toFixed(1)}M</div>
+          <div class="result-label">Costo de respuesta</div>
+        </div>
+      </div>
+
+      <div class="response-meter" role="region" aria-label="Nivel de respuesta">
+        <div class="response-meter-title">Medidor de respuesta (${r.responsePct}%)</div>
+        <div class="response-levels" aria-hidden="true">
+          <div class="rl rl-low ${r.responsePct < 40 ? '' : 'inactive'}">Baja &lt;40%</div>
+          <div class="rl rl-mid ${r.responsePct >= 40 && r.responsePct < 80 ? '' : 'inactive'}">Media 40–80%</div>
+          <div class="rl rl-high ${r.responsePct >= 80 ? '' : 'inactive'}">Alta &gt;80%</div>
+        </div>
+        <div class="response-pointer" aria-live="polite">Nivel de respuesta: <strong>${responseLevel}</strong> · ${r.responsePct}% del pedido cubierto</div>
+      </div>
+
+      <div class="info-box">
+        <strong>Principal restricción:</strong> ${s.mainRestriction}<br>
+        <strong>Clasificación:</strong> <span class="elasticity-badge ${r.elastClass}">${r.elastLabel}</span>
+      </div>
+
+      <div class="feedback-box visible ${r.challengeMet ? 'success' : 'warning'}" role="status" aria-live="polite">
+        ${r.challengeMet ? '🏅 ¡Desafío superado! Cubriste más de 800 unidades sin exceder el presupuesto.' : r.covered >= 800 ? '⚠️ Cubriste el pedido mínimo, pero el presupuesto fue superado.' : `💡 ${feedbackMsg}`}
+      </div>
+
+      <div class="feedback-box visible" style="background:#F3F0FB;border-color:var(--soft-color)" role="note">
+        📊 ${feedbackMsg}
+      </div>
+    </div>`;
+}
+
+function getFeedback(sid, r) {
+  if (sid === 'bakery') {
+    if (r.covered < 500) return 'La panadería enfrenta una restricción física que limita su respuesta: los hornos y el espacio son fijos en el corto plazo.';
+    if (r.covered < 800) return `La panadería cubrió ${r.covered} de las 1.000 unidades. La principal restricción fue la capacidad de los hornos.`;
+    return 'La panadería respondió bien gracias a horas extraordinarias e inventarios. Los hornos, sin embargo, siguen siendo el límite superior de la producción a corto plazo.';
+  }
+  if (sid === 'agri') {
+    if (r.covered < 300) return 'La agricultura tiene una respuesta muy limitada en 24 horas: no puede producir nuevas cosechas que requieren semanas o meses.';
+    return `El sector agrícola cubrió ${r.covered} unidades. La disponibilidad de inventarios permite responder rápidamente, pero la maduración del cultivo impone un techo biológico que no puede superarse.`;
+  }
+  if (sid === 'soft') {
+    if (r.covered > 800) return 'La producción digital puede escalar con mayor facilidad. Distribuir copias adicionales requiere pocos insumos físicos, lo que hace a la oferta muy elástica en el corto plazo.';
+    return `El software cubrió ${r.covered} unidades. La infraestructura de servidores y el soporte al cliente son las principales restricciones.`;
+  }
+  return '';
+}
+
+function nextSector() {
+  const remaining = SECTOR_ORDER.filter(s => !STATE.sectorsCompleted.includes(s));
+  if (remaining.length > 0) {
+    document.getElementById('sector-workspace').style.display = 'none';
+    document.getElementById('sector-results-panel').style.display = 'none';
+    document.getElementById('sector-btn-row').style.display = 'none';
+    document.getElementById('btn-next-sector').style.display = 'none';
+    announce('Selecciona el siguiente sector para continuar.');
+  } else {
+    // All sectors done, go to long run
+    STATE.step = 3;
+    updateProgress();
+    buildLongRun();
+    showStep('step-longrun');
+  }
+}
+
+/* ============================================================
+   LONG RUN
+   ============================================================ */
+function buildLongRun() {
+  const ws = document.getElementById('longrun-workspace');
+  let html = '';
+  SECTOR_ORDER.forEach(sid => {
+    const s = SECTORS[sid];
+    const sr = STATE.sectorResults[sid] || { covered: 0, additionalProd: 0 };
+    html += `
+      <div class="card" style="margin-bottom:16px;border-top:4px solid ${s.color}">
+        <h3 style="font-weight:700;margin-bottom:4px">${s.icon} ${s.name} — Inversiones a largo plazo</h3>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px">Corto plazo: cubriste ${sr.covered} de 1.000 unidades. ¿Cuánto puede mejorar en seis meses?</p>
+        <div class="long-run-actions" id="lr-actions-${sid}" role="group" aria-label="Acciones de largo plazo para ${s.name}">
+          ${LONG_RUN_ACTIONS.map(la => {
+            const b = la.boost[sid];
+            if (b === 0) return '';
+            return `
+              <div class="lr-action" data-sid="${sid}" data-lrid="${la.id}" tabindex="0" role="checkbox" aria-checked="false"
+                onclick="toggleLrAction('${sid}','${la.id}',this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleLrAction('${sid}','${la.id}',this)}">
+                <div class="lr-action-icon" aria-hidden="true">${la.icon}</div>
+                <div class="lr-action-name">${la.name}</div>
+                <div class="lr-action-boost">+${b.toLocaleString('es-CL')} unidades · $${la.cost.toLocaleString('es-CL')}</div>
+              </div>`;
+          }).join('')}
+        </div>
+        <div id="lr-result-${sid}" style="margin-top:10px;font-size:0.85rem;color:var(--text-muted)">Selecciona inversiones para ver el potencial.</div>
+      </div>`;
+  });
+  ws.innerHTML = html;
+}
+
+const selectedLrActions = {};
+function toggleLrAction(sid, lrid, el) {
+  if (!selectedLrActions[sid]) selectedLrActions[sid] = new Set();
+  if (selectedLrActions[sid].has(lrid)) {
+    selectedLrActions[sid].delete(lrid);
+    el.classList.remove('selected');
+    el.setAttribute('aria-checked', 'false');
+  } else {
+    selectedLrActions[sid].add(lrid);
+    el.classList.add('selected');
+    el.setAttribute('aria-checked', 'true');
+  }
+  updateLrPreview(sid);
+}
+
+function updateLrPreview(sid) {
+  const s = SECTORS[sid];
+  let boost = s.inventory;
+  let cost = 0;
+  if (selectedLrActions[sid]) {
+    selectedLrActions[sid].forEach(lrid => {
+      const la = LONG_RUN_ACTIONS.find(x => x.id === lrid);
+      if (la) { boost += la.boost[sid]; cost += la.cost; }
+    });
+  }
+  // Add short-run actions still valid
+  STATE.selectedActions.forEach(id => {
+    const a = ACTIONS.find(x => x.id === id);
+    if (a && a.compatible.includes(sid)) boost += a.effects[sid] || 0;
+  });
+  // Cap to max long
+  boost = Math.min(boost, s.maxLong);
+  const covered = Math.min(ORDER, boost);
+  const el = document.getElementById(`lr-result-${sid}`);
+  if (el) el.innerHTML = `<strong style="color:var(--long-color)">Producción adicional estimada: ${boost.toLocaleString('es-CL')} unidades · Costo adicional: $${cost.toLocaleString('es-CL')}</strong> · Pedido cubierto: ${covered}/1.000`;
+  STATE.longRunResults[sid] = { boost, covered, cost };
+}
+
+function applyLongRun() {
+  SECTOR_ORDER.forEach(sid => {
+    if (!STATE.longRunResults[sid]) {
+      const s = SECTORS[sid];
+      STATE.longRunResults[sid] = { boost: s.maxLong, covered: Math.min(ORDER, s.maxLong), cost: 0 };
+    }
+  });
+  STATE.step = 4;
+  document.getElementById('badge-longrun').classList.add('completed');
+  updateProgress();
+  buildComparison();
+  showStep('step-comparison');
+}
+
+/* ============================================================
+   COMPARISON
+   ============================================================ */
+function buildComparison() {
+  const container = document.getElementById('comparison-content');
+
+  let html = `
+    <div class="chart-container">
+      <div class="chart-title">Producción adicional: Corto vs. Largo Plazo</div>
+      ${buildBarChart()}
+    </div>
+
+    <div class="overflow-x">
+      <table class="comparison-table" aria-label="Comparación de producción adicional por sector y plazo">
+        <caption style="text-align:left;font-weight:700;margin-bottom:8px;font-size:0.9rem">Tabla: Capacidad de respuesta ante un pedido de 1.000 unidades</caption>
+        <thead>
+          <tr>
+            <th>Sector</th>
+            <th class="col-short">Prod. adicional en 24 h</th>
+            <th class="col-long">Prod. adicional en 6 meses</th>
+            <th>Cambio en capacidad</th>
+            <th>Corto plazo</th>
+            <th>Largo plazo</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+  SECTOR_ORDER.forEach(sid => {
+    const s = SECTORS[sid];
+    const sr = STATE.sectorResults[sid] || { additionalProd: 0, elastLabel: '—', elastClass: '' };
+    const lr = STATE.longRunResults[sid] || { boost: s.maxLong };
+    const changeLabel = sid === 'bakery' ? 'Alto' : sid === 'agri' ? 'Alto, condicionado por ciclos biológicos' : 'Muy alto';
+    const lrElast = sid === 'bakery' ? 'Más elástica' : sid === 'agri' ? 'Más elástica (limitada)' : 'Muy elástica';
+    const lrClass = sid === 'soft' ? 'elast-vhigh' : 'elast-high';
+    html += `
+          <tr>
+            <td><strong>${s.icon} ${s.name}</strong></td>
+            <td class="col-short">${sr.additionalProd.toLocaleString('es-CL')}</td>
+            <td class="col-long">${lr.boost.toLocaleString('es-CL')}</td>
+            <td>${changeLabel}</td>
+            <td><span class="elasticity-badge ${sr.elastClass}">${sr.elastLabel}</span></td>
+            <td><span class="elasticity-badge ${lrClass}">${lrElast}</span></td>
+          </tr>`;
+  });
+
+  html += `
+        </tbody>
+      </table>
+    </div>
+
+    <div class="conclusion-card" role="note" aria-label="Conclusión principal">
+      <h4>Conclusión principal</h4>
+      <p>La oferta suele ser <strong>más elástica en el largo plazo</strong> porque la empresa puede modificar más insumos y ampliar su capacidad. En el corto plazo, las restricciones físicas, biológicas y tecnológicas limitan la respuesta productiva.</p>
+    </div>
+
+    <div class="overflow-x">
+      <table class="comparison-table" aria-label="Clasificación de elasticidad por sector y plazo">
+        <thead>
+          <tr><th>Sector</th><th>Corto plazo</th><th>Largo plazo</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>🍞 Panadería</td><td><span class="elasticity-badge elast-mid">Intermedia</span></td><td><span class="elasticity-badge elast-high">Más elástica</span></td></tr>
+          <tr><td>🌾 Agricultura</td><td><span class="elasticity-badge elast-low">Inelástica</span></td><td><span class="elasticity-badge elast-high">Más elástica (condicionada)</span></td></tr>
+          <tr><td>💻 Software</td><td><span class="elasticity-badge elast-high">Elástica</span></td><td><span class="elasticity-badge elast-vhigh">Muy elástica</span></td></tr>
+        </tbody>
+      </table>
+    </div>`;
+
+  container.innerHTML = html;
+
+  // Reveal formula and award after a short delay
+  setTimeout(() => {
+    const f = document.getElementById('formula-reveal');
+    if (f) f.style.display = 'block';
+    const aw = document.getElementById('award-section');
+    if (aw) aw.style.display = 'block';
+    announce('Comparación completa. Revisa los resultados y la conclusión final.');
+  }, 600);
+}
+
+/* ============================================================
+   BAR CHART (SVG)
+   ============================================================ */
+function buildBarChart() {
+  const data = SECTOR_ORDER.map(sid => {
+    const s = SECTORS[sid];
+    const sr = STATE.sectorResults[sid] || { additionalProd: 0 };
+    const lr = STATE.longRunResults[sid] || { boost: s.maxLong };
+    return { name: s.name, icon: s.icon, short: sr.additionalProd, long: lr.boost, color: s.color };
+  });
+
+  const maxVal = Math.max(...data.map(d => d.long), ORDER) * 1.1;
+  const w = 900, h = 260, padL = 70, padR = 30, padT = 24, padB = 56;
+  const chartW = w - padL - padR;
+  const chartH = h - padT - padB;
+  const groupW = chartW / data.length;
+  const barW = groupW * 0.3;
+
+  const scaleY = (v) => chartH - (v / maxVal) * chartH;
+
+  let bars = '';
+  let labels = '';
+  data.forEach((d, i) => {
+    const x0 = padL + i * groupW + groupW * 0.1;
+    const x1 = x0 + barW + 6;
+    const yS = scaleY(d.short);
+    const yL = scaleY(d.long);
+
+    bars += `
+      <rect x="${x0}" y="${padT + yS}" width="${barW}" height="${chartH - yS}" fill="${d.color}" opacity="0.85" rx="3" aria-label="${d.name} corto plazo: ${d.short}"/>
+      <rect x="${x1}" y="${padT + yL}" width="${barW}" height="${chartH - yL}" fill="#1565C0" opacity="0.75" rx="3" aria-label="${d.name} largo plazo: ${d.long}"/>
+      <text x="${x0 + barW/2}" y="${padT + yS - 4}" text-anchor="middle" font-size="9" fill="${d.color}" font-weight="600">${d.short}</text>
+      <text x="${x1 + barW/2}" y="${padT + yL - 4}" text-anchor="middle" font-size="9" fill="#1565C0" font-weight="600">${d.long >= 1000 ? (d.long/1000).toFixed(0)+'k' : d.long}</text>`;
+
+    labels += `<text x="${padL + i * groupW + groupW/2}" y="${h - 8}" text-anchor="middle" font-size="11" fill="#555">${d.icon} ${d.name}</text>`;
+  });
+
+  // Y axis ticks
+  let yAxis = '';
+  [0, ORDER/2, ORDER, maxVal * 0.75].forEach(v => {
+    const y = padT + scaleY(v);
+    const lab = v >= 1000 ? (v/1000).toFixed(0) + 'k' : Math.round(v);
+    yAxis += `<line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="${padL - 6}" y="${y + 4}" text-anchor="end" font-size="9" fill="#888">${lab}</text>`;
+  });
+
+  // ORDER line
+  const orderY = padT + scaleY(ORDER);
+
+  return `
+    <figure>
+      <svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Gráfico de barras: producción adicional corto vs largo plazo" style="display:block;width:100%;max-width:${w}px;margin:0 auto">
+        <title>Producción adicional por sector y plazo</title>
+        <desc>Comparación de producción adicional en 24 horas vs 6 meses para panadería, agricultura y software.</desc>
+        ${yAxis}
+        <line x1="${padL}" y1="${orderY}" x2="${w - padR}" y2="${orderY}" stroke="#E65100" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="${w - padR - 2}" y="${orderY - 4}" text-anchor="end" font-size="9" fill="#E65100" font-weight="600">Pedido: 1.000</text>
+        ${bars}
+        ${labels}
+        <!-- Legend -->
+        <rect x="${padL}" y="6" width="12" height="10" fill="#D4722A" opacity="0.85" rx="2"/>
+        <text x="${padL + 16}" y="15" font-size="10" fill="#555">Corto plazo</text>
+        <rect x="${padL + 85}" y="6" width="12" height="10" fill="#1565C0" opacity="0.75" rx="2"/>
+        <text x="${padL + 101}" y="15" font-size="10" fill="#555">Largo plazo</text>
+      </svg>
+      <figcaption style="font-size:0.78rem;color:var(--text-muted);margin-top:6px">Producción adicional en unidades ante un pedido de 1.000 unidades. La línea naranja punteada indica el tamaño del pedido.</figcaption>
+    </figure>`;
+}
+
+/* ============================================================
+   PROGRESS
+   ============================================================ */
+function updateProgress() {
+  const total = 4;
+  const pct = Math.round((STATE.step / total) * 100);
+  const bar = document.getElementById('progress-bar');
+  const role = document.getElementById('progress-bar-role');
+  const label = document.getElementById('progress-pct');
+  if (bar) bar.style.width = `${pct}%`;
+  if (role) role.setAttribute('aria-valuenow', pct);
+  if (label) label.textContent = `${pct}%`;
+}
+
+/* ============================================================
+   ANNOUNCE (ARIA LIVE)
+   ============================================================ */
+function announce(msg) {
+  const el = document.getElementById('feedback');
+  if (el) { el.textContent = ''; setTimeout(() => { el.textContent = msg; }, 100); }
+}
+
+/* ============================================================
+   ANIMATIONS TOGGLE
+   ============================================================ */
+function toggleAnimations() {
+  STATE.animationsEnabled = !STATE.animationsEnabled;
+  const state = document.getElementById('anim-state');
+  if (state) state.textContent = STATE.animationsEnabled ? 'Activadas' : 'Desactivadas';
+  document.documentElement.style.setProperty('--transition', STATE.animationsEnabled ? '0.2s ease' : '0s');
+  if (!STATE.animationsEnabled) {
+    const style = document.createElement('style');
+    style.id = 'no-anim';
+    style.textContent = '*, *::before, *::after { animation: none !important; transition: none !important; }';
+    document.head.appendChild(style);
+  } else {
+    const old = document.getElementById('no-anim');
+    if (old) old.remove();
+  }
+}
+
+/* ============================================================
+   RESET
+   ============================================================ */
+function resetActivity() {
+  STATE.selectedActions.clear();
+  STATE.currentSector = null;
+  STATE.sectorsCompleted = [];
+  STATE.sectorResults = {};
+  STATE.longRunResults = {};
+  STATE.hintIndex = 0;
+  STATE.step = 1;
+  for (const k in selectedLrActions) delete selectedLrActions[k];
+
+  // Reset badges
+  ['bakery', 'agri', 'soft', 'longrun'].forEach(k => {
+    const b = document.getElementById(`badge-${k}`);
+    if (b) b.classList.remove('completed');
+  });
+  ['bakery', 'agri', 'soft'].forEach(sid => {
+    const el = document.getElementById(`status-${sid}`);
+    if (el) { el.textContent = 'Pendiente'; el.className = 'sector-status-badge status-pending'; }
+    const card = document.querySelector(`.sector-card[data-sector="${sid}"]`);
+    if (card) card.classList.remove('done', 'active-sector');
+  });
+
+  // Reset workspace
+  const ws = document.getElementById('sector-workspace');
+  if (ws) ws.style.display = 'none';
+  const rp = document.getElementById('sector-results-panel');
+  if (rp) rp.style.display = 'none';
+  const srow = document.getElementById('sector-btn-row');
+  if (srow) srow.style.display = 'none';
+
+  updateProgress();
+  renderActions();
+  showStep('step-actions');
+  announce('Actividad reiniciada. Selecciona nuevas acciones para comenzar.');
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  renderActions();
+  updateProgress();
+});
+</script>
+</body>
+</html>

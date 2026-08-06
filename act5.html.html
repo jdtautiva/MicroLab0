@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El festival inesperado — Oferta de la empresa y de la industria</title>
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cafe: #c0550a; --cafe-light: #fdf0e8; --cafe-border: #f0a070;
+  --hotel: #1a6fa0; --hotel-light: #e8f3fb; --hotel-border: #70b8e8;
+  --granja: #1e7e34; --granja-light: #e8f6ec; --granja-border: #70c888;
+  --app: #6c3dab; --app-light: #f2ecfb; --app-border: #b088e0;
+  --total: #1a2e5a; --total-light: #e8ecf8;
+  --unab-blue: #003366; --unab-accent: #0066cc;
+  --gray-100: #f8f9fa; --gray-200: #e9ecef; --gray-300: #dee2e6;
+  --gray-600: #6c757d; --gray-800: #343a40;
+  --success: #198754; --warning: #ffc107; --danger: #dc3545;
+  --radius: 12px; --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --transition: 0.2s ease;
+}
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6fb; color: var(--gray-800); line-height: 1.5; }
+h1,h2,h3,h4 { font-weight: 700; }
+button { cursor: pointer; border: none; outline: none; font-family: inherit; transition: all var(--transition); }
+button:focus-visible { outline: 3px solid var(--unab-accent); outline-offset: 2px; }
+input[type=range] { accent-color: var(--unab-accent); }
+input[type=number] { font-family: inherit; }
+table { border-collapse: collapse; width: 100%; }
+th, td { padding: 8px 12px; text-align: right; }
+th { background: var(--unab-blue); color: #fff; font-weight: 600; }
+tr:nth-child(even) { background: var(--gray-100); }
+td:first-child, th:first-child { text-align: left; }
+.hidden { display: none !important; }
+
+/* ===== HEADER — FORMATO ACTIVIDAD 1 ===== */
+.inst-header {
+  background: #fff;
+  border-bottom: 4px solid var(--unab-blue);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.inst-header img { height: 56px; width: auto; max-width: 180px; object-fit: contain; }
+.inst-header-fallback {
+  width: 56px;
+  height: 56px;
+  background: var(--unab-blue);
+  border-radius: 8px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+.inst-header-text h1 { font-size: .95rem; font-weight: 700; color: var(--unab-blue); }
+.inst-header-text p { font-size: .8rem; color: var(--gray-600); }
+
+/* ===== PROGRESS BAR ===== */
+#progress-wrapper { background: #fff; border-bottom: 1px solid var(--gray-200); padding: 8px 32px; }
+.progress-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size: 0.8rem; color: var(--gray-600); }
+.progress-bar-outer { background: var(--gray-200); border-radius: 99px; height: 8px; }
+.progress-bar-inner { background: linear-gradient(90deg, var(--unab-blue), var(--unab-accent)); border-radius: 99px; height: 8px; transition: width 0.5s ease; }
+
+/* ===== MAIN ===== */
+main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+
+/* ===== SECTIONS ===== */
+.section-card {
+  background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 28px 32px; margin-bottom: 24px;
+}
+.section-title {
+  font-size: 1.25rem; color: var(--unab-blue); margin-bottom: 16px;
+  padding-bottom: 10px; border-bottom: 2px solid var(--gray-200);
+  display: flex; align-items: center; gap: 10px;
+}
+
+/* ===== NEWS CARD ===== */
+#festival-news .news-banner {
+  background: linear-gradient(135deg, #1a2e5a 0%, #0066cc 100%);
+  color: #fff; border-radius: var(--radius); padding: 28px 32px;
+  position: relative; overflow: hidden;
+}
+#festival-news .news-banner::before {
+  content: '🎪';
+  position: absolute; right: 24px; top: 50%; transform: translateY(-50%);
+  font-size: 5rem; opacity: 0.15;
+}
+.news-tag { background: #ffc107; color: #000; font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; letter-spacing: 1px; display: inline-block; margin-bottom: 12px; }
+.news-headline { font-size: 1.35rem; font-weight: 700; margin-bottom: 12px; line-height: 1.3; }
+.news-body { font-size: 0.95rem; opacity: 0.9; margin-bottom: 16px; }
+.news-role { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 12px 16px; font-size: 0.9rem; border-left: 3px solid #ffc107; }
+.news-role strong { display: block; margin-bottom: 4px; }
+.btn-start { margin-top: 20px; background: #ffc107; color: #000; font-weight: 700; padding: 12px 28px; border-radius: 8px; font-size: 1rem; }
+.btn-start:hover { background: #ffca2c; transform: translateY(-1px); }
+
+/* ===== COMPANY GRID ===== */
+#company-selection { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+@media (max-width: 900px) { #company-selection { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { #company-selection { grid-template-columns: 1fr; } }
+
+.company-card {
+  background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
+  border: 2px solid var(--gray-200); padding: 20px 16px; cursor: pointer;
+  transition: all var(--transition); text-align: center; position: relative;
+}
+.company-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+.company-card.active { border-color: currentColor; box-shadow: 0 0 0 3px rgba(0,0,0,0.1); }
+.company-card.completed::after { content: '✓'; position: absolute; top: 8px; right: 8px; background: var(--success); color: #fff; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+.company-card[data-company="cafeteria"] { color: var(--cafe); }
+.company-card[data-company="hotel"] { color: var(--hotel); }
+.company-card[data-company="granja"] { color: var(--granja); }
+.company-card[data-company="app"] { color: var(--app); }
+.company-icon { width: 64px; height: 64px; margin: 0 auto 10px; }
+.company-name { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+.company-product { font-size: 0.8rem; color: var(--gray-600); }
+.company-status-badge { margin-top: 8px; font-size: 0.75rem; font-weight: 600; padding: 3px 8px; border-radius: 99px; display: inline-block; }
+.company-selection-actions {
+  margin-top: 20px;
+  padding: 16px;
+  background: #f8faff;
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.company-selection-message {
+  color: var(--gray-600);
+  font-size: .9rem;
+}
+.company-selection-message strong { color: var(--unab-blue); }
+.badge-pending { background: var(--gray-200); color: var(--gray-600); }
+.badge-done { background: #d1fae5; color: #065f46; }
+
+/* ===== MANAGEMENT PANEL ===== */
+#company-management { display: none; }
+#company-management.visible { display: block; }
+.mgmt-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.mgmt-icon { width: 52px; height: 52px; flex-shrink: 0; }
+.mgmt-company-name { font-size: 1.4rem; font-weight: 700; }
+.mgmt-product { font-size: 0.9rem; color: var(--gray-600); }
+
+.info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+@media (max-width: 600px) { .info-grid { grid-template-columns: 1fr 1fr; } }
+.info-box { background: var(--gray-100); border-radius: 8px; padding: 12px 14px; }
+.info-label { font-size: 0.75rem; color: var(--gray-600); margin-bottom: 2px; }
+.info-value { font-size: 1.1rem; font-weight: 700; }
+.info-box.price-up .info-value { color: var(--success); }
+
+.restrictions-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 14px 16px; margin-bottom: 20px; }
+.restrictions-box h4 { font-size: 0.85rem; color: #856404; margin-bottom: 8px; }
+.restrictions-list { list-style: none; }
+.restrictions-list li { font-size: 0.85rem; color: #856404; padding: 2px 0; }
+.restrictions-list li::before { content: '⚠ '; }
+
+.actions-box { margin-bottom: 20px; }
+.actions-box h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; color: var(--gray-800); }
+.actions-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+@media (max-width: 480px) { .actions-grid { grid-template-columns: 1fr; } }
+.action-item { border: 1px solid var(--gray-300); border-radius: 8px; padding: 10px 12px; cursor: pointer; transition: all var(--transition); display: flex; align-items: flex-start; gap: 8px; }
+.action-item:hover { border-color: var(--unab-accent); background: #f0f6ff; }
+.action-item.selected { border-color: var(--unab-accent); background: #e8f0fe; }
+.action-item input[type=checkbox] { margin-top: 2px; accent-color: var(--unab-accent); }
+.action-label { font-size: 0.85rem; font-weight: 600; }
+.action-detail { font-size: 0.75rem; color: var(--gray-600); }
+
+.slider-section { background: var(--gray-100); border-radius: 10px; padding: 18px 20px; margin-bottom: 20px; }
+.slider-section h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 14px; }
+.slider-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.slider-row label { font-size: 0.8rem; color: var(--gray-600); width: 120px; flex-shrink: 0; }
+.slider-row input[type=range] { flex: 1; }
+.slider-row .slider-num { width: 70px; text-align: right; }
+.slider-row input[type=number] { width: 70px; padding: 4px 6px; border: 1px solid var(--gray-300); border-radius: 6px; text-align: right; font-size: 0.9rem; }
+
+.capacity-bar-wrap { margin-top: 10px; }
+.capacity-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--gray-600); margin-bottom: 4px; }
+.capacity-bar-outer { background: var(--gray-200); border-radius: 99px; height: 10px; }
+.capacity-bar-inner { height: 10px; border-radius: 99px; transition: width 0.3s; }
+
+.production-summary { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
+.prod-box { text-align: center; border-radius: 8px; padding: 10px; }
+.prod-box.initial { background: var(--gray-100); }
+.prod-box.delta { background: #e8f0fe; }
+.prod-box.total { background: #d1fae5; }
+.prod-box .prod-label { font-size: 0.72rem; color: var(--gray-600); margin-bottom: 2px; }
+.prod-box .prod-val { font-size: 1.2rem; font-weight: 700; }
+
+.feedback-inline { border-radius: 8px; padding: 12px 14px; margin-bottom: 14px; font-size: 0.9rem; }
+.feedback-inline.positive { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+.feedback-inline.warning { background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
+
+.btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-primary { background: var(--unab-blue); color: #fff; padding: 10px 22px; border-radius: 8px; font-size: 0.95rem; font-weight: 600; }
+.btn-primary:hover { background: var(--unab-accent); }
+.btn-primary:disabled { background: var(--gray-300); color: var(--gray-600); cursor: not-allowed; }
+.btn-secondary { background: var(--gray-200); color: var(--gray-800); padding: 10px 22px; border-radius: 8px; font-size: 0.95rem; }
+.btn-secondary:hover { background: var(--gray-300); }
+.btn-hint { background: #fff3cd; color: #856404; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; border: 1px solid #ffc107; }
+.btn-hint:hover { background: #ffe8a1; }
+.btn-danger { background: var(--danger); color: #fff; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; }
+
+/* ===== INDIVIDUAL RESULT ===== */
+#individual-result { display: none; }
+#individual-result.visible { display: block; }
+.result-message { font-size: 1rem; color: var(--gray-800); background: var(--gray-100); border-radius: 8px; padding: 14px 16px; margin-bottom: 16px; border-left: 4px solid var(--unab-accent); }
+
+.mini-chart-wrap { margin: 16px 0; }
+.mini-chart-wrap h4 { font-size: 0.85rem; color: var(--gray-600); margin-bottom: 8px; }
+
+/* ===== AGGREGATION ===== */
+.agg-bars { display: flex; flex-direction: column; gap: 10px; }
+.agg-bar-row { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; }
+.agg-bar-label { width: 130px; flex-shrink: 0; font-weight: 600; }
+.agg-bar-outer { flex: 1; background: var(--gray-200); border-radius: 99px; height: 24px; position: relative; overflow: hidden; }
+.agg-bar-fill { height: 24px; border-radius: 99px; display: flex; align-items: center; padding-left: 10px; color: #fff; font-size: 0.75rem; font-weight: 700; transition: width 0.8s ease; }
+.agg-bar-val { width: 60px; text-align: right; font-weight: 700; }
+
+/* ===== MARKET TABLE ===== */
+.table-wrapper { overflow-x: auto; }
+.market-table th, .market-table td { font-size: 0.88rem; padding: 8px 14px; }
+.market-table .col-total { font-weight: 700; color: var(--total); background: var(--total-light); }
+
+/* ===== SVG GRAPH ===== */
+.graph-wrapper { overflow-x: auto; }
+.supply-svg { display: block; margin: 0 auto; }
+.curve-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  background: #f8f9fa;
+  border: 1px solid var(--gray-200);
+  border-radius: 9px;
+}
+.curve-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .78rem;
+  font-weight: 650;
+  color: var(--gray-800);
+}
+.curve-legend-line {
+  width: 28px;
+  height: 0;
+  border-top: 3px solid currentColor;
+  flex: 0 0 auto;
+}
+.curve-legend-line.peer { border-top-style: dashed; border-top-width: 2px; }
+.curve-legend-empty { color: var(--gray-600); font-size: .8rem; }
+.axis-label { font-size: 12px; fill: #555; }
+.grid-line { stroke: #e5e7eb; stroke-width: 1; }
+.supply-dot { transition: r 0.3s; }
+.supply-line { transition: stroke-dashoffset 0.8s; }
+.supply-dot:hover { r: 8; cursor: pointer; }
+.dot-label { font-size: 11px; }
+
+/* ===== CHALLENGE ===== */
+.challenge-goal { background: linear-gradient(135deg, var(--unab-blue), var(--unab-accent)); color: #fff; border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px; }
+.challenge-goal h3 { margin-bottom: 8px; font-size: 1.1rem; }
+.challenge-goal p { opacity: 0.9; font-size: 0.9rem; }
+.challenge-controls { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-bottom: 16px; }
+@media (max-width: 600px) { .challenge-controls { grid-template-columns: 1fr; } }
+.challenge-company-ctrl { background: var(--gray-100); border-radius: 8px; padding: 12px 14px; }
+.challenge-company-ctrl label { font-size: 0.8rem; font-weight: 600; color: var(--gray-800); display: block; margin-bottom: 4px; }
+.challenge-total-display { font-size: 1.8rem; font-weight: 700; text-align: center; padding: 16px; }
+.challenge-total-display.goal-met { color: var(--success); }
+.challenge-total-display.goal-not { color: var(--danger); }
+.goal-meter { background: var(--gray-200); border-radius: 99px; height: 14px; margin: 8px 0; position: relative; }
+.goal-meter-fill { background: linear-gradient(90deg, var(--unab-accent), var(--success)); height: 14px; border-radius: 99px; transition: width 0.3s; }
+.goal-marker { position: absolute; top: -6px; height: 26px; width: 2px; background: var(--danger); }
+.goal-marker::after { content: 'Meta: 5.000'; position: absolute; top: -16px; left: -28px; font-size: 0.7rem; color: var(--danger); white-space: nowrap; }
+.badge-achieved { display: none; background: linear-gradient(135deg, #ffc107, #ff8c00); color: #fff; border-radius: var(--radius); padding: 20px 24px; text-align: center; }
+.badge-achieved.visible { display: block; }
+.badge-icon { font-size: 3rem; margin-bottom: 8px; }
+.badge-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+
+
+.peer-note {
+  background: #eef4fb;
+  border-left: 4px solid var(--unab-blue);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  font-size: .9rem;
+}
+.price-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 14px 0;
+}
+.challenge-price-btn {
+  border: 2px solid var(--gray-300);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--unab-blue);
+  padding: 12px 10px;
+  font-weight: 700;
+  font-size: .9rem;
+}
+.challenge-price-btn:hover { border-color: var(--unab-accent); background: #f0f6ff; }
+.challenge-price-btn.selected { border-color: var(--unab-blue); background: #e8f0fe; box-shadow: 0 0 0 3px rgba(0,51,102,.12); }
+.challenge-breakdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 14px 0;
+}
+.challenge-firm {
+  background: var(--gray-100);
+  border: 1px solid var(--gray-300);
+  border-radius: 9px;
+  padding: 12px;
+  text-align: center;
+}
+.challenge-firm strong { display: block; color: var(--unab-blue); margin-bottom: 4px; }
+.challenge-firm span { font-size: 1.1rem; font-weight: 800; }
+.challenge-feedback {
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-top: 12px;
+  font-size: .9rem;
+}
+.challenge-feedback.neutral { background: #e8f0fe; color: #17365d; border: 1px solid #9bbbe0; }
+.challenge-feedback.warning { background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
+.challenge-feedback.success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+@media (max-width: 700px) {
+  .price-choice-grid, .challenge-breakdown { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 430px) {
+  .price-choice-grid, .challenge-breakdown { grid-template-columns: 1fr; }
+}
+
+/* ===== COMPARISON TABLE ===== */
+.compare-table th { background: var(--unab-blue); }
+.response-high { color: var(--granja); font-weight: 700; }
+.response-med { color: var(--cafe); font-weight: 700; }
+.response-low { color: var(--danger); font-weight: 700; }
+
+/* ===== MOVEMENT VS DISPLACEMENT ===== */
+.mvd-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-bottom: 16px; }
+@media (max-width: 500px) { .mvd-grid { grid-template-columns: 1fr; } }
+.shock-card { border: 2px solid var(--gray-200); border-radius: 8px; padding: 14px; cursor: pointer; transition: all var(--transition); }
+.shock-card:hover { border-color: var(--unab-accent); }
+.shock-card.answered-correct { border-color: var(--success); background: #d1fae5; }
+.shock-card.answered-wrong { border-color: var(--danger); background: #fee2e2; }
+.shock-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 8px; }
+.shock-options { display: flex; gap: 8px; }
+.shock-btn { flex: 1; padding: 6px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; background: var(--gray-200); color: var(--gray-800); }
+.shock-btn:hover { background: var(--gray-300); }
+.shock-result { margin-top: 8px; font-size: 0.8rem; display: none; }
+.shock-result.show { display: block; }
+
+/* ===== TRANSITION QUESTION ===== */
+.question-box { background: linear-gradient(135deg, #e8ecf8, #d4e6ff); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; border-left: 4px solid var(--unab-blue); }
+.question-box p { font-size: 1.1rem; font-weight: 700; color: var(--unab-blue); }
+.discussion-transition {
+  background: #fff8e6;
+  border: 2px solid #e8bb55;
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin-bottom: 16px;
+}
+.discussion-transition .discussion-label {
+  display: inline-block;
+  background: #856404;
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: .72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 10px;
+}
+.discussion-transition p {
+  color: #5f4300;
+  font-size: 1.08rem;
+  font-weight: 750;
+  line-height: 1.55;
+}
+.discussion-prompts {
+  margin: 14px 0 0 20px;
+  color: #6e4d00;
+}
+.discussion-prompts li { margin-bottom: 7px; }
+
+/* ===== HINT PANEL ===== */
+.hint-panel { background: #fffbeb; border: 1px solid #fbbf24; border-radius: 8px; padding: 12px 14px; margin-top: 10px; display: none; font-size: 0.875rem; color: #92400e; }
+.hint-panel.show { display: block; }
+
+/* ===== FOOTER — FORMATO ACTIVIDAD 1 ===== */
+footer {
+  background: var(--unab-blue);
+  color: rgba(255,255,255,.85);
+  text-align: center;
+  padding: 1.25rem;
+  font-size: .82rem;
+}
+footer p { margin: 0; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes slideIn { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+.animate-in { animation: slideIn 0.4s ease forwards; }
+@keyframes pulse { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.05); } }
+
+@media (max-width: 560px) {
+  .inst-header { padding: .85rem 1rem; gap: .85rem; }
+  .inst-header img { height: 46px; }
+  .inst-header-fallback { width: 46px; height: 46px; }
+  .company-selection-actions { align-items: stretch; }
+  .company-selection-actions .btn-primary { width: 100%; }
+}
+.pulse { animation: pulse 0.6s ease; }
+
+/* ===== ARIA LIVE ===== */
+#aria-feedback { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+</style>
+</head>
+<body>
+
+<div id="aria-feedback" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ===== INSTITUTIONAL HEADER — FORMATO ACTIVIDAD 1 ===== -->
+<header class="inst-header" role="banner">
+  <img
+    id="logo-img"
+    src="https://facultades.unab.cl/economiaynegocios/wp-content/uploads/2022/03/logo-fen-negro.png"
+    alt="Logo de la Facultad de Economía y Negocios de la Universidad Andrés Bello"
+    onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';"
+  >
+  <div id="logo-fallback" class="inst-header-fallback" aria-hidden="true">FEN</div>
+  <div class="inst-header-text">
+    <h1>Universidad Andrés Bello</h1>
+    <p>Facultad de Economía y Negocios</p>
+  </div>
+</header>
+
+<!-- ===== PROGRESS BAR ===== -->
+<div id="progress-wrapper" role="navigation" aria-label="Progreso de la actividad">
+  <div class="progress-info">
+    <span id="progress-label">Introducción</span>
+    <span id="progress-pct">0%</span>
+  </div>
+  <div class="progress-bar-outer" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar-aria">
+    <div class="progress-bar-inner" id="progress-bar" style="width:0%"></div>
+  </div>
+</div>
+
+<main id="main-content" role="main">
+
+<!-- ===== SECTION 1: FESTIVAL NEWS ===== -->
+<div class="section-card animate-in" id="sec-news">
+  <div id="festival-news">
+    <div class="news-banner">
+      <div class="news-tag">🗞 NOTICIA URGENTE</div>
+      <div class="news-headline">La ciudad será sede de un festival masivo este fin de semana</div>
+      <div class="news-body">Se espera la llegada de miles de visitantes y los precios de alojamiento, alimentos, frutas y servicios digitales han comenzado a <strong>aumentar</strong>.</div>
+      <div class="news-role">
+        <strong>Tu rol: Coordinador de producción</strong>
+        El precio está aumentando. ¿Cuánto puede producir adicionalmente una empresa esta semana y cómo se compara con firmas similares?<br>
+        <em>Selecciona una empresa representativa, analiza su respuesta y luego construye la oferta de su industria agregando únicamente empresas que venden el mismo producto en el mismo mercado.</em>
+      </div>
+      <button class="btn-start" id="btn-start-activity" onclick="startActivity()">
+        🚀 Comenzar actividad
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 2: COMPANY SELECTION ===== -->
+<div class="section-card animate-in" id="sec-companies" style="display:none;">
+  <div class="section-title">
+    <span>🏢</span> Empresas que administras
+  </div>
+  <p style="margin-bottom:16px;font-size:0.9rem;color:var(--gray-600);">
+    Selecciona una empresa representativa. Después de analizarla, la compararás con otras firmas de la misma industria.
+  </p>
+  <div id="company-selection">
+    <div class="company-card" data-company="cafeteria" onclick="selectCompany('cafeteria')" role="button" tabindex="0" aria-pressed="false" aria-label="Seleccionar Cafetería" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectCompany('cafeteria')}">
+      <div class="company-icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="30" fill="#fdf0e8"/>
+          <path d="M20 40h24M22 40V28a10 10 0 0120 0v12" stroke="#c0550a" stroke-width="3" stroke-linecap="round"/>
+          <path d="M38 22c2-2 4-1 4-3" stroke="#c0550a" stroke-width="2" stroke-linecap="round"/>
+          <path d="M32 20c1-3 3-2 3-5" stroke="#c0550a" stroke-width="2" stroke-linecap="round"/>
+          <rect x="18" y="40" width="28" height="4" rx="2" fill="#c0550a"/>
+          <path d="M42 30h4a2 2 0 010 4h-4" stroke="#c0550a" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="company-name">Cafetería</div>
+      <div class="company-product">Bebidas y alimentos</div>
+      <div class="company-status-badge badge-pending" id="badge-cafeteria">Pendiente</div>
+    </div>
+    <div class="company-card" data-company="hotel" onclick="selectCompany('hotel')" role="button" tabindex="0" aria-pressed="false" aria-label="Seleccionar Hotel" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectCompany('hotel')}">
+      <div class="company-icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="30" fill="#e8f3fb"/>
+          <rect x="16" y="20" width="32" height="28" rx="2" fill="#1a6fa0" opacity="0.15"/>
+          <rect x="16" y="20" width="32" height="28" rx="2" stroke="#1a6fa0" stroke-width="2.5"/>
+          <rect x="22" y="26" width="6" height="5" rx="1" fill="#1a6fa0"/>
+          <rect x="36" y="26" width="6" height="5" rx="1" fill="#1a6fa0"/>
+          <rect x="22" y="35" width="6" height="5" rx="1" fill="#1a6fa0"/>
+          <rect x="36" y="35" width="6" height="5" rx="1" fill="#1a6fa0"/>
+          <rect x="28" y="38" width="8" height="10" rx="1" fill="#1a6fa0"/>
+          <path d="M24 20v-4a8 8 0 0116 0v4" stroke="#1a6fa0" stroke-width="2.5"/>
+        </svg>
+      </div>
+      <div class="company-name">Hotel</div>
+      <div class="company-product">Noches de alojamiento</div>
+      <div class="company-status-badge badge-pending" id="badge-hotel">Pendiente</div>
+    </div>
+    <div class="company-card" data-company="granja" onclick="selectCompany('granja')" role="button" tabindex="0" aria-pressed="false" aria-label="Seleccionar Granja de frutillas" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectCompany('granja')}">
+      <div class="company-icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="30" fill="#e8f6ec"/>
+          <path d="M22 44c0-10 10-18 10-18s10 8 10 18" stroke="#1e7e34" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M32 26v18" stroke="#1e7e34" stroke-width="2" stroke-linecap="round"/>
+          <ellipse cx="25" cy="36" rx="5" ry="4" fill="#e74c3c" opacity="0.9"/>
+          <ellipse cx="39" cy="36" rx="5" ry="4" fill="#e74c3c" opacity="0.9"/>
+          <ellipse cx="32" cy="32" rx="5" ry="4" fill="#e74c3c"/>
+          <path d="M25 32l2-3m0 0l2-2m-2 2l-2-2" stroke="#1e7e34" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="company-name">Granja de frutillas</div>
+      <div class="company-product">Cajas de frutillas frescas</div>
+      <div class="company-status-badge badge-pending" id="badge-granja">Pendiente</div>
+    </div>
+    <div class="company-card" data-company="app" onclick="selectCompany('app')" role="button" tabindex="0" aria-pressed="false" aria-label="Seleccionar Empresa de aplicaciones móviles" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectCompany('app')}">
+      <div class="company-icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="30" fill="#f2ecfb"/>
+          <rect x="22" y="14" width="20" height="36" rx="4" stroke="#6c3dab" stroke-width="2.5" fill="none"/>
+          <rect x="26" y="20" width="12" height="18" rx="2" fill="#6c3dab" opacity="0.15"/>
+          <circle cx="32" cy="44" r="2" fill="#6c3dab"/>
+          <path d="M28 24h8M28 28h6M28 32h4" stroke="#6c3dab" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M38 10l4-4m2 8l4-2M40 18l5 2" stroke="#6c3dab" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="company-name">App móvil</div>
+      <div class="company-product">Descargas de aplicación</div>
+      <div class="company-status-badge badge-pending" id="badge-app">Pendiente</div>
+    </div>
+  </div>
+
+  <div class="company-selection-actions" id="company-selection-actions">
+    <p class="company-selection-message" id="company-selection-message" aria-live="polite">
+      Selecciona una empresa para habilitar el botón de continuación.
+    </p>
+    <button class="btn-primary" id="btn-continue-company" type="button" onclick="continueWithSelectedCompany()" disabled>
+      Continuar con la empresa seleccionada →
+    </button>
+  </div>
+
+  <!-- Hint -->
+  <div style="text-align:right;margin-top:12px;">
+    <button class="btn-hint" onclick="showHint('companies')">💡 Solicitar pista</button>
+  </div>
+  <div class="hint-panel" id="hint-companies">
+    Revisa qué recursos pueden modificarse durante una semana y cuáles permanecen fijos.
+    Algunas empresas tienen más flexibilidad que otras para responder al aumento del precio.
+  </div>
+</div>
+
+<!-- ===== SECTION 3: COMPANY MANAGEMENT ===== -->
+<div class="section-card animate-in" id="sec-management" style="display:none;">
+  <div id="company-management">
+    <div class="mgmt-header">
+      <div class="mgmt-icon" id="mgmt-icon" aria-hidden="true"></div>
+      <div>
+        <div class="mgmt-company-name" id="mgmt-name"></div>
+        <div class="mgmt-product" id="mgmt-product"></div>
+      </div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <div class="info-label">Producción inicial semanal</div>
+        <div class="info-value" id="mgmt-init-prod"></div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">Precio inicial</div>
+        <div class="info-value" id="mgmt-price-init"></div>
+      </div>
+      <div class="info-box price-up">
+        <div class="info-label">Nuevo precio (festival) ↑</div>
+        <div class="info-value" id="mgmt-price-new"></div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">Aumento máximo posible</div>
+        <div class="info-value" id="mgmt-max-extra"></div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">Unidad</div>
+        <div class="info-value" id="mgmt-unit"></div>
+      </div>
+    </div>
+
+    <div class="restrictions-box">
+      <h4>⚠ Restricciones de corto plazo</h4>
+      <ul class="restrictions-list" id="mgmt-restrictions"></ul>
+    </div>
+
+    <div class="actions-box">
+      <h4>Acciones productivas disponibles</h4>
+      <div class="actions-grid" id="mgmt-actions"></div>
+    </div>
+
+    <div class="slider-section">
+      <h4>¿Cuánto aumentará la producción esta semana?</h4>
+      <div class="slider-row">
+        <label for="slider-extra">Aumento (0 – máx)</label>
+        <input type="range" id="slider-extra" min="0" max="100" value="0" oninput="updateSlider(this.value)" aria-label="Aumento de producción">
+        <input type="number" id="num-extra" min="0" max="100" value="0" oninput="updateSlider(this.value)" aria-label="Valor numérico del aumento">
+      </div>
+      <div class="production-summary">
+        <div class="prod-box initial">
+          <div class="prod-label">Producción inicial</div>
+          <div class="prod-val" id="sum-initial">—</div>
+        </div>
+        <div class="prod-box delta">
+          <div class="prod-label">+ Aumento</div>
+          <div class="prod-val" id="sum-delta">0</div>
+        </div>
+        <div class="prod-box total">
+          <div class="prod-label">= Total ofrecido</div>
+          <div class="prod-val" id="sum-total">—</div>
+        </div>
+      </div>
+      <div class="capacity-bar-wrap">
+        <div class="capacity-label">
+          <span>Capacidad adicional usada</span>
+          <span id="cap-pct">0%</span>
+        </div>
+        <div class="capacity-bar-outer" role="progressbar" aria-label="Porcentaje de capacidad adicional utilizada" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="cap-bar-aria">
+          <div class="capacity-bar-inner" id="cap-bar" style="width:0%;background:var(--success)"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feedback-inline hidden" id="mgmt-feedback"></div>
+
+    <div class="btn-group">
+      <button class="btn-primary" id="btn-confirm-prod" onclick="confirmProduction()">✅ Confirmar producción</button>
+      <button class="btn-secondary" onclick="closeCompany()">← Volver</button>
+      <button class="btn-hint" onclick="showHint('mgmt')">💡 Pista</button>
+    </div>
+    <div class="hint-panel" id="hint-mgmt"></div>
+  </div>
+</div>
+
+
+<!-- ===== SECTION 4: INDIVIDUAL RESULT ===== -->
+<div class="section-card animate-in" id="sec-individual" style="display:none;">
+  <div class="section-title"><span>📈</span> Resultado de oferta individual</div>
+  <div class="result-message" id="individual-message"></div>
+  <div class="mini-chart-wrap">
+    <h4>Curva de oferta de la empresa seleccionada</h4>
+    <svg class="supply-svg" id="mini-chart" width="420" height="240" viewBox="0 0 420 240" role="img" aria-label="Gráfico de oferta individual" aria-describedby="mini-chart-desc">
+      <title>Oferta individual</title>
+      <desc id="mini-chart-desc">Gráfico que muestra la cantidad ofrecida por una empresa a distintos precios.</desc>
+    </svg>
+    <p id="mini-chart-text" style="font-size:0.82rem;color:var(--gray-600);margin-top:6px;"></p>
+  </div>
+  <div class="peer-note">
+    <strong>Siguiente paso:</strong> esta empresa no se sumará con hoteles, granjas o aplicaciones.
+    Se comparará con otras firmas que ofrecen el mismo producto dentro de la misma industria.
+  </div>
+  <div class="btn-group" style="margin-top:16px;">
+    <button class="btn-primary" onclick="showMarketAggregation()">Comparar con empresas de la misma industria →</button>
+    <button class="btn-secondary" onclick="nextCompany()">← Elegir otra empresa</button>
+  </div>
+</div>
+
+<!-- ===== SECTION 5: SAME-INDUSTRY COMPARISON ===== -->
+<div class="section-card animate-in" id="sec-aggregation" style="display:none;">
+  <div class="section-title"><span>➕</span> <span id="aggregation-title">Comparación dentro de la industria</span></div>
+  <div id="aggregation-explanation" style="background:var(--total-light);border-radius:8px;padding:14px 16px;margin-bottom:20px;border-left:4px solid var(--total);"></div>
+  <div class="agg-bars" id="agg-bars"></div>
+  <div style="margin-top:16px;padding:12px 16px;background:#e8ecf8;border-radius:8px;font-size:0.9rem;" id="agg-total-box"></div>
+  <div class="btn-group" style="margin-top:16px;">
+    <button class="btn-primary" onclick="animateAgg()" id="btn-agg-animate">▶ Comparar progresivamente</button>
+    <button class="btn-primary" onclick="showMarketTable()" id="btn-show-table" style="display:none;">📋 Ver tabla de oferta de la industria →</button>
+  </div>
+</div>
+
+<!-- ===== SECTION 6: INDUSTRY SUPPLY TABLE ===== -->
+<div class="section-card animate-in" id="sec-table" style="display:none;">
+  <div class="section-title"><span>📋</span> <span id="market-table-title">Tabla de oferta de la industria</span></div>
+  <div class="table-wrapper">
+    <table class="market-table" id="market-table" aria-label="Tabla de oferta de la industria por precio">
+      <thead><tr id="market-table-head"></tr></thead>
+      <tbody id="market-table-body"></tbody>
+    </table>
+  </div>
+  <p id="market-table-note" style="font-size:0.82rem;color:var(--gray-600);margin-top:8px;"></p>
+  <div class="btn-group" style="margin-top:16px;">
+    <button class="btn-primary" onclick="showMarketGraph()">📈 Construir curva de oferta de la industria →</button>
+  </div>
+</div>
+
+<!-- ===== SECTION 7: INDUSTRY SUPPLY CURVE ===== -->
+<div class="section-card animate-in" id="sec-graph" style="display:none;">
+  <div class="section-title"><span>📈</span> <span id="market-graph-title">Curva de oferta de la industria</span></div>
+  <div class="graph-wrapper">
+    <div id="curve-legend" class="curve-legend" aria-label="Leyenda de las curvas de oferta">
+      <span class="curve-legend-empty">Agrega empresas comparables para mostrar las curvas y sus nombres.</span>
+    </div>
+    <svg class="supply-svg" id="market-supply-svg" width="560" height="390" viewBox="0 0 560 390" role="img" aria-label="Curva de oferta de la industria" aria-describedby="market-svg-desc">
+      <title>Curva de oferta de la industria</title>
+      <desc id="market-svg-desc">Gráfico que suma horizontalmente las cantidades ofrecidas por empresas comparables de una misma industria.</desc>
+    </svg>
+    <p id="market-svg-text" style="font-size:0.82rem;color:var(--gray-600);margin-top:6px;"></p>
+  </div>
+  <div style="background:#d1fae5;border:1px solid #6ee7b7;border-radius:8px;padding:16px;margin-top:16px;display:none;" id="law-of-supply-box">
+    <strong>⚖ Ley de la oferta</strong><br>
+    Manteniendo constantes los demás factores, un mayor precio suele aumentar la cantidad ofrecida por las firmas de una industria.
+    La oferta de la industria se obtiene sumando, a cada precio, cantidades expresadas en la misma unidad y correspondientes al mismo producto.
+  </div>
+  <div class="btn-group" style="margin-top:16px;">
+    <button class="btn-primary" id="btn-build-curve" onclick="buildCurveStep()">➕ Agregar siguiente empresa comparable</button>
+    <button class="btn-primary" id="btn-next-challenge" onclick="showChallenge()" style="display:none;">🎯 Ir al desafío de precio y oferta →</button>
+  </div>
+</div>
+
+<!-- ===== SECTION 8: REVISED CHALLENGE ===== -->
+<div class="section-card animate-in" id="sec-challenge" style="display:none;">
+  <div class="section-title"><span>🎯</span> Desafío: precio mínimo para alcanzar una meta</div>
+  <div class="challenge-goal">
+    <h3 id="challenge-title">Encuentra el precio correcto</h3>
+    <p id="challenge-instruction"></p>
+  </div>
+  <div class="price-choice-grid" id="challenge-controls" role="group" aria-label="Precios disponibles"></div>
+  <div class="market-summary">
+    <div class="info-box"><div class="info-label">Precio seleccionado</div><div class="info-value" id="challenge-price">—</div></div>
+    <div class="info-box"><div class="info-label">Oferta total de la industria</div><div class="info-value" id="challenge-total">—</div></div>
+    <div class="info-box"><div class="info-label">Meta de oferta</div><div class="info-value" id="challenge-target">—</div></div>
+  </div>
+  <div class="challenge-breakdown" id="challenge-breakdown"></div>
+  <div id="challenge-feedback" class="challenge-feedback neutral">Selecciona un precio para observar cuánto ofrecería cada empresa comparable.</div>
+  <div class="badge-achieved" id="badge-achieved">
+    <div class="badge-icon">🏅</div>
+    <div class="badge-title">¡Analista de oferta de la industria!</div>
+    <p>Encontraste el precio más bajo que permite alcanzar la meta con las empresas de esta industria.</p>
+  </div>
+  <div class="btn-group" style="margin-top:16px;">
+    <button class="btn-primary" id="btn-challenge-next" onclick="showComparison()" disabled>🔍 Comparar las empresas de la industria →</button>
+  </div>
+</div>
+
+<!-- ===== SECTION 9: PEER-FIRM COMPARISON ===== -->
+<div class="section-card animate-in" id="sec-comparison" style="display:none;">
+  <div class="section-title"><span>🔍</span> <span id="comparison-title">Contraste entre empresas de la misma industria</span></div>
+  <p id="comparison-intro" style="margin-bottom:14px;font-size:0.9rem;color:var(--gray-600);"></p>
+  <div class="table-wrapper">
+    <table class="compare-table" aria-label="Comparación de empresas de la misma industria">
+      <thead>
+        <tr>
+          <th>Empresa comparable</th>
+          <th>Respuesta de corto plazo</th>
+          <th>Principal restricción</th>
+          <th id="comparison-quantity-head">Cantidad al precio del festival</th>
+          <th>Participación en la oferta</th>
+        </tr>
+      </thead>
+      <tbody id="industry-comparison-body"></tbody>
+    </table>
+  </div>
+  <div class="btn-group" style="margin-top:16px;">
+    <button class="btn-primary" onclick="showMovementDisplacement()">🔄 Movimiento vs desplazamiento →</button>
+  </div>
+</div>
+
+<!-- ===== SECTION 10: MOVEMENT VS DISPLACEMENT ===== -->
+<div class="section-card animate-in" id="sec-mvd" style="display:none;">
+  <div class="section-title"><span>🔄</span> Movimiento vs desplazamiento de la curva</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+    <div style="background:#e8f0fe;border-radius:8px;padding:14px;border-left:4px solid #1a6fa0;">
+      <strong>Movimiento sobre la curva</strong><br>
+      <small style="color:var(--gray-600);">Ocurre cuando cambia el <em>precio del bien</em>. La cantidad ofrecida aumenta o disminuye a lo largo de la misma curva.</small>
+    </div>
+    <div style="background:#f2ecfb;border-radius:8px;padding:14px;border-left:4px solid #6c3dab;">
+      <strong>Desplazamiento de la curva</strong><br>
+      <small style="color:var(--gray-600);">Ocurre cuando cambia un factor distinto al precio (insumos, tecnología, número de empresas, expectativas). Toda la curva se mueve.</small>
+    </div>
+  </div>
+  <p style="font-size:0.9rem;font-weight:600;margin-bottom:12px;">
+    En <strong id="mvd-industry-name">la industria seleccionada</strong>, el festival produjo inicialmente un aumento del precio → <em>movimiento a lo largo de la curva</em>. Ahora clasifica estos cambios adicionales:
+  </p>
+  <div class="mvd-grid" id="shocks-grid"></div>
+  <div style="text-align:right;margin-top:8px;">
+    <button class="btn-hint" onclick="showHint('mvd')">💡 Pista</button>
+  </div>
+  <div class="hint-panel" id="hint-mvd">
+    Pregúntate: ¿cambió el precio del bien? Si sí → movimiento. ¿Cambió otra cosa (costos, tecnología, número de empresas)? → desplazamiento.
+  </div>
+  <div class="btn-group" style="margin-top:16px;">
+    <button class="btn-primary" onclick="showTransitionQuestion()">❓ Pregunta de transición →</button>
+  </div>
+</div>
+
+<!-- ===== SECTION 11: TRANSITION QUESTION ===== -->
+<div class="section-card animate-in" id="sec-transition" style="display:none;">
+  <div class="section-title"><span>💬</span> Pregunta de transición para discutir en clase</div>
+  <div class="discussion-transition" role="note" aria-labelledby="transition-question-text">
+    <span class="discussion-label">Discusión abierta</span>
+    <p id="transition-question-text">¿Por qué la oferta de una industria debe construirse con empresas que venden el mismo producto en el mismo mercado?</p>
+    <ul class="discussion-prompts" id="transition-prompts">
+      <li>¿Qué condiciones deben compartir las cantidades que se agregan?</li>
+      <li>¿Qué error conceptual surgiría al sumar productos de industrias diferentes?</li>
+      <li>¿Por qué empresas similares pueden ofrecer cantidades distintas al mismo precio?</li>
+    </ul>
+  </div>
+  <div class="btn-group">
+    <button class="btn-primary" onclick="finishDiscussion()">Finalizar actividad</button>
+  </div>
+  <div style="margin-top:20px;display:none;" id="sec-finish">
+    <div style="background:linear-gradient(135deg,#1a2e5a,#0066cc);color:#fff;border-radius:var(--radius);padding:24px;text-align:center;">
+      <div style="font-size:2.5rem;margin-bottom:8px;">🎓</div>
+      <h3 style="margin-bottom:8px;">¡Actividad completada!</h3>
+      <p style="opacity:0.9;">Has construido la oferta de una industria sumando las decisiones de empresas comparables que venden el mismo producto.</p>
+    </div>
+    <div class="btn-group" style="margin-top:16px;justify-content:center;">
+      <button class="btn-danger" onclick="resetActivity()">🔄 Reiniciar actividad</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- ===== FOOTER — FORMATO ACTIVIDAD 1 ===== -->
+<footer role="contentinfo">
+  <p>Desarrollado por Julián Díaz Tautiva, PhD.</p>
+</footer>
+
+<script>
+// ===== DATA =====
+const COMPANIES = {
+  cafeteria: {
+    name: 'Cafetería',
+    product: 'pedidos de bebidas y alimentos',
+    unit: 'pedidos',
+    initProd: 800,
+    maxExtra: 400,
+    priceInit: '$3.000',
+    priceNew: '$4.000',
+    color: '#c0550a',
+    light: '#fdf0e8',
+    restrictions: [
+      'Capacidad de la máquina de café',
+      'Horas de trabajo disponibles',
+      'Inventario de insumos',
+      'Espacio físico del local'
+    ],
+    actions: [
+      { label: 'Usar inventarios existentes', detail: 'Costo bajo · Efecto inmediato · Sin riesgo', cap: 100 },
+      { label: 'Pagar horas extraordinarias', detail: 'Costo medio · +120 pedidos posibles · Cansancio del equipo', cap: 120 },
+      { label: 'Contratar trabajador temporal', detail: 'Costo medio · +100 pedidos · Tiempo de inducción', cap: 100 },
+      { label: 'Extender horario de atención', detail: 'Costo bajo · +80 pedidos · Posible fatiga', cap: 80 }
+    ],
+    hints: 'La cafetería puede pagar horas extras y usar inventarios, pero la máquina tiene un límite físico.',
+    supplyPoints: [
+      { price: 10, qty: 50 }, { price: 15, qty: 70 }, { price: 20, qty: 90 }, { price: 25, qty: 105 }
+    ],
+    resultMsg: 'La cafetería aumentó su producción. El mayor límite fue la capacidad de la máquina y las horas disponibles. La empresa desea aumentar su oferta, pero enfrenta límites de capacidad.'
+  },
+  hotel: {
+    name: 'Hotel',
+    product: 'noches de alojamiento',
+    unit: 'noches',
+    initProd: 420,
+    maxExtra: 40,
+    priceInit: '$60.000',
+    priceNew: '$90.000',
+    color: '#1a6fa0',
+    light: '#e8f3fb',
+    restrictions: [
+      'Capacidad física de habitaciones',
+      'Tiempo de limpieza entre huéspedes',
+      'Normas de seguridad y ocupación',
+      'Imposibilidad de construir nuevas habitaciones en una semana'
+    ],
+    actions: [
+      { label: 'Habilitar habitaciones cerradas', detail: 'Costo medio · +20 noches · Limpieza necesaria', cap: 20 },
+      { label: 'Contratar personal temporal', detail: 'Costo alto · +10 noches posibles · Proceso de selección', cap: 10 },
+      { label: 'Acelerar proceso de limpieza', detail: 'Costo bajo · +10 noches · Riesgo de calidad', cap: 10 },
+      { label: 'Mantener capacidad actual', detail: 'Sin costo · Sin aumento · Sin riesgo', cap: 0 }
+    ],
+    hints: 'El hotel no puede construir habitaciones nuevas en pocos días. Su capacidad de respuesta es baja.',
+    supplyPoints: [
+      { price: 10, qty: 20 }, { price: 15, qty: 22 }, { price: 20, qty: 24 }, { price: 25, qty: 25 }
+    ],
+    resultMsg: 'El hotel puede aumentar poco su oferta en el corto plazo. La respuesta productiva varía según la tecnología y el tiempo disponible. La capacidad física es el principal cuello de botella.'
+  },
+  granja: {
+    name: 'Granja de frutillas',
+    product: 'cajas de frutillas frescas',
+    unit: 'cajas',
+    initProd: 1200,
+    maxExtra: 250,
+    priceInit: '$4.000',
+    priceNew: '$5.500',
+    color: '#1e7e34',
+    light: '#e8f6ec',
+    restrictions: [
+      'Ciclo biológico de la fruta',
+      'Clima y condiciones de maduración',
+      'Capacidad de cosecha y mano de obra',
+      'Capacidad de transporte refrigerado'
+    ],
+    actions: [
+      { label: 'Contratar cosechadores temporales', detail: 'Costo medio · +100 cajas · Disponibilidad de temporeros', cap: 100 },
+      { label: 'Adelantar cosecha disponible', detail: 'Sin costo extra · +80 cajas · Posible menor calidad', cap: 80 },
+      { label: 'Arrendar transporte refrigerado', detail: 'Costo alto · +70 cajas · Dependencia externa', cap: 70 },
+      { label: 'Esperar maduración natural', detail: 'Sin costo · Sin aumento inmediato · Sin riesgo', cap: 0 }
+    ],
+    hints: 'La granja puede acelerar la cosecha de fruta disponible, pero no producir grandes cantidades nuevas en una semana.',
+    supplyPoints: [
+      { price: 10, qty: 30 }, { price: 15, qty: 38 }, { price: 20, qty: 45 }, { price: 25, qty: 50 }
+    ],
+    resultMsg: 'La granja aceleró su cosecha. El ciclo biológico y el clima impiden una expansión mayor. Tu decisión reconoce que el aumento del precio crea un incentivo para producir más.'
+  },
+  app: {
+    name: 'App móvil',
+    product: 'descargas de aplicación',
+    unit: 'descargas',
+    initProd: 2000,
+    maxExtra: 8000,
+    priceInit: '$2.000',
+    priceNew: '$2.500',
+    color: '#6c3dab',
+    light: '#f2ecfb',
+    restrictions: [
+      'Capacidad actual de servidores',
+      'Atención al cliente y soporte',
+      'Corrección de errores en alta demanda',
+      'Escalabilidad tecnológica'
+    ],
+    actions: [
+      { label: 'Aumentar capacidad de servidores', detail: 'Costo variable · +5.000 descargas · Escalado rápido', cap: 5000 },
+      { label: 'Automatizar soporte', detail: 'Costo bajo · +1.500 descargas · Sin riesgo operativo', cap: 1500 },
+      { label: 'Contratar soporte temporal', detail: 'Costo medio · +1.500 descargas · Tiempo de inducción', cap: 1500 },
+      { label: 'Mantener capacidad actual', detail: 'Sin costo · Sin aumento · Sin riesgo', cap: 0 }
+    ],
+    hints: 'Una aplicación digital puede distribuir muchas copias adicionales con relativa rapidez. El costo de distribuir copias es bajo.',
+    supplyPoints: [
+      { price: 10, qty: 100 }, { price: 15, qty: 180 }, { price: 20, qty: 280 }, { price: 25, qty: 400 }
+    ],
+    resultMsg: 'La app puede aumentar considerablemente la cantidad ofrecida porque el costo de distribuir copias adicionales es relativamente bajo. La respuesta productiva varía según la tecnología y el tiempo disponible.'
+  }
+};
+
+const COMPANY_ORDER = ['cafeteria','hotel','granja','app'];
+
+
+const INDUSTRIES = {
+  cafeteria: {
+    name: 'industria de cafeterías',
+    product: 'pedidos de bebidas y alimentos',
+    priceLevels: [2500, 3000, 4000, 5000],
+    colors: ['#c0550a','#dc7a32','#9f4108','#ef9a5b'],
+    inputShock: 'café, leche y otros insumos',
+    peers: [
+      { name:'Tu cafetería', factor:1.00, responsiveness:1.00, response:'Media', restriction:'Capacidad de la máquina y horas de trabajo' },
+      { name:'Café Central', factor:0.82, responsiveness:0.75, response:'Media-baja', restriction:'Una sola máquina y local pequeño' },
+      { name:'Estación Café', factor:1.15, responsiveness:1.25, response:'Alta', restriction:'Disponibilidad de personal en horas punta' },
+      { name:'Rincón del Festival', factor:0.68, responsiveness:0.55, response:'Baja', restriction:'Inventario reducido de insumos' }
+    ]
+  },
+  hotel: {
+    name: 'industria hotelera',
+    product: 'noches de alojamiento',
+    priceLevels: [50000, 60000, 90000, 110000],
+    colors: ['#1a6fa0','#3d8fc0','#12557b','#70b8e8'],
+    inputShock: 'servicios de limpieza, energía y personal',
+    peers: [
+      { name:'Tu hotel', factor:1.00, responsiveness:1.00, response:'Baja', restriction:'Número fijo de habitaciones' },
+      { name:'Hotel Plaza', factor:1.18, responsiveness:0.90, response:'Media-baja', restriction:'Tiempo de limpieza entre huéspedes' },
+      { name:'Hostal Alameda', factor:0.62, responsiveness:1.10, response:'Media', restriction:'Pocas habitaciones, pero turnos flexibles' },
+      { name:'Hotel del Parque', factor:0.90, responsiveness:0.65, response:'Baja', restriction:'Capacidad física y normas de ocupación' }
+    ]
+  },
+  granja: {
+    name: 'industria de productores de frutillas',
+    product: 'cajas de frutillas frescas',
+    priceLevels: [3000, 4000, 5500, 7000],
+    colors: ['#1e7e34','#47a45c','#145d26','#70c888'],
+    inputShock: 'fertilizantes, transporte refrigerado y mano de obra',
+    peers: [
+      { name:'Tu granja', factor:1.00, responsiveness:1.00, response:'Baja', restriction:'Ciclo biológico y maduración' },
+      { name:'Frutillas del Valle', factor:1.22, responsiveness:0.80, response:'Baja', restriction:'Clima y disponibilidad de fruta madura' },
+      { name:'Agrícola Los Robles', factor:0.78, responsiveness:1.20, response:'Media', restriction:'Disponibilidad de cosechadores' },
+      { name:'Campo Fresco', factor:0.66, responsiveness:0.60, response:'Muy baja', restriction:'Transporte refrigerado limitado' }
+    ]
+  },
+  app: {
+    name: 'industria de aplicaciones móviles',
+    product: 'descargas de aplicaciones',
+    priceLevels: [1500, 2000, 2500, 3000],
+    colors: ['#6c3dab','#8a5bc5','#4f2885','#b088e0'],
+    inputShock: 'servidores, soporte y servicios tecnológicos',
+    peers: [
+      { name:'Tu app', factor:1.00, responsiveness:1.00, response:'Alta', restriction:'Servidores y soporte al usuario' },
+      { name:'FestivalGo', factor:1.28, responsiveness:1.20, response:'Muy alta', restriction:'Capacidad de soporte ante fallas' },
+      { name:'CiudadApp', factor:0.82, responsiveness:0.90, response:'Alta', restriction:'Escalabilidad de la infraestructura' },
+      { name:'Evento Móvil', factor:0.58, responsiveness:0.70, response:'Media-alta', restriction:'Equipo técnico reducido' }
+    ]
+  }
+};
+
+
+// ===== STATE =====
+let state = {
+  phase: 'news',
+  currentCompany: null,
+  selectedCompany: null,
+  completed: { cafeteria: false, hotel: false, granja: false, app: false },
+  decisions: { cafeteria: 0, hotel: 0, app: 0, granja: 0 },
+  industryData: null,
+  challengePriceIndex: null,
+  shockAnswers: {}
+};
+
+// ===== HELPERS =====
+function fmt(n) { return n.toLocaleString('es-CL'); }
+function setProgress(pct, label) {
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('progress-label').textContent = label;
+  document.getElementById('progress-bar-aria').setAttribute('aria-valuenow', pct);
+}
+function announce(msg) {
+  const el = document.getElementById('aria-feedback');
+  el.textContent = '';
+  setTimeout(() => el.textContent = msg, 50);
+}
+function show(id) {
+  const el = document.getElementById(id);
+  if (el) { el.style.display = ''; el.classList.add('animate-in'); }
+}
+function hide(id) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'none';
+}
+function showHint(section) {
+  const el = document.getElementById('hint-' + section);
+  if (el) { el.classList.toggle('show'); }
+}
+
+// ===== PHASE 1: START =====
+function startActivity() {
+  hide('sec-news');
+  show('sec-companies');
+  setProgress(10, 'Selecciona una empresa');
+  announce('Actividad iniciada. Selecciona una empresa para administrar.');
+}
+
+// ===== PHASE 2: SELECT AND OPEN COMPANY =====
+function selectCompany(compId) {
+  state.selectedCompany = compId;
+  const c = COMPANIES[compId];
+
+  document.querySelectorAll('.company-card').forEach(card => {
+    const selected = card.dataset.company === compId;
+    card.classList.toggle('active', selected);
+    card.setAttribute('aria-pressed', String(selected));
+  });
+
+  const message = document.getElementById('company-selection-message');
+  message.innerHTML = `Empresa seleccionada: <strong>${c.name}</strong>. Pulsa el botón para continuar.`;
+
+  const button = document.getElementById('btn-continue-company');
+  button.disabled = false;
+  button.textContent = `Continuar con ${c.name} →`;
+
+  announce(`Empresa seleccionada: ${c.name}. El botón para continuar está habilitado.`);
+}
+
+function continueWithSelectedCompany() {
+  if (!state.selectedCompany) {
+    announce('Selecciona una empresa antes de continuar.');
+    return;
+  }
+  openCompany(state.selectedCompany);
+}
+
+function openCompany(compId) {
+  state.currentCompany = compId;
+  const c = COMPANIES[compId];
+
+  // Update cards
+  document.querySelectorAll('.company-card').forEach(card => card.classList.remove('active'));
+  const activeCard = document.querySelector(`.company-card[data-company="${compId}"]`);
+  if (activeCard) activeCard.classList.add('active');
+
+  // Fill management panel
+  document.getElementById('mgmt-name').textContent = c.name;
+  document.getElementById('mgmt-product').textContent = c.product;
+  document.getElementById('mgmt-init-prod').textContent = fmt(c.initProd) + ' ' + c.unit;
+  document.getElementById('mgmt-price-init').textContent = c.priceInit;
+  document.getElementById('mgmt-price-new').textContent = c.priceNew;
+  document.getElementById('mgmt-max-extra').textContent = fmt(c.maxExtra) + ' ' + c.unit;
+  document.getElementById('mgmt-unit').textContent = c.unit;
+
+  // Icon
+  const iconEl = document.getElementById('mgmt-icon');
+  const srcCard = document.querySelector(`.company-card[data-company="${compId}"] .company-icon`);
+  iconEl.innerHTML = srcCard ? srcCard.innerHTML : '';
+
+  // Restrictions
+  const resList = document.getElementById('mgmt-restrictions');
+  resList.innerHTML = c.restrictions.map(r => `<li>${r}</li>`).join('');
+
+  // Actions
+  const actGrid = document.getElementById('mgmt-actions');
+  actGrid.innerHTML = c.actions.map((a, i) => `
+    <label class="action-item" for="act-${compId}-${i}">
+      <input type="checkbox" id="act-${compId}-${i}" name="action" value="${i}" onchange="updateActionCapacity()">
+      <div>
+        <div class="action-label">${a.label}</div>
+        <div class="action-detail">${a.detail}</div>
+      </div>
+    </label>
+  `).join('');
+
+  // Slider
+  const slider = document.getElementById('slider-extra');
+  const numInput = document.getElementById('num-extra');
+  slider.max = c.maxExtra;
+  slider.value = state.decisions[compId] || 0;
+  numInput.max = c.maxExtra;
+  numInput.value = state.decisions[compId] || 0;
+
+  document.getElementById('sum-initial').textContent = fmt(c.initProd);
+  updateSlider(state.decisions[compId] || 0);
+
+  // Hint
+  document.getElementById('hint-mgmt').textContent = c.hints;
+
+  // Feedback reset
+  const fb = document.getElementById('mgmt-feedback');
+  fb.classList.add('hidden');
+
+  document.getElementById('company-management').classList.add('visible');
+  show('sec-management');
+  document.getElementById('sec-management').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setProgress(20, `Administrando: ${c.name}`);
+  announce(`Administrando ${c.name}. Precio inicial: ${c.priceInit}. Nuevo precio: ${c.priceNew}. Aumento máximo: ${fmt(c.maxExtra)} ${c.unit}.`);
+}
+
+function updateActionCapacity() {
+  const compId = state.currentCompany;
+  const c = COMPANIES[compId];
+  const checked = document.querySelectorAll('#mgmt-actions input[type=checkbox]:checked');
+  let totalCap = 0;
+  checked.forEach(cb => {
+    totalCap += c.actions[parseInt(cb.value)].cap;
+  });
+  const realMax = Math.min(c.maxExtra, totalCap || c.maxExtra);
+  document.getElementById('slider-extra').max = realMax;
+  document.getElementById('num-extra').max = realMax;
+  const cur = Math.min(parseInt(document.getElementById('slider-extra').value), realMax);
+  updateSlider(cur);
+}
+
+function updateSlider(val) {
+  const compId = state.currentCompany;
+  if (!compId) return;
+  const c = COMPANIES[compId];
+  val = Math.min(Math.max(0, parseInt(val) || 0), c.maxExtra);
+  document.getElementById('slider-extra').value = val;
+  document.getElementById('num-extra').value = val;
+  document.getElementById('sum-delta').textContent = '+' + fmt(val);
+  document.getElementById('sum-total').textContent = fmt(c.initProd + val);
+
+  const pct = c.maxExtra > 0 ? Math.round(val / c.maxExtra * 100) : 0;
+  document.getElementById('cap-pct').textContent = pct + '%';
+  const bar = document.getElementById('cap-bar');
+  bar.style.width = pct + '%';
+  bar.style.background = pct > 90 ? '#dc3545' : pct > 60 ? '#ffc107' : '#198754';
+  document.getElementById('cap-bar-aria').setAttribute('aria-valuenow', pct);
+
+  const fb = document.getElementById('mgmt-feedback');
+  if (val > c.maxExtra) {
+    fb.classList.remove('hidden','positive');
+    fb.classList.add('warning');
+    fb.textContent = 'Esta empresa no puede aumentar tanto su producción en una semana. Revisa su capacidad instalada y sus restricciones.';
+    announce('Límite superado: ' + fb.textContent);
+  } else {
+    fb.classList.add('hidden');
+  }
+}
+
+function closeCompany() {
+  document.getElementById('company-management').classList.remove('visible');
+  hide('sec-management');
+}
+
+
+function confirmProduction() {
+  const compId = state.currentCompany;
+  const c = COMPANIES[compId];
+  const extra = parseInt(document.getElementById('slider-extra').value) || 0;
+  state.decisions[compId] = extra;
+  state.completed[compId] = true;
+  state.industryData = null;
+
+  const card = document.querySelector(`.company-card[data-company="${compId}"]`);
+  card.classList.add('completed');
+  const badge = document.getElementById('badge-' + compId);
+  badge.textContent = '✓ Analizada';
+  badge.className = 'company-status-badge badge-done';
+
+  showIndividualResult(compId, extra);
+  document.getElementById('company-management').classList.remove('visible');
+  hide('sec-management');
+  show('sec-individual');
+  document.getElementById('sec-individual').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  setProgress(35, 'Resultado de la empresa');
+  announce(`Producción confirmada para ${c.name}. Ahora puedes compararla con firmas de la misma industria.`);
+}
+
+function smartRound(value) {
+  const step = value >= 10000 ? 100 : value >= 1000 ? 10 : 1;
+  return Math.max(0, Math.round(value / step) * step);
+}
+
+function buildIndustryData() {
+  const compId = state.currentCompany;
+  const c = COMPANIES[compId];
+  const cfg = INDUSTRIES[compId];
+  const extra = state.decisions[compId] || 0;
+  const capacity = c.initProd + c.maxExtra;
+
+  const selected = [
+    smartRound(c.initProd * 0.82),
+    c.initProd,
+    Math.max(c.initProd, c.initProd + extra),
+    Math.max(c.initProd + extra, smartRound((c.initProd + extra) + (capacity - (c.initProd + extra)) * 0.60))
+  ];
+
+  const firms = cfg.peers.map((peer, index) => {
+    if (index === 0) {
+      return { ...peer, quantities: selected.slice(), color: cfg.colors[index] };
+    }
+    const quantities = [smartRound(selected[0] * peer.factor)];
+    for (let i = 1; i < selected.length; i++) {
+      const selectedIncrease = Math.max(0, selected[i] - selected[i - 1]);
+      const increase = smartRound(selectedIncrease * peer.factor * peer.responsiveness);
+      quantities.push(Math.max(quantities[i - 1], quantities[i - 1] + increase));
+    }
+    return { ...peer, quantities, color: cfg.colors[index] };
+  });
+
+  const totals = cfg.priceLevels.map((_, priceIndex) =>
+    firms.reduce((sum, firm) => sum + firm.quantities[priceIndex], 0)
+  );
+
+  return {
+    companyId: compId,
+    industryName: cfg.name,
+    product: cfg.product,
+    unit: c.unit,
+    prices: cfg.priceLevels,
+    firms,
+    totals,
+    festivalIndex: 2,
+    inputShock: cfg.inputShock
+  };
+}
+
+function getIndustryData() {
+  if (!state.industryData || state.industryData.companyId !== state.currentCompany) {
+    state.industryData = buildIndustryData();
+  }
+  return state.industryData;
+}
+
+function formatPrice(value) {
+  return '$' + Math.round(value).toLocaleString('es-CL');
+}
+
+function shortPrice(value) {
+  if (value >= 1000000) return '$' + (value / 1000000).toLocaleString('es-CL', { maximumFractionDigits: 1 }) + ' M';
+  if (value >= 1000) return '$' + (value / 1000).toLocaleString('es-CL', { maximumFractionDigits: 1 }) + ' mil';
+  return '$' + Math.round(value);
+}
+
+function showIndividualResult(compId, extra) {
+  const c = COMPANIES[compId];
+  const data = getIndustryData();
+  const msg = document.getElementById('individual-message');
+  msg.textContent = `${c.name}: producción inicial ${fmt(c.initProd)} ${c.unit} + aumento de ${fmt(extra)} ${c.unit} = ${fmt(c.initProd + extra)} ${c.unit}. ${c.resultMsg} A continuación, esta firma se comparará con empresas de la ${data.industryName}.`;
+
+  drawMiniChart(compId);
+  document.getElementById('mini-chart-text').textContent =
+    `A ${formatPrice(data.prices[1])}, la empresa ofrece ${fmt(data.firms[0].quantities[1])} ${c.unit}. A ${formatPrice(data.prices[2])}, ofrece ${fmt(data.firms[0].quantities[2])} ${c.unit}.`;
+}
+
+function drawMiniChart(compId) {
+  const c = COMPANIES[compId];
+  const data = getIndustryData();
+  const svg = document.getElementById('mini-chart');
+  const W = 420, H = 240, pad = { l:76, r:24, t:22, b:46 };
+  const prices = data.prices;
+  const qtys = data.firms[0].quantities;
+  const maxQ = Math.max(...qtys) * 1.15 || 1;
+  const minP = Math.min(...prices), maxP = Math.max(...prices);
+  const xScale = q => pad.l + q / maxQ * (W - pad.l - pad.r);
+  const yScale = p => H - pad.b - (p - minP) / (maxP - minP || 1) * (H - pad.t - pad.b);
+
+  let content = `<rect width="${W}" height="${H}" fill="#f8f9fa" rx="8"/>`;
+  prices.forEach(p => {
+    const y = yScale(p);
+    content += `<line class="grid-line" x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}"/>`;
+    content += `<text x="${pad.l-8}" y="${y+4}" text-anchor="end" class="axis-label">${shortPrice(p)}</text>`;
+  });
+  content += `<line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${H-pad.b}" stroke="#777" stroke-width="1.5"/>`;
+  content += `<line x1="${pad.l}" y1="${H-pad.b}" x2="${W-pad.r}" y2="${H-pad.b}" stroke="#777" stroke-width="1.5"/>`;
+  content += `<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-8}" text-anchor="middle" class="axis-label">Cantidad ofrecida (${c.unit})</text>`;
+  content += `<text x="18" y="${H/2}" text-anchor="middle" class="axis-label" transform="rotate(-90,18,${H/2})">Precio</text>`;
+
+  const path = prices.map((p,i)=>(i===0?'M':'L')+xScale(qtys[i])+','+yScale(p)).join(' ');
+  content += `<path d="${path}" stroke="${c.color}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+  prices.forEach((p,i) => {
+    content += `<circle cx="${xScale(qtys[i])}" cy="${yScale(p)}" r="5.5" fill="${c.color}"><title>${fmt(qtys[i])} ${c.unit} a ${formatPrice(p)}</title></circle>`;
+    content += `<text x="${xScale(qtys[i])+8}" y="${yScale(p)-6}" class="dot-label" fill="${c.color}">${fmt(qtys[i])}</text>`;
+  });
+  svg.innerHTML = content;
+}
+
+function nextCompany() {
+  hide('sec-individual');
+  ['sec-aggregation','sec-table','sec-graph','sec-challenge','sec-comparison','sec-mvd','sec-transition'].forEach(hide);
+  show('sec-companies');
+  state.selectedCompany = null;
+  state.industryData = null;
+  state.challengePriceIndex = null;
+  document.querySelectorAll('.company-card').forEach(card => {
+    card.classList.remove('active');
+    card.setAttribute('aria-pressed', 'false');
+  });
+  const selectionMessage = document.getElementById('company-selection-message');
+  selectionMessage.textContent = 'Selecciona una empresa para habilitar el botón de continuación.';
+  const continueButton = document.getElementById('btn-continue-company');
+  continueButton.disabled = true;
+  continueButton.textContent = 'Continuar con la empresa seleccionada →';
+  document.getElementById('sec-companies').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setProgress(10, 'Selecciona una empresa');
+  announce('Selecciona otra empresa representativa para analizar una industria diferente.');
+}
+
+// ===== PHASE 3: SAME-INDUSTRY AGGREGATION =====
+function showMarketAggregation() {
+  hide('sec-individual');
+  show('sec-aggregation');
+  document.getElementById('sec-aggregation').scrollIntoView({ behavior:'smooth', block:'start' });
+  setProgress(55, 'Comparación dentro de la industria');
+
+  const data = getIndustryData();
+  const priceIndex = data.festivalIndex;
+  document.getElementById('aggregation-title').textContent = `Empresas de la ${data.industryName}`;
+  document.getElementById('aggregation-explanation').innerHTML =
+    `<strong>Comparación válida:</strong> las cuatro firmas ofrecen <strong>${data.product}</strong>, usan la misma unidad (${data.unit}) y enfrentan el mismo precio de ${formatPrice(data.prices[priceIndex])}.<br><em style="color:var(--gray-600);font-size:.85rem;">La oferta de la industria se obtiene sumando sus cantidades, no mezclando productos de industrias diferentes.</em>`;
+
+  const maxFirm = Math.max(...data.firms.map(f => f.quantities[priceIndex]));
+  document.getElementById('agg-bars').innerHTML = data.firms.map((firm, index) => `
+    <div class="agg-bar-row" id="agg-row-${index}" style="opacity:0;transition:opacity .5s">
+      <div class="agg-bar-label" style="color:${firm.color}">${firm.name}</div>
+      <div class="agg-bar-outer">
+        <div class="agg-bar-fill" id="agg-fill-${index}" style="width:0%;background:${firm.color}" aria-label="${firm.name}: ${fmt(firm.quantities[priceIndex])} ${data.unit}">
+          <span id="agg-fill-label-${index}"></span>
+        </div>
+      </div>
+      <div class="agg-bar-val" id="agg-val-${index}" style="color:${firm.color}">0</div>
+    </div>`).join('');
+
+  document.getElementById('agg-total-box').innerHTML = '';
+  document.getElementById('btn-agg-animate').style.display = 'inline-flex';
+  document.getElementById('btn-show-table').style.display = 'none';
+  announce(`Compararás cuatro empresas de la ${data.industryName}.`);
+}
+
+function animateAgg() {
+  const data = getIndustryData();
+  const priceIndex = data.festivalIndex;
+  const maxFirm = Math.max(...data.firms.map(f => f.quantities[priceIndex]));
+  let step = 0;
+
+  function showStep() {
+    if (step >= data.firms.length) {
+      const total = data.totals[priceIndex];
+      document.getElementById('agg-total-box').innerHTML =
+        `<strong style="color:var(--total)">Oferta total de la ${data.industryName}: ${fmt(total)} ${data.unit}</strong><br>
+         <small>Q<sub>industria</sub> = ${data.firms.map(f => fmt(f.quantities[priceIndex])).join(' + ')} = ${fmt(total)} ${data.unit}, al precio ${formatPrice(data.prices[priceIndex])}.</small>`;
+      document.getElementById('btn-show-table').style.display = 'inline-flex';
+      announce(`Oferta de la industria calculada: ${fmt(total)} ${data.unit}.`);
+      return;
+    }
+    const firm = data.firms[step];
+    const value = firm.quantities[priceIndex];
+    const pct = maxFirm ? value / maxFirm * 100 : 0;
+    document.getElementById('agg-row-' + step).style.opacity = '1';
+    setTimeout(() => {
+      document.getElementById('agg-fill-' + step).style.width = pct + '%';
+      document.getElementById('agg-fill-label-' + step).textContent = fmt(value);
+      document.getElementById('agg-val-' + step).textContent = fmt(value);
+      step += 1;
+      setTimeout(showStep, 550);
+    }, 80);
+  }
+  showStep();
+  document.getElementById('btn-agg-animate').style.display = 'none';
+}
+
+// ===== PHASE 4: INDUSTRY TABLE =====
+function showMarketTable() {
+  const data = getIndustryData();
+  show('sec-table');
+  document.getElementById('sec-table').scrollIntoView({ behavior:'smooth', block:'start' });
+  setProgress(68, 'Tabla de oferta de la industria');
+
+  document.getElementById('market-table-title').textContent = `Tabla de oferta: ${data.industryName}`;
+  document.getElementById('market-table-head').innerHTML =
+    `<th>Precio</th>${data.firms.map(f => `<th style="background:${f.color}">${f.name}</th>`).join('')}<th class="col-total">Oferta total</th>`;
+
+  document.getElementById('market-table-body').innerHTML = data.prices.map((price, priceIndex) => `
+    <tr>
+      <td><strong>${formatPrice(price)}</strong></td>
+      ${data.firms.map(f => `<td>${fmt(f.quantities[priceIndex])}</td>`).join('')}
+      <td class="col-total">${fmt(data.totals[priceIndex])}</td>
+    </tr>`).join('');
+
+  document.getElementById('market-table-note').textContent =
+    `Todas las columnas están expresadas en ${data.unit} del mismo producto. La oferta total se calcula horizontalmente para cada precio.`;
+}
+
+// ===== PHASE 5: INDUSTRY SUPPLY CURVE =====
+let curveBuilt = 0;
+
+function showMarketGraph() {
+  const data = getIndustryData();
+  show('sec-graph');
+  document.getElementById('sec-graph').scrollIntoView({ behavior:'smooth', block:'start' });
+  setProgress(78, 'Curva de oferta de la industria');
+  curveBuilt = 0;
+  document.getElementById('market-graph-title').textContent = `Curva de oferta: ${data.industryName}`;
+  document.getElementById('btn-build-curve').style.display = 'inline-flex';
+  document.getElementById('btn-next-challenge').style.display = 'none';
+  document.getElementById('law-of-supply-box').style.display = 'none';
+  renderMarketCurve();
+}
+
+function buildCurveStep() {
+  const data = getIndustryData();
+  curveBuilt = Math.min(curveBuilt + 1, data.firms.length);
+  if (curveBuilt >= data.firms.length) {
+    document.getElementById('btn-build-curve').style.display = 'none';
+    document.getElementById('btn-next-challenge').style.display = 'inline-flex';
+    document.getElementById('law-of-supply-box').style.display = 'block';
+    announce('Curva de oferta de la industria completada.');
+  }
+  renderMarketCurve();
+}
+
+function renderMarketCurve() {
+  const data = getIndustryData();
+  const svg = document.getElementById('market-supply-svg');
+  const W = 560, H = 390, pad = { l:82, r:34, t:30, b:60 };
+  const maxQ = Math.max(...data.totals) * 1.15 || 1;
+  const minP = Math.min(...data.prices);
+  const maxP = Math.max(...data.prices);
+  const xScale = q => pad.l + q / maxQ * (W - pad.l - pad.r);
+  const yScale = p => H - pad.b - (p - minP) / (maxP - minP || 1) * (H - pad.t - pad.b);
+
+  let content = `<rect width="${W}" height="${H}" fill="#f8f9fa" rx="8"/>`;
+  data.prices.forEach(price => {
+    const y = yScale(price);
+    content += `<line class="grid-line" x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}"/>`;
+    content += `<text x="${pad.l-10}" y="${y+4}" text-anchor="end" class="axis-label">${shortPrice(price)}</text>`;
+  });
+
+  for (let tick = 0; tick <= 4; tick++) {
+    const q = maxQ * tick / 4;
+    const x = xScale(q);
+    content += `<line class="grid-line" x1="${x}" y1="${pad.t}" x2="${x}" y2="${H-pad.b}"/>`;
+    content += `<text x="${x}" y="${H-pad.b+18}" text-anchor="middle" class="axis-label">${fmt(smartRound(q))}</text>`;
+  }
+  content += `<line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${H-pad.b}" stroke="#555" stroke-width="2"/>`;
+  content += `<line x1="${pad.l}" y1="${H-pad.b}" x2="${W-pad.r}" y2="${H-pad.b}" stroke="#555" stroke-width="2"/>`;
+  content += `<text x="${pad.l+(W-pad.l-pad.r)/2}" y="${H-10}" text-anchor="middle" class="axis-label" font-size="13" font-weight="bold">Cantidad ofrecida (${data.unit})</text>`;
+  content += `<text x="20" y="${H/2}" text-anchor="middle" class="axis-label" font-size="13" font-weight="bold" transform="rotate(-90,20,${H/2})">Precio</text>`;
+
+  const included = data.firms.slice(0, curveBuilt);
+  const legend = document.getElementById('curve-legend');
+  if (legend) {
+    const items = included.map(firm =>
+      `<span class="curve-legend-item" style="color:${firm.color}">
+        <span class="curve-legend-line peer" aria-hidden="true"></span>
+        <span>${firm.name}</span>
+      </span>`
+    );
+    if (included.length) {
+      items.push(
+        `<span class="curve-legend-item" style="color:#1a2e5a">
+          <span class="curve-legend-line" aria-hidden="true"></span>
+          <span>Oferta agregada de la industria</span>
+        </span>`
+      );
+    }
+    legend.innerHTML = items.length
+      ? items.join('')
+      : '<span class="curve-legend-empty">Agrega empresas comparables para mostrar las curvas y sus nombres.</span>';
+  }
+
+  included.forEach((firm, firmIndex) => {
+    const path = data.prices.map((price, i) =>
+      (i === 0 ? 'M' : 'L') + xScale(firm.quantities[i]) + ',' + yScale(price)
+    ).join(' ');
+    content += `<path d="${path}" stroke="${firm.color}" stroke-width="2" fill="none" stroke-dasharray="5,3" opacity=".82"/>`;
+
+    // Place each direct label at a different price point and keep it inside the graph.
+    const labelIndex = Math.min(firmIndex, data.prices.length - 1);
+    const labelText = firm.name;
+    const labelWidth = Math.min(150, Math.max(62, labelText.length * 6.2 + 14));
+    const rawX = xScale(firm.quantities[labelIndex]) + 8;
+    const labelX = Math.max(pad.l + 4, Math.min(rawX, W - pad.r - labelWidth));
+    const rawY = yScale(data.prices[labelIndex]) + (firmIndex % 2 === 0 ? -11 : 16);
+    const labelY = Math.max(pad.t + 12, Math.min(rawY, H - pad.b - 6));
+
+    content += `<rect x="${labelX - 4}" y="${labelY - 11}" width="${labelWidth}" height="16" rx="4"
+      fill="#ffffff" fill-opacity=".92" stroke="${firm.color}" stroke-opacity=".35"/>`;
+    content += `<text x="${labelX + 2}" y="${labelY}" fill="${firm.color}" font-size="10.5"
+      font-weight="700">${labelText}</text>`;
+  });
+
+  if (included.length) {
+    const totals = data.prices.map((_, priceIndex) =>
+      included.reduce((sum, firm) => sum + firm.quantities[priceIndex], 0)
+    );
+    const path = data.prices.map((price, i) => (i === 0 ? 'M' : 'L') + xScale(totals[i]) + ',' + yScale(price)).join(' ');
+    content += `<path d="${path}" stroke="#1a2e5a" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
+    data.prices.forEach((price, i) => {
+      content += `<circle cx="${xScale(totals[i])}" cy="${yScale(price)}" r="6" fill="#1a2e5a"><title>${fmt(totals[i])} ${data.unit} a ${formatPrice(price)}</title></circle>`;
+    });
+    if (curveBuilt === data.firms.length) {
+      const labelIndex = Math.floor((data.prices.length - 1) / 2);
+      const labelText = 'Oferta de la industria';
+      const labelWidth = 126;
+      const labelX = Math.max(
+        pad.l + 4,
+        Math.min(xScale(totals[labelIndex]) + 10, W - pad.r - labelWidth)
+      );
+      const labelY = Math.max(
+        pad.t + 13,
+        Math.min(yScale(data.prices[labelIndex]) - 12, H - pad.b - 8)
+      );
+      content += `<rect x="${labelX - 5}" y="${labelY - 12}" width="${labelWidth}" height="18" rx="4"
+        fill="#ffffff" fill-opacity=".96" stroke="#1a2e5a" stroke-opacity=".4"/>`;
+      content += `<text x="${labelX + 1}" y="${labelY}" fill="#1a2e5a" font-size="11.5"
+        font-weight="800">${labelText}</text>`;
+    }
+  }
+
+  svg.innerHTML = content;
+  document.getElementById('market-svg-text').textContent = curveBuilt === 0
+    ? 'Agrega empresas comparables para observar cómo sus cantidades se suman a cada precio.'
+    : `Curva construida con ${curveBuilt} de ${data.firms.length} empresas de la ${data.industryName}.`;
+}
+
+// ===== PHASE 6: REVISED CHALLENGE =====
+function showChallenge() {
+  const data = getIndustryData();
+  show('sec-challenge');
+  document.getElementById('sec-challenge').scrollIntoView({ behavior:'smooth', block:'start' });
+  setProgress(88, 'Desafío de precio y oferta');
+
+  state.challengePriceIndex = null;
+  const targetReferenceIndex = data.festivalIndex;
+  const target = data.totals[targetReferenceIndex];
+  const lowestIndex = data.totals.findIndex(total => total >= target);
+  state.challengeTarget = target;
+  state.challengeLowestIndex = lowestIndex;
+
+  document.getElementById('challenge-title').textContent =
+    `Encuentra el precio mínimo para ofrecer al menos ${fmt(target)} ${data.unit}`;
+  document.getElementById('challenge-instruction').textContent =
+    `Selecciona entre los precios disponibles. La meta debe alcanzarse con las empresas de la ${data.industryName}, pero debes evitar elegir un precio mayor de lo necesario.`;
+  document.getElementById('challenge-target').textContent = `${fmt(target)} ${data.unit}`;
+  document.getElementById('challenge-price').textContent = '—';
+  document.getElementById('challenge-total').textContent = '—';
+  document.getElementById('challenge-breakdown').innerHTML = '';
+  document.getElementById('challenge-feedback').className = 'challenge-feedback neutral';
+  document.getElementById('challenge-feedback').textContent = 'Selecciona un precio para observar la oferta de cada empresa.';
+  document.getElementById('badge-achieved').classList.remove('visible');
+  document.getElementById('btn-challenge-next').disabled = true;
+
+  document.getElementById('challenge-controls').innerHTML = data.prices.map((price, index) =>
+    `<button type="button" class="challenge-price-btn" id="challenge-price-${index}" onclick="selectChallengePrice(${index})">${formatPrice(price)}</button>`
+  ).join('');
+}
+
+function selectChallengePrice(index) {
+  const data = getIndustryData();
+  state.challengePriceIndex = index;
+  document.querySelectorAll('.challenge-price-btn').forEach((button, i) => button.classList.toggle('selected', i === index));
+
+  const total = data.totals[index];
+  document.getElementById('challenge-price').textContent = formatPrice(data.prices[index]);
+  document.getElementById('challenge-total').textContent = `${fmt(total)} ${data.unit}`;
+  document.getElementById('challenge-breakdown').innerHTML = data.firms.map(firm =>
+    `<div class="challenge-firm"><strong>${firm.name}</strong><span>${fmt(firm.quantities[index])}</span><small style="display:block;color:var(--gray-600)">${data.unit}</small></div>`
+  ).join('');
+
+  const feedback = document.getElementById('challenge-feedback');
+  const target = state.challengeTarget;
+  const lowestIndex = state.challengeLowestIndex;
+  const next = document.getElementById('btn-challenge-next');
+  const badge = document.getElementById('badge-achieved');
+
+  if (total < target) {
+    feedback.className = 'challenge-feedback warning';
+    feedback.textContent = `La industria ofrece ${fmt(total)} ${data.unit}, por debajo de la meta. Prueba un precio mayor.`;
+    next.disabled = true;
+    badge.classList.remove('visible');
+  } else if (index > lowestIndex) {
+    feedback.className = 'challenge-feedback neutral';
+    feedback.textContent = `La meta se alcanza, pero existe un precio menor que también la cumple. Busca el precio mínimo.`;
+    next.disabled = true;
+    badge.classList.remove('visible');
+  } else if (index === lowestIndex) {
+    feedback.className = 'challenge-feedback success';
+    feedback.textContent = `Correcto: ${formatPrice(data.prices[index])} es el precio más bajo que permite alcanzar la meta de oferta.`;
+    next.disabled = false;
+    badge.classList.add('visible');
+    announce('Desafío completado. Encontraste el precio mínimo que alcanza la meta de oferta.');
+  }
+}
+
+// ===== PHASE 7: PEER COMPARISON =====
+function showComparison() {
+  const data = getIndustryData();
+  show('sec-comparison');
+  document.getElementById('sec-comparison').scrollIntoView({ behavior:'smooth', block:'start' });
+  setProgress(92, 'Contraste entre empresas comparables');
+
+  const i = data.festivalIndex;
+  const total = data.totals[i];
+  document.getElementById('comparison-title').textContent = `¿Por qué difieren las empresas de la ${data.industryName}?`;
+  document.getElementById('comparison-intro').textContent =
+    `Aunque todas venden ${data.product}, sus capacidades, tecnologías y restricciones producen respuestas diferentes al mismo precio.`;
+  document.getElementById('comparison-quantity-head').textContent =
+    `Cantidad a ${formatPrice(data.prices[i])}`;
+  document.getElementById('industry-comparison-body').innerHTML = data.firms.map(firm => {
+    const qty = firm.quantities[i];
+    const share = total ? qty / total * 100 : 0;
+    return `<tr>
+      <td><strong style="color:${firm.color}">${firm.name}</strong></td>
+      <td>${firm.response}</td>
+      <td>${firm.restriction}</td>
+      <td>${fmt(qty)} ${data.unit}</td>
+      <td>${share.toLocaleString('es-CL',{maximumFractionDigits:1})}%</td>
+    </tr>`;
+  }).join('');
+}
+
+// ===== PHASE 8: MOVEMENT VS DISPLACEMENT =====
+
+
+function getIndustryShocks() {
+  const data = getIndustryData();
+  return [
+    {
+      title: `Aumenta el costo de ${data.inputShock}`,
+      correct: 'desplazamiento',
+      explanation: 'Cambian los costos de producción, por lo que se modifica la cantidad ofrecida a todos los precios.'
+    },
+    {
+      title: `Aumenta el precio de ${data.product}`,
+      correct: 'movimiento',
+      explanation: 'Cambia el precio del propio producto; las firmas se mueven a lo largo de sus curvas de oferta.'
+    },
+    {
+      title: `Una nueva tecnología mejora la productividad en la ${data.industryName}`,
+      correct: 'desplazamiento',
+      explanation: 'La tecnología permite ofrecer más a cada precio, desplazando la curva hacia la derecha.'
+    },
+    {
+      title: `Ingresan nuevas empresas a la ${data.industryName}`,
+      correct: 'desplazamiento',
+      explanation: 'Aumenta el número de oferentes y, por tanto, la oferta total de la industria a cada precio.'
+    }
+  ];
+}
+
+function showMovementDisplacement() {
+  const data = getIndustryData();
+  show('sec-mvd');
+  document.getElementById('sec-mvd').scrollIntoView({ behavior:'smooth', block:'start' });
+  setProgress(95, 'Movimiento vs desplazamiento');
+  document.getElementById('mvd-industry-name').textContent = data.industryName;
+
+  state.shockAnswers = {};
+  const shocks = getIndustryShocks();
+  const grid = document.getElementById('shocks-grid');
+  grid.innerHTML = shocks.map((shock, i) => `
+    <div class="shock-card" id="shock-card-${i}">
+      <div class="shock-title">${shock.title}</div>
+      <div class="shock-options">
+        <button class="shock-btn" onclick="answerShock(${i},'movimiento')">Movimiento</button>
+        <button class="shock-btn" onclick="answerShock(${i},'desplazamiento')">Desplazamiento</button>
+      </div>
+      <div class="shock-result" id="shock-result-${i}"></div>
+    </div>`).join('');
+}
+
+function answerShock(i, answer) {
+  if (state.shockAnswers[i] !== undefined) return;
+  const shocks = getIndustryShocks();
+  state.shockAnswers[i] = answer;
+  const shock = shocks[i];
+  const card = document.getElementById('shock-card-' + i);
+  const result = document.getElementById('shock-result-' + i);
+  if (answer === shock.correct) {
+    card.classList.add('answered-correct');
+    result.textContent = '✅ Correcto. ' + shock.explanation;
+    result.style.color = '#065f46';
+  } else {
+    card.classList.add('answered-wrong');
+    result.textContent = `La respuesta correcta es "${shock.correct}". ${shock.explanation}`;
+    result.style.color = '#7f1d1d';
+  }
+  result.classList.add('show');
+  announce(answer === shock.correct ? 'Correcto. ' + shock.explanation : 'La respuesta correcta es ' + shock.correct + '.');
+}
+
+// ===== PHASE 9: TRANSITION QUESTION =====
+function showTransitionQuestion() {
+  const data = getIndustryData();
+  show('sec-transition');
+  document.getElementById('sec-transition').scrollIntoView({ behavior:'smooth', block:'start' });
+  setProgress(98, 'Pregunta de transición');
+  document.getElementById('transition-question-text').textContent =
+    `¿Por qué la oferta de la ${data.industryName} debe sumar únicamente empresas que venden ${data.product} en el mismo mercado?`;
+
+  document.getElementById('transition-prompts').innerHTML = `
+    <li>¿Qué características deben compartir las cantidades expresadas en ${data.unit} antes de sumarlas?</li>
+    <li>¿Qué error conceptual surgiría al agregar la producción de empresas pertenecientes a industrias diferentes?</li>
+    <li>¿Por qué dos empresas de la ${data.industryName} pueden ofrecer cantidades distintas al mismo precio?</li>
+  `;
+}
+
+function finishDiscussion() {
+  const data = getIndustryData();
+  show('sec-finish');
+  setProgress(100, '¡Actividad completada!');
+  document.getElementById('sec-finish').scrollIntoView({ behavior:'smooth', block:'start' });
+  announce(`Actividad completada. La pregunta final queda abierta para discutir la oferta de la ${data.industryName} en clase.`);
+}
+
+// ===== RESET =====
+
+function resetActivity() {
+  if (!confirm('¿Deseas reiniciar la actividad? Se perderá todo el progreso.')) return;
+  state = {
+    phase: 'news',
+    currentCompany: null,
+    selectedCompany: null,
+    completed: { cafeteria: false, hotel: false, granja: false, app: false },
+    decisions: { cafeteria: 0, hotel: 0, app: 0, granja: 0 },
+    industryData: null,
+    challengePriceIndex: null,
+    shockAnswers: {}
+  };
+  curveBuilt = 0;
+  // Reset badges
+  COMPANY_ORDER.forEach(id => {
+    const badge = document.getElementById('badge-' + id);
+    if (badge) { badge.textContent = 'Pendiente'; badge.className = 'company-status-badge badge-pending'; }
+    const card = document.querySelector(`.company-card[data-company="${id}"]`);
+    if (card) card.classList.remove('completed','active');
+  });
+  // Hide all sections
+  document.getElementById('company-management').classList.remove('visible');
+  ['sec-companies','sec-management','sec-individual','sec-aggregation','sec-table','sec-graph','sec-challenge','sec-comparison','sec-mvd','sec-transition'].forEach(id => hide(id));
+  hide('sec-finish');
+  document.getElementById('badge-achieved').classList.remove('visible');
+  const nextChallenge = document.getElementById('btn-challenge-next');
+  if (nextChallenge) nextChallenge.disabled = true;
+  show('sec-news');
+  setProgress(0, 'Introducción');
+  document.getElementById('company-selection-message').textContent =
+    'Selecciona una empresa para habilitar el botón de continuación.';
+  const continueButton = document.getElementById('btn-continue-company');
+  continueButton.disabled = true;
+  continueButton.textContent = 'Continuar con la empresa seleccionada →';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  announce('Actividad reiniciada.');
+}
+</script>
+</body>
+</html>

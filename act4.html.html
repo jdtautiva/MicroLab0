@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Cuánto pagarías? | Universidad Andrés Bello</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary:#003366; --primary-lt:#1a5599; --accent:#d4961a;
+    --success:#2e7d32; --danger:#b3261e; --warning:#9a6700;
+    --bg:#f4f6fb; --surface:#fff; --text:#1a1a2e; --muted:#55557a;
+    --border:#dce3f0; --shadow:0 2px 12px rgba(0,0,60,.10);
+    --radius:14px; --tr:.22s ease;
+  }
+  html { scroll-behavior:smooth; }
+  body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; min-height:100vh; }
+  :focus-visible { outline:3px solid var(--accent); outline-offset:3px; border-radius:4px; }
+  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+  /* Encabezado de la Actividad 1 */
+  .inst-header { background:#fff; border-bottom:4px solid var(--primary); padding:1rem 2rem; display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap; position:sticky; top:0; z-index:50; }
+  .inst-header img { height:56px; width:auto; max-width:180px; }
+  .inst-header-fallback { width:56px; height:56px; background:var(--primary); border-radius:8px; display:none; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:1.2rem; }
+  .inst-header-text h1 { font-size:.95rem; font-weight:700; color:var(--primary); }
+  .inst-header-text p { font-size:.8rem; color:var(--muted); }
+
+  main { max-width:1080px; margin:0 auto; padding:2rem 1.25rem 4rem; }
+  .progress-shell { background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); padding:1rem 1.25rem; margin-bottom:1.5rem; }
+  .progress-head { display:flex; justify-content:space-between; gap:1rem; font-size:.82rem; color:var(--muted); margin-bottom:.5rem; }
+  .progress-track { height:9px; background:var(--border); border-radius:999px; overflow:hidden; }
+  .progress-fill { height:100%; width:0; background:linear-gradient(90deg,var(--primary),var(--primary-lt)); transition:width .4s ease; }
+
+  .screen { display:none; }
+  .screen.active { display:block; animation:fadeUp .35s ease; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .panel { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:1.65rem; margin-bottom:1.25rem; }
+  .hero { text-align:center; padding:2.25rem 1.5rem; }
+  .eyebrow { display:inline-block; color:var(--primary); background:#edf2ff; border-radius:999px; padding:.3rem .8rem; font-size:.75rem; font-weight:800; text-transform:uppercase; letter-spacing:.05em; margin-bottom:.8rem; }
+  h2 { color:var(--primary); font-size:1.65rem; line-height:1.25; margin-bottom:.65rem; }
+  h3 { color:var(--primary); font-size:1.12rem; margin-bottom:.55rem; }
+  .lead { color:var(--muted); max-width:760px; margin:0 auto; }
+  .instruction-box { background:#edf2ff; border-left:5px solid var(--primary); border-radius:0 10px 10px 0; padding:1rem 1.1rem; margin:1rem 0; }
+  .instruction-box strong { color:var(--primary); }
+  .warning-box { background:#fff8e6; border:1.5px solid #e8bb55; border-radius:10px; padding:.9rem 1rem; color:#6e4d00; margin:.9rem 0; }
+  .success-box { background:#eef9ef; border:1.5px solid #86c88b; border-radius:10px; padding:.9rem 1rem; color:#1f5d25; margin:.9rem 0; }
+  .error-box { background:#fff0ef; border:1.5px solid #e59a95; border-radius:10px; padding:.9rem 1rem; color:#7f1d1d; margin:.9rem 0; }
+
+  .products { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-top:1.25rem; }
+  .product-card { border:2px solid var(--border); background:#fff; border-radius:12px; padding:1.15rem; text-align:center; cursor:pointer; transition:all var(--tr); min-height:190px; display:flex; flex-direction:column; justify-content:center; }
+  .product-card:hover { transform:translateY(-3px); border-color:var(--primary-lt); box-shadow:0 7px 20px rgba(0,0,60,.12); }
+  .product-card.selected { border-color:var(--primary); background:#edf2ff; box-shadow:0 0 0 3px rgba(0,51,102,.12); }
+  .product-icon { font-size:2.6rem; margin-bottom:.45rem; }
+  .product-card strong { color:var(--primary); }
+  .product-card small { color:var(--muted); display:block; margin-top:.35rem; }
+
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; align-items:start; }
+  .range-card { background:#f8faff; border:1px solid var(--border); border-radius:12px; padding:1.2rem; }
+  .value-display { font-size:2rem; font-weight:850; color:var(--primary); margin:.4rem 0; }
+  input[type="range"] { width:100%; accent-color:var(--primary); min-height:32px; }
+  input[type="number"] { width:100%; padding:.65rem .75rem; border:2px solid var(--border); border-radius:8px; font:inherit; margin-top:.55rem; }
+
+  .btn-row { display:flex; gap:.75rem; flex-wrap:wrap; margin-top:1.15rem; }
+  .btn { border:none; border-radius:9px; padding:.72rem 1.15rem; font:inherit; font-size:.92rem; font-weight:750; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:.4rem; transition:all var(--tr); }
+  .btn-primary { background:var(--primary); color:#fff; }
+  .btn-primary:hover:not(:disabled) { background:var(--primary-lt); transform:translateY(-1px); }
+  .btn-outline { background:#fff; color:var(--primary); border:2px solid var(--primary); }
+  .btn-outline:hover:not(:disabled) { background:var(--primary); color:#fff; }
+  .btn-success { background:var(--success); color:#fff; }
+  .btn-success:hover:not(:disabled) { background:#1f6424; }
+  .btn:disabled { opacity:.45; cursor:not-allowed; transform:none !important; }
+
+  .market-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:.85rem; margin:1rem 0; }
+  .metric { background:#f8faff; border:1px solid var(--border); border-radius:10px; padding:.9rem; text-align:center; }
+  .metric strong { display:block; color:var(--primary); font-size:1.35rem; }
+  .consumer-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:.65rem; margin-top:1rem; }
+  .consumer { border:2px solid var(--border); border-radius:10px; padding:.75rem .45rem; text-align:center; background:#fff; transition:all .25s ease; }
+  .consumer.buying { background:#eef9ef; border-color:#76b87b; }
+  .consumer.not-buying { opacity:.55; background:#f3f4f6; }
+  .consumer.focus { box-shadow:0 0 0 4px rgba(212,150,26,.25); border-color:var(--accent); opacity:1; }
+  .consumer .avatar { font-size:1.7rem; display:block; }
+  .consumer .name { font-weight:750; font-size:.84rem; }
+  .consumer .wap { color:var(--muted); font-size:.73rem; }
+  .table-wrap { overflow-x:auto; margin-top:1rem; }
+  table { width:100%; border-collapse:collapse; font-size:.88rem; }
+  th,td { padding:.65rem .75rem; text-align:left; border-bottom:1px solid var(--border); }
+  th { background:#f4f6fb; color:var(--primary); }
+
+  .objective-grid { display:grid; grid-template-columns:1fr; gap:1.25rem; }
+  .analysis-panel { max-width:780px; }
+  .step4-chart-section { margin-top:1.25rem; }
+  .step4-chart-section .chart-card { width:100%; }
+  .person-progress { display:inline-flex; align-items:center; gap:.35rem; border-radius:999px; padding:.3rem .7rem; background:#fff8e6; color:#6e4d00; font-size:.8rem; font-weight:800; margin-bottom:.75rem; }
+  .steps-list { margin:.6rem 0 0 1.25rem; }
+  .steps-list li { margin-bottom:.45rem; }
+  .decision-buttons { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; margin:1rem 0; }
+  .choice { border:2px solid var(--border); border-radius:10px; background:#fff; padding:.85rem; font:inherit; font-weight:750; cursor:pointer; transition:all var(--tr); }
+  .choice:hover:not(:disabled) { border-color:var(--primary); background:#edf2ff; }
+  .choice.correct { border-color:var(--success); background:#eef9ef; color:#1f5d25; }
+  .choice.incorrect { border-color:var(--danger); background:#fff0ef; color:#7f1d1d; }
+  .trial-status { font-size:.83rem; color:var(--muted); margin-top:.6rem; }
+  .price-stage { border:2px solid var(--primary); background:#f8faff; }
+  .price-stage.complete { border-color:var(--success); background:#eef9ef; }
+  .person-analysis-panel { display:none; }
+  .person-analysis-panel.visible { display:block; animation:fadeUp .3s ease; }
+  .stage-note { color:var(--muted); font-size:.86rem; margin-top:.55rem; }
+
+  .chart-card { background:#fff; border:1px solid var(--border); border-radius:12px; padding:.8rem; }
+  .chart-card svg { width:100%; height:auto; display:block; }
+  .chart-caption { color:var(--muted); font-size:.8rem; text-align:center; margin-top:.4rem; }
+  .point-counter { display:inline-flex; align-items:center; gap:.35rem; border-radius:999px; padding:.3rem .7rem; background:#edf2ff; color:var(--primary); font-size:.8rem; font-weight:800; }
+
+  .formula-box { background:#f7f9fd; border:2px solid var(--border); border-radius:12px; padding:1.2rem; margin:1rem 0; text-align:center; }
+  .formula { font-family:Georgia,'Times New Roman',serif; font-size:1.25rem; color:var(--primary); overflow-wrap:anywhere; }
+  .key-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-top:1rem; }
+  .key-card { border:1px solid var(--border); border-radius:10px; padding:1rem; background:#fff; }
+  .key-card strong { color:var(--primary); display:block; margin-bottom:.25rem; }
+
+  .discussion-list { display:grid; gap:1rem; margin-top:1rem; counter-reset:discussion; }
+  .discussion-card { position:relative; border:1.5px solid var(--border); border-left:5px solid var(--primary); border-radius:12px; padding:1.15rem 1.15rem 1.15rem 3.35rem; background:#fff; }
+  .discussion-card::before { counter-increment:discussion; content:counter(discussion); position:absolute; left:1rem; top:1rem; width:1.65rem; height:1.65rem; border-radius:50%; display:flex; align-items:center; justify-content:center; background:var(--primary); color:#fff; font-weight:800; }
+  .discussion-card p { font-weight:700; color:var(--text); }
+  .discussion-note { background:#fff8e6; border:1.5px solid #e8bb55; border-radius:10px; padding:.9rem 1rem; color:#6e4d00; margin-top:1rem; }
+  .completion-message { margin-top:1.25rem; background:linear-gradient(135deg,#003366,#1a5599); color:#fff; border-radius:14px; padding:1.4rem; display:none; }
+  .completion-message.show { display:block; animation:fadeUp .35s ease; }
+  .completion-message h3 { color:#fff; }
+
+  footer { background:var(--primary); color:rgba(255,255,255,.88); text-align:center; padding:1.25rem; font-size:.82rem; }
+
+  @media (max-width:850px) { .products { grid-template-columns:repeat(2,1fr); } .consumer-grid { grid-template-columns:repeat(3,1fr); } .two-col,.objective-grid { grid-template-columns:1fr; } .key-grid { grid-template-columns:1fr; } }
+  @media (max-width:560px) { .inst-header { padding:.85rem 1rem; gap:.85rem; } .inst-header img { height:46px; } .inst-header-fallback { width:46px; height:46px; } main { padding:1.25rem .75rem 3rem; } .panel { padding:1.1rem; } .products { grid-template-columns:1fr; } .consumer-grid { grid-template-columns:repeat(2,1fr); } .market-summary { grid-template-columns:1fr; } .decision-buttons { grid-template-columns:1fr; } .btn-row .btn { width:100%; } h2 { font-size:1.4rem; } }
+</style>
+</head>
+<body>
+<div id="live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+<header class="inst-header" role="banner">
+  <img id="logo-img" src="https://facultades.unab.cl/economiaynegocios/wp-content/uploads/2022/03/logo-fen-negro.png" alt="Logo de la Facultad de Economía y Negocios de la Universidad Andrés Bello" onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='flex';">
+  <div id="logo-fallback" class="inst-header-fallback" aria-hidden="true">FEN</div>
+  <div class="inst-header-text"><h1>Universidad Andrés Bello</h1><p>Facultad de Economía y Negocios</p></div>
+</header>
+
+<main>
+  <div class="progress-shell" aria-label="Progreso de la actividad">
+    <div class="progress-head"><span id="step-label">Paso 1 de 6</span><span id="step-pct">0%</span></div>
+    <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="6" aria-valuenow="1"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <section id="screen-1" class="screen active" aria-labelledby="s1-title">
+    <div class="panel hero">
+      <span class="eyebrow">Demanda individual y de mercado</span>
+      <h2 id="s1-title">¿Cuánto pagarías?</h2>
+      <p class="lead">Selecciona un producto. Después registrarás tu disposición máxima a pagar y construirás, punto por punto, una demanda de mercado.</p>
+    </div>
+    <div class="panel">
+      <h3>1. Elige un producto</h3>
+      <p class="lead" style="margin:0">No existe una elección correcta. Escoge el producto que te resulte más fácil valorar.</p>
+      <div class="products" id="product-grid"></div>
+      <div class="btn-row"><button class="btn btn-primary" id="btn-product" disabled onclick="confirmProduct()">Elegir este producto →</button></div>
+    </div>
+  </section>
+
+  <section id="screen-2" class="screen" aria-labelledby="s2-title">
+    <div class="panel">
+      <span class="eyebrow">Paso 2</span><h2 id="s2-title">Registra tu disposición máxima a pagar</h2>
+      <div class="instruction-box"><strong>Objetivo:</strong> indicar el precio más alto al que todavía comprarías una unidad del producto. A un precio superior, decidirías no comprar.</div>
+      <div class="two-col">
+        <div class="range-card"><h3 id="valuation-product"></h3><div class="value-display" id="valuation-display">$0</div><input id="valuation-range" type="range" aria-label="Disposición máxima a pagar"><label for="valuation-number" class="sr-only">Valor numérico</label><input id="valuation-number" type="number" aria-label="Disposición máxima a pagar en formato numérico"><p id="valuation-sentence" style="margin-top:.75rem;color:var(--muted)"></p></div>
+        <div><h3>¿Qué significa este valor?</h3><p>Tu disposición a pagar es una valoración individual. Puede ser diferente a la de otras personas.</p><div class="success-box"><strong>Regla:</strong><br>Si precio ≤ disposición a pagar, compras.<br>Si precio &gt; disposición a pagar, no compras.</div></div>
+      </div>
+      <div class="btn-row"><button class="btn btn-outline" onclick="goTo(1)">← Volver</button><button class="btn btn-primary" onclick="registerValuation()">Registrar mi disposición a pagar →</button></div>
+    </div>
+  </section>
+
+  <section id="screen-3" class="screen" aria-labelledby="s3-title">
+    <div class="panel">
+      <span class="eyebrow">Paso 3</span><h2 id="s3-title">Conoce el mercado</h2>
+      <p>Estas diez personas tienen disposiciones máximas a pagar diferentes. Esas valoraciones permanecerán constantes mientras tú modificas únicamente el precio.</p>
+      <div class="market-summary"><div class="metric"><span>Producto</span><strong id="market-product">—</strong></div><div class="metric"><span>Consumidores</span><strong>10</strong></div><div class="metric"><span>Tu valoración</span><strong id="market-own-wap">—</strong></div></div>
+      <div class="consumer-grid" id="consumer-grid-static"></div>
+      <div class="table-wrap"><table><thead><tr><th>Consumidor</th><th>Disposición máxima a pagar</th></tr></thead><tbody id="market-table-body"></tbody></table></div>
+      <div class="btn-row"><button class="btn btn-outline" onclick="goTo(2)">← Volver</button><button class="btn btn-outline" onclick="generateMarket()">Generar nuevo mercado</button><button class="btn btn-primary" onclick="startTrials()">Comenzar a construir la demanda →</button></div>
+    </div>
+  </section>
+
+  <section id="screen-4" class="screen" aria-labelledby="s4-title">
+    <div class="panel">
+      <span class="eyebrow">Paso 4</span><h2 id="s4-title">Decide quién compra y agrega puntos al gráfico</h2>
+      <div class="instruction-box"><strong>Objetivo de este paso:</strong> fijar primero un precio sin conocer la persona que será evaluada. Después de confirmar el precio, aparecerá una persona y deberás decidir si compraría. Finalmente, registrarás el resultado del mercado como un punto <strong>(cantidad demandada, precio)</strong>.</div>
+      <div class="objective-grid">
+        <div class="analysis-panel">
+          <div class="person-progress" id="person-progress">Análisis 1 de 5 · Selecciona el precio</div>
+          <h3>Cómo completar cada análisis</h3>
+          <ol class="steps-list">
+            <li>Selecciona un <strong>precio de mercado</strong> usando el control deslizante o el campo numérico.</li>
+            <li>Pulsa <strong>Confirmar precio y mostrar persona</strong>. La persona permanece oculta hasta confirmar.</li>
+            <li>Compara el precio fijado con la disposición a pagar de la persona revelada.</li>
+            <li>Marca si <strong>compraría</strong> o <strong>no compraría</strong>.</li>
+            <li>Cuando la respuesta sea correcta, el sistema calculará cuántas personas compran.</li>
+            <li>Agrega el punto al gráfico y repite con una persona y un precio diferentes.</li>
+          </ol>
+          <div class="range-card price-stage" id="price-stage" style="margin-top:1rem">
+            <label for="market-price"><strong>1. Selecciona el precio de mercado</strong></label>
+            <div class="value-display" id="market-price-display">$0</div>
+            <input id="market-price" type="range" aria-label="Precio de mercado">
+            <input id="market-price-number" type="number" aria-label="Precio de mercado en formato numérico">
+            <p class="stage-note" id="price-stage-note">La identidad y valoración de la persona se mostrarán únicamente después de confirmar este precio.</p>
+            <div class="btn-row"><button class="btn btn-primary" id="btn-confirm-price" onclick="confirmTrialPrice()">Confirmar precio y mostrar persona →</button></div>
+            <div id="price-feedback" aria-live="polite"></div>
+          </div>
+          <div class="panel person-analysis-panel" id="person-analysis-panel" style="box-shadow:none;margin-top:1rem;border-width:2px;border-color:var(--accent)">
+            <h3>2. Analiza a la persona revelada</h3>
+            <div id="focus-consumer"></div>
+            <p id="decision-rule" style="color:var(--muted);margin-top:.55rem"></p>
+            <div class="decision-buttons"><button class="choice" id="choice-yes" onclick="answerDecision(true)">Sí, compraría</button><button class="choice" id="choice-no" onclick="answerDecision(false)">No compraría</button></div>
+            <div id="decision-feedback" aria-live="polite"></div>
+          </div>
+          <div id="quantity-result"></div>
+          <div class="btn-row"><button class="btn btn-success" id="btn-add-point" disabled onclick="addPoint()">＋ Agregar este punto al gráfico</button></div>
+          <p class="trial-status" id="trial-status">Selecciona y confirma un precio para comenzar el primer análisis.</p>
+        </div>
+        <div class="step4-chart-section">
+          <div style="display:flex;justify-content:space-between;gap:.75rem;align-items:center;margin-bottom:.6rem;flex-wrap:wrap"><h3 style="margin:0">Gráfico de demanda construido progresivamente</h3><span class="point-counter" id="point-counter">0 de 5 puntos</span></div>
+          <div class="chart-card"><svg id="trial-chart" viewBox="0 0 640 390" role="img" aria-label="Gráfico de puntos de demanda registrados"></svg><p class="chart-caption">Eje horizontal: cantidad demandada. Eje vertical: precio. Cada análisis correcto agrega un punto.</p></div>
+          <div class="warning-box"><strong>Importante:</strong> el punto se registra como <strong>(Q<sub>D</sub>, P)</strong>. No se suman precios; se cuenta cuántas personas compran a cada precio.</div>
+        </div>
+      </div>
+      <div class="btn-row"><button class="btn btn-outline" onclick="goTo(3)">← Volver</button><button class="btn btn-primary" id="btn-to-curve" disabled onclick="openCurve()">Ver la función de demanda →</button></div>
+    </div>
+  </section>
+
+  <section id="screen-5" class="screen" aria-labelledby="s5-title">
+    <div class="panel">
+      <span class="eyebrow">Paso 5</span><h2 id="s5-title">Función de demanda de mercado</h2>
+      <div class="success-box"><strong>Desbloqueada después de cinco puntos:</strong> ahora puedes observar la relación completa entre precio y cantidad demandada.</div>
+      <div class="two-col">
+        <div class="chart-card"><svg id="curve-chart" viewBox="0 0 640 390" role="img" aria-label="Función escalonada de demanda de mercado"></svg><p class="chart-caption">Los puntos que registraste se muestran sobre la función escalonada completa.</p></div>
+        <div><h3>La función representa una suma de decisiones individuales</h3><div class="formula-box"><div class="formula">Q<sub>D</sub>(P) = Σ 1(DAP<sub>i</sub> ≥ P)</div></div><p>Para cada precio <strong>P</strong>, la función cuenta cuántos consumidores tienen una disposición a pagar igual o superior a ese precio.</p><div class="key-grid"><div class="key-card"><strong>Demanda individual</strong>Cada persona compra una unidad o no compra.</div><div class="key-card"><strong>Demanda de mercado</strong>Se suman las cantidades individuales al mismo precio.</div><div class="key-card"><strong>Ley de la demanda</strong>Al subir el precio, tiende a disminuir el número de compradores.</div></div></div>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>Punto</th><th>Persona analizada</th><th>Precio</th><th>Cantidad demandada</th><th>Interpretación</th></tr></thead><tbody id="points-summary-body"></tbody></table></div>
+      <div class="btn-row"><button class="btn btn-outline" onclick="goTo(4)">← Volver</button><button class="btn btn-primary" onclick="openFormativeQuestions()">Responder preguntas formativas →</button></div>
+    </div>
+  </section>
+
+  <section id="screen-6" class="screen" aria-labelledby="s6-title">
+    <div class="panel">
+      <span class="eyebrow">Paso 6 · Discusión en clase</span><h2 id="s6-title">Preguntas abiertas para conversar y argumentar</h2>
+      <p>Estas preguntas no tienen una respuesta incorporada en la actividad. Utilícenlas para comparar interpretaciones, justificar argumentos y relacionar el ejercicio con los conceptos de la clase.</p>
+      <div class="discussion-list" aria-label="Preguntas abiertas para discusión">
+        <article class="discussion-card"><p>¿Por qué dos personas pueden tomar decisiones de compra distintas frente al mismo precio?</p></article>
+        <article class="discussion-card"><p>¿Cómo cambia la cantidad demandada del mercado cuando aumenta el precio? Explica el mecanismo usando las disposiciones a pagar.</p></article>
+        <article class="discussion-card"><p>¿Qué información aporta cada punto <strong>(Q<sub>D</sub>, P)</strong> y por qué no se deben sumar los precios para construir la demanda de mercado?</p></article>
+      </div>
+      <div class="completion-message" id="completion-message"><h3>Actividad completada</h3><p>Las preguntas quedan disponibles para continuar la discusión colectiva.</p></div>
+      <div class="btn-row"><button class="btn btn-outline" onclick="goTo(5)">← Volver</button><button class="btn btn-success" id="btn-finish" onclick="finishActivity()">Finalizar actividad</button><button class="btn btn-outline" onclick="resetActivity()">↺ Reiniciar actividad</button></div>
+    </div>
+  </section>
+</main>
+
+<footer role="contentinfo"><p>Desarrollado por Julián Díaz Tautiva, PhD.</p></footer>
+
+<script>
+'use strict';
+const PRODUCTS = [
+  {id:'concert',name:'Entrada para un concierto',icon:'🎵',desc:'Acceso a un concierto de tu elección.',min:0,max:100000,step:5000},
+  {id:'stream',name:'Suscripción mensual a una plataforma',icon:'📺',desc:'Un mes de contenido digital.',min:0,max:30000,step:1000},
+  {id:'coffee',name:'Café antes de una prueba',icon:'☕',desc:'Una bebida antes de una evaluación.',min:0,max:8000,step:500},
+  {id:'transport',name:'Transporte a un evento',icon:'🚌',desc:'Traslado de ida a un evento.',min:0,max:40000,step:2000}
+];
+const NAMES = ['Camila','Diego','Fernanda','Tomás','Valentina','Martín','Sofía','Benjamín','Antonia','Nicolás'];
+const AVATARS = ['👩🏻','👨🏽','👩🏾','👨🏻','👩🏼','👨🏿','👩🏽','👨🏼','👩🏻','👨🏽'];
+
+
+let state = {step:1, product:null, ownWap:0, consumers:[], price:0, focusIndex:0, priceConfirmed:false, decisionResolved:false, points:[], analyzedPeople:[]};
+const fmt = value => '$' + Math.round(value).toLocaleString('es-CL');
+function announce(msg){ const el=document.getElementById('live'); el.textContent=''; requestAnimationFrame(()=>el.textContent=msg); }
+function currentProduct(){ return PRODUCTS.find(p=>p.id===state.product); }
+function roundStep(value,step){ return Math.round(value/step)*step; }
+
+function init(){ renderProducts(); updateProgress(); }
+function renderProducts(){
+  const grid=document.getElementById('product-grid'); grid.innerHTML='';
+  PRODUCTS.forEach(p=>{ const b=document.createElement('button'); b.type='button'; b.className='product-card'+(state.product===p.id?' selected':''); b.setAttribute('aria-pressed',String(state.product===p.id)); b.innerHTML=`<span class="product-icon" aria-hidden="true">${p.icon}</span><strong>${p.name}</strong><small>${p.desc}</small><small>Rango: ${fmt(p.min)} a ${fmt(p.max)}</small>`; b.onclick=()=>{state.product=p.id;renderProducts();document.getElementById('btn-product').disabled=false;announce('Producto seleccionado: '+p.name);}; grid.appendChild(b); });
+}
+function confirmProduct(){ if(!state.product)return; setupValuation(); goTo(2); }
+function setupValuation(){
+  const p=currentProduct(); state.ownWap=roundStep(p.max*.5,p.step);
+  document.getElementById('valuation-product').textContent=p.icon+' '+p.name;
+  ['valuation-range','valuation-number'].forEach(id=>{const el=document.getElementById(id);el.min=p.min;el.max=p.max;el.step=p.step;el.value=state.ownWap;});
+  document.getElementById('valuation-range').oninput=e=>syncValuation(Number(e.target.value));
+  document.getElementById('valuation-number').oninput=e=>syncValuation(clamp(Number(e.target.value),p.min,p.max));
+  syncValuation(state.ownWap);
+}
+function syncValuation(v){ const p=currentProduct(); state.ownWap=roundStep(v,p.step); document.getElementById('valuation-range').value=state.ownWap; document.getElementById('valuation-number').value=state.ownWap; document.getElementById('valuation-display').textContent=fmt(state.ownWap); document.getElementById('valuation-sentence').innerHTML=`Estarías dispuesto a pagar hasta <strong>${fmt(state.ownWap)}</strong> por ${p.name.toLowerCase()}.`; }
+function registerValuation(){ createDefaultMarket(); renderMarket(); goTo(3); }
+function createDefaultMarket(){ const p=currentProduct(); const ratios=[.92,.82,.73,.64,.56,.48,.40,.32,.23,.14]; state.consumers=ratios.map((r,i)=>({name:NAMES[i],avatar:AVATARS[i],wap:Math.max(p.step,roundStep(p.max*r,p.step))})).sort((a,b)=>b.wap-a.wap); state.points=[]; state.analyzedPeople=[]; state.focusIndex=0; }
+function generateMarket(){ const p=currentProduct(); const vals=[]; while(vals.length<10){const v=Math.max(p.step,roundStep((.1+Math.random()*.85)*p.max,p.step)); if(!vals.includes(v))vals.push(v);} vals.sort((a,b)=>b-a); state.consumers=vals.map((wap,i)=>({name:NAMES[i],avatar:AVATARS[i],wap})); state.points=[]; state.analyzedPeople=[]; state.focusIndex=0; renderMarket(); announce('Se generó un nuevo mercado.'); }
+function renderMarket(){ const p=currentProduct(); document.getElementById('market-product').textContent=p.name; document.getElementById('market-own-wap').textContent=fmt(state.ownWap); const grid=document.getElementById('consumer-grid-static'); const tbody=document.getElementById('market-table-body'); grid.innerHTML='';tbody.innerHTML=''; state.consumers.forEach(c=>{grid.insertAdjacentHTML('beforeend',`<div class="consumer"><span class="avatar">${c.avatar}</span><span class="name">${c.name}</span><div class="wap">DAP: ${fmt(c.wap)}</div></div>`);tbody.insertAdjacentHTML('beforeend',`<tr><td>${c.name}</td><td>${fmt(c.wap)}</td></tr>`);}); }
+function startTrials(){
+  const p=currentProduct();
+  state.points=[]; state.analyzedPeople=[]; state.price=roundStep(p.max*.6,p.step);
+  state.focusIndex=0; state.priceConfirmed=false; state.decisionResolved=false;
+  setupPriceControls(); clearDecisionStyles(); preparePriceSelection(); updatePointCounter(); drawChart('trial-chart',false); goTo(4);
+}
+function setupPriceControls(){
+  const p=currentProduct();
+  ['market-price','market-price-number'].forEach(id=>{const el=document.getElementById(id);el.min=p.min;el.max=p.max;el.step=p.step;el.value=state.price;});
+  document.getElementById('market-price').oninput=e=>setPrice(Number(e.target.value));
+  document.getElementById('market-price-number').oninput=e=>setPrice(clamp(Number(e.target.value),p.min,p.max));
+}
+function setPrice(v){
+  if(state.priceConfirmed) return;
+  const p=currentProduct();
+  state.price=roundStep(v,p.step);
+  document.getElementById('market-price').value=state.price;
+  document.getElementById('market-price-number').value=state.price;
+  document.getElementById('market-price-display').textContent=fmt(state.price);
+  document.getElementById('price-feedback').innerHTML='';
+  document.getElementById('trial-status').textContent=`Precio seleccionado: ${fmt(state.price)}. Confírmalo para revelar la persona ${state.focusIndex+1} de 5.`;
+}
+function setPriceControlsDisabled(disabled){
+  document.getElementById('market-price').disabled=disabled;
+  document.getElementById('market-price-number').disabled=disabled;
+  document.getElementById('btn-confirm-price').disabled=disabled;
+}
+function preparePriceSelection(){
+  state.priceConfirmed=false; state.decisionResolved=false;
+  setPriceControlsDisabled(false);
+  document.getElementById('market-price-display').textContent=fmt(state.price);
+  document.getElementById('price-stage').classList.remove('complete');
+  document.getElementById('price-stage-note').textContent='La identidad y valoración de la persona se mostrarán únicamente después de confirmar este precio.';
+  document.getElementById('price-feedback').innerHTML='';
+  document.getElementById('person-analysis-panel').classList.remove('visible');
+  document.getElementById('focus-consumer').innerHTML='';
+  document.getElementById('decision-rule').innerHTML='';
+  document.getElementById('quantity-result').innerHTML='';
+  document.getElementById('btn-add-point').disabled=true;
+  clearDecisionStyles();
+  document.getElementById('person-progress').textContent=`Análisis ${state.focusIndex+1} de 5 · Selecciona el precio`;
+  document.getElementById('trial-status').textContent=`Selecciona un precio diferente y confírmalo antes de conocer a la persona ${state.focusIndex+1}.`;
+}
+function confirmTrialPrice(){
+  if(state.focusIndex>=5 || state.priceConfirmed) return;
+  const duplicate=state.points.some(pt=>pt.price===state.price);
+  if(duplicate){
+    document.getElementById('price-feedback').innerHTML='<div class="warning-box"><strong>Elige otro precio.</strong> Este valor ya fue registrado en un análisis anterior.</div>';
+    announce('Este precio ya fue registrado. Selecciona uno diferente.');
+    return;
+  }
+  state.priceConfirmed=true;
+  setPriceControlsDisabled(true);
+  document.getElementById('price-stage').classList.add('complete');
+  document.getElementById('price-stage-note').textContent=`Precio confirmado: ${fmt(state.price)}. Ahora se revela la persona que debes analizar.`;
+  document.getElementById('price-feedback').innerHTML='<div class="success-box"><strong>Precio fijado.</strong> Ya no puede modificarse durante este análisis.</div>';
+  renderTrial();
+  document.getElementById('person-analysis-panel').classList.add('visible');
+  document.getElementById('person-progress').textContent=`Análisis ${state.focusIndex+1} de 5 · Precio confirmado`;
+  document.getElementById('trial-status').textContent='Compara el precio confirmado con la disposición a pagar de la persona revelada.';
+  document.getElementById('person-analysis-panel').scrollIntoView({behavior:'smooth',block:'center'});
+  announce(`Precio ${fmt(state.price)} confirmado. Se muestra la persona a analizar.`);
+}
+function buyersAt(price){ return state.consumers.filter(c=>c.wap>=price).length; }
+function renderTrial(){
+  if(!state.priceConfirmed || state.focusIndex>=5) return;
+  const c=state.consumers[state.focusIndex];
+  document.getElementById('focus-consumer').innerHTML=`<div class="consumer focus" style="max-width:220px"><span class="avatar">${c.avatar}</span><span class="name">${c.name}</span><div class="wap">Disposición máxima: <strong>${fmt(c.wap)}</strong></div></div>`;
+  document.getElementById('decision-rule').innerHTML=`Compara el precio confirmado <strong>${fmt(state.price)}</strong> con la disposición a pagar de ${c.name}: <strong>${fmt(c.wap)}</strong>.`;
+  document.getElementById('quantity-result').innerHTML='';
+  document.getElementById('btn-add-point').disabled=true;
+}
+function clearDecisionStyles(){ ['choice-yes','choice-no'].forEach(id=>{const b=document.getElementById(id);b.classList.remove('correct','incorrect');b.disabled=false;}); document.getElementById('decision-feedback').innerHTML=''; }
+function answerDecision(answer){
+  if(state.focusIndex>=5 || !state.priceConfirmed) return;
+  const c=state.consumers[state.focusIndex];
+  const correct=c.wap>=state.price;
+  const btn=document.getElementById(answer?'choice-yes':'choice-no');
+  if(answer!==correct){
+    btn.classList.add('incorrect');
+    btn.disabled=true;
+    document.getElementById('decision-feedback').innerHTML=`<div class="error-box"><strong>Revisa la comparación.</strong> ${c.name} compra solo cuando el precio es igual o menor que su disposición máxima a pagar. Puedes elegir la otra alternativa.</div>`;
+    announce('La respuesta requiere revisión. Intenta nuevamente.');
+    return;
+  }
+  state.decisionResolved=true;
+  btn.classList.add('correct');
+  document.querySelectorAll('.choice').forEach(b=>b.disabled=true);
+  const q=buyersAt(state.price);
+  document.getElementById('decision-feedback').innerHTML=`<div class="success-box"><strong>Correcto.</strong> ${c.name} ${correct?'sí compraría':'no compraría'} a este precio.</div>`;
+  document.getElementById('quantity-result').innerHTML=`<div class="instruction-box">Al aplicar la misma regla a las diez personas: <strong>Q<sub>D</sub> = ${q}</strong>. El punto que puedes agregar es <strong>(${q}, ${fmt(state.price)})</strong>.</div>`;
+  const duplicate=state.points.some(pt=>pt.price===state.price);
+  document.getElementById('btn-add-point').disabled=duplicate;
+  if(duplicate) document.getElementById('quantity-result').insertAdjacentHTML('beforeend','<div class="warning-box">Este precio ya fue registrado. Selecciona otro precio para agregar un punto nuevo.</div>');
+  announce(`Decisión correcta. Cantidad demandada ${q}.`);
+}
+function addPoint(){
+  if(!state.priceConfirmed || !state.decisionResolved || state.focusIndex>=5) return;
+  if(state.points.some(pt=>pt.price===state.price)) return;
+  const person=state.consumers[state.focusIndex];
+  const q=buyersAt(state.price);
+  state.points.push({price:state.price,q,person:person.name,personWap:person.wap,buying:person.wap>=state.price});
+  state.analyzedPeople.push(person.name);
+  state.focusIndex += 1;
+  state.priceConfirmed=false; state.decisionResolved=false;
+  clearDecisionStyles(); updatePointCounter(); drawChart('trial-chart',false);
+  if(state.points.length>=5){
+    setPriceControlsDisabled(true);
+    document.getElementById('btn-to-curve').disabled=false;
+    document.getElementById('trial-status').textContent='Análisis completo: seleccionaste cinco precios antes de conocer a cada persona y registraste cinco puntos.';
+    document.getElementById('person-progress').textContent='5 de 5 personas analizadas';
+    document.getElementById('person-analysis-panel').classList.remove('visible');
+    document.getElementById('price-stage').classList.add('complete');
+    document.getElementById('price-stage-note').textContent='Los cinco análisis fueron completados.';
+    document.getElementById('price-feedback').innerHTML='<div class="success-box"><strong>Completado.</strong> La función de demanda ya está disponible.</div>';
+    document.getElementById('quantity-result').innerHTML='';
+    document.getElementById('btn-add-point').disabled=true;
+  } else {
+    document.getElementById('trial-status').textContent=`Punto agregado para ${person.name}: (${q}, ${fmt(state.price)}). Selecciona ahora un nuevo precio antes de revelar a la siguiente persona.`;
+    preparePriceSelection();
+  }
+  announce(`Punto agregado. Llevas ${state.points.length} de 5 personas analizadas.`);
+}
+function updatePointCounter(){ const n=state.points.length;document.getElementById('point-counter').textContent=`${Math.min(n,5)} de 5 puntos`;document.getElementById('btn-to-curve').disabled=n<5; }
+function openCurve(){ if(state.points.length<5)return; renderCurveScreen(); goTo(5); }
+function renderCurveScreen(){ drawChart('curve-chart',true); const tbody=document.getElementById('points-summary-body');tbody.innerHTML='';state.points.forEach((pt,i)=>tbody.insertAdjacentHTML('beforeend',`<tr><td>${i+1}</td><td>${pt.person || '—'}</td><td>${fmt(pt.price)}</td><td>${pt.q}</td><td>${pt.person || 'La persona'} ${pt.buying?'compraría':'no compraría'}; en el mercado, ${pt.q} consumidor${pt.q===1?'':'es'} compraría${pt.q===1?'':'n'}.</td></tr>`)); }
+function drawChart(id,fullCurve){ const svg=document.getElementById(id); if(!svg||!currentProduct())return; const p=currentProduct(), W=640,H=390,L=68,R=22,T=24,B=58,plotW=W-L-R,plotH=H-T-B; const x=q=>L+(q/10)*plotW, y=price=>T+(1-price/p.max)*plotH; let s=`<rect x="0" y="0" width="${W}" height="${H}" fill="#fff"/><line x1="${L}" y1="${T}" x2="${L}" y2="${H-B}" stroke="#444" stroke-width="2"/><line x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}" stroke="#444" stroke-width="2"/>`;
+  for(let q=0;q<=10;q+=2){s+=`<line x1="${x(q)}" y1="${H-B}" x2="${x(q)}" y2="${H-B+6}" stroke="#555"/><text x="${x(q)}" y="${H-B+23}" text-anchor="middle" font-size="13" fill="#555">${q}</text>`;}
+  for(let i=0;i<=5;i++){const price=p.max*i/5;s+=`<line x1="${L-6}" y1="${y(price)}" x2="${L}" y2="${y(price)}" stroke="#555"/><text x="${L-10}" y="${y(price)+4}" text-anchor="end" font-size="12" fill="#555">${shortMoney(price)}</text>`;}
+  s+=`<text x="${L+plotW/2}" y="${H-12}" text-anchor="middle" font-size="15" font-weight="700" fill="#003366">Cantidad demandada (Qᴅ)</text><text x="18" y="${T+plotH/2}" text-anchor="middle" transform="rotate(-90 18 ${T+plotH/2})" font-size="15" font-weight="700" fill="#003366">Precio (P)</text>`;
+  if(fullCurve){ const vals=[...state.consumers].map(c=>c.wap).sort((a,b)=>b-a); let d=`M ${x(0)} ${y(p.max)}`; let currentQ=0,currentP=p.max; vals.forEach(v=>{d+=` L ${x(currentQ)} ${y(v)} L ${x(currentQ+1)} ${y(v)}`;currentQ++;currentP=v;}); d+=` L ${x(10)} ${y(0)}`; s+=`<path d="${d}" fill="none" stroke="#1a5599" stroke-width="4" stroke-linejoin="round"/><text x="${x(7.3)}" y="${y(vals[7]) - 12}" font-size="15" font-weight="800" fill="#1a5599">Demanda de mercado</text>`; }
+  state.points.forEach((pt,i)=>{s+=`<circle cx="${x(pt.q)}" cy="${y(pt.price)}" r="7" fill="#d4961a" stroke="#7a5200" stroke-width="2"><title>Punto ${i+1}: cantidad ${pt.q}, precio ${fmt(pt.price)}</title></circle><text x="${x(pt.q)+10}" y="${y(pt.price)-10}" font-size="12" font-weight="700" fill="#7a5200">${i+1}</text>`;}); svg.innerHTML=s; }
+function shortMoney(v){ if(v>=1000)return '$'+(v/1000).toLocaleString('es-CL',{maximumFractionDigits:1})+' mil';return '$'+Math.round(v); }
+function openFormativeQuestions(){ goTo(6); }
+function finishActivity(){
+  document.getElementById('completion-message').classList.add('show');
+  document.getElementById('completion-message').scrollIntoView({behavior:'smooth',block:'center'});
+  announce('Actividad finalizada. Las preguntas abiertas quedan disponibles para la discusión en clase.');
+}
+function goTo(step){ state.step=step;document.querySelectorAll('.screen').forEach((el,i)=>el.classList.toggle('active',i===step-1));updateProgress();window.scrollTo({top:0,behavior:'smooth'}); }
+function updateProgress(){ const step=state.step; const pct=Math.round((step/6)*100);document.getElementById('step-label').textContent=`Paso ${step} de 6`;document.getElementById('step-pct').textContent=pct+'%';document.getElementById('progress-fill').style.width=pct+'%';document.querySelector('.progress-track').setAttribute('aria-valuenow',step); }
+function resetActivity(){
+  state={step:1,product:null,ownWap:0,consumers:[],price:0,focusIndex:0,priceConfirmed:false,decisionResolved:false,points:[],analyzedPeople:[]};
+  document.getElementById('btn-product').disabled=true;
+  document.getElementById('btn-to-curve').disabled=true;
+  document.getElementById('completion-message').classList.remove('show');
+  renderProducts(); goTo(1); announce('Actividad reiniciada.');
+}
+function clamp(v,min,max){ if(Number.isNaN(v))return min; return Math.min(max,Math.max(min,v)); }
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
