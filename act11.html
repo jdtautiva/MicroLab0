@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Quién decide el precio? – Universidad Andrés Bello</title>
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --unab-blue: #003366;
+  --unab-gold: #C8A400;
+  --trigo: #D4A017;
+  --cafe: #6F4E37;
+  --telefonia: #1565C0;
+  --medicamento: #6A1B9A;
+  --power-low: #2E7D32;
+  --power-mid: #E65100;
+  --power-high: #B71C1C;
+  --bg: #F5F6FA;
+  --card-bg: #FFFFFF;
+  --text: #1A1A2E;
+  --text-secondary: #555;
+  --border: #DDE1E9;
+  --radius: 12px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.10);
+  --transition: 0.25s ease;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+/* ===== ACCESSIBILITY ===== */
+:focus-visible { outline: 3px solid var(--unab-gold); outline-offset: 3px; border-radius: 4px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ===== HEADER — FORMATO ACTIVIDAD 1 ===== */
+.inst-header {
+  background: #fff;
+  border-bottom: 4px solid var(--unab-blue);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.inst-header img {
+  height: 56px;
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
+}
+.inst-header-fallback {
+  width: 56px;
+  height: 56px;
+  background: var(--unab-blue);
+  border-radius: 8px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+.inst-header-text h1 { font-size: .95rem; font-weight: 700; color: var(--unab-blue); }
+.inst-header-text p { font-size: .8rem; color: var(--text-secondary); }
+
+/* ===== MAIN LAYOUT ===== */
+main { max-width: 1200px; margin: 0 auto; padding: 24px 16px 48px; }
+
+/* ===== INTRO SECTION ===== */
+#intro {
+  background: linear-gradient(135deg, var(--unab-blue) 0%, #1a4a8a 100%);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  margin-bottom: 28px;
+  text-align: center;
+}
+#intro h2 { font-size: 1.8rem; margin-bottom: 12px; }
+#intro .challenge-box {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 8px;
+  padding: 18px 24px;
+  margin: 16px auto;
+  max-width: 700px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+#intro p.sub { opacity: 0.85; font-size: 0.95rem; margin-top: 10px; }
+.badge-container { margin-top: 16px; }
+.progress-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 0.8rem;
+  margin: 4px;
+}
+
+/* ===== MARKET SELECTION ===== */
+#market-selection { margin-bottom: 28px; }
+#market-selection h2 { font-size: 1.3rem; font-weight: 700; color: var(--unab-blue); margin-bottom: 6px; }
+#market-selection .instruction { color: var(--text-secondary); margin-bottom: 18px; font-size: 0.95rem; }
+.markets-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.market-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.market-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.market-card.active { border-color: var(--market-color); box-shadow: 0 0 0 3px rgba(var(--market-color-rgb),0.2); }
+.market-card.completed::after {
+  content: "✓";
+  position: absolute;
+  top: 8px; right: 12px;
+  background: #2E7D32;
+  color: #fff;
+  border-radius: 50%;
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.market-card[data-market="trigo"] { --market-color: var(--trigo); --market-color-rgb: 212,160,23; }
+.market-card[data-market="cafeteria"] { --market-color: var(--cafe); --market-color-rgb: 111,78,55; }
+.market-card[data-market="telefonia"] { --market-color: var(--telefonia); --market-color-rgb: 21,101,192; }
+.market-card[data-market="medicamento"] { --market-color: var(--medicamento); --market-color-rgb: 106,27,154; }
+.market-card.active { border-color: var(--market-color); }
+.market-icon { width: 64px; height: 64px; margin: 0 auto 12px; }
+.market-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; color: var(--market-color); }
+.market-meta { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.8; text-align: left; }
+.market-meta span { display: block; }
+
+/* ===== PRICING DECISION ===== */
+#pricing-decision {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  display: none;
+}
+#pricing-decision.visible { display: block; }
+.decision-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.decision-header .market-color-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+.decision-header h2 { font-size: 1.2rem; font-weight: 700; }
+.decision-context { background: var(--bg); border-left: 4px solid var(--unab-blue); border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 20px; font-style: italic; color: var(--text-secondary); }
+
+.price-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 20px; }
+.slider-group { display: flex; flex-direction: column; gap: 10px; }
+.slider-group label { font-weight: 600; font-size: 0.9rem; }
+.slider-wrap { display: flex; align-items: center; gap: 12px; }
+input[type="range"] {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  accent-color: var(--unab-blue);
+  cursor: pointer;
+}
+.slider-value { font-weight: 700; color: var(--unab-blue); min-width: 48px; text-align: right; }
+.number-input-alt {
+  width: 70px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.price-preview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.preview-item {
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 12px 14px;
+  text-align: center;
+}
+.preview-item .label { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px; }
+.preview-item .value { font-size: 1.1rem; font-weight: 700; color: var(--unab-blue); }
+.preview-item .value.increase { color: #B71C1C; }
+.preview-item .value.decrease { color: #2E7D32; }
+
+/* oligopoly reaction */
+.oligopoly-section { display: none; }
+.oligopoly-section.visible { display: block; }
+.oligopoly-section h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; color: var(--telefonia); }
+.reaction-options { display: flex; gap: 10px; flex-wrap: wrap; }
+.reaction-btn {
+  padding: 8px 14px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: all var(--transition);
+  font-weight: 600;
+}
+.reaction-btn:hover { border-color: var(--telefonia); color: var(--telefonia); }
+.reaction-btn.selected { border-color: var(--telefonia); background: var(--telefonia); color: #fff; }
+
+/* cafeteria differentiation */
+.diff-section { display: none; }
+.diff-section.visible { display: block; }
+.diff-section h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; color: var(--cafe); }
+.diff-options { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.diff-tag {
+  padding: 6px 12px;
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all var(--transition);
+}
+.diff-tag:hover { border-color: var(--cafe); }
+.diff-tag.selected { border-color: var(--cafe); background: var(--cafe); color: #fff; }
+.diff-level { font-size: 0.82rem; color: var(--text-secondary); }
+
+/* prediction */
+.prediction-section { background: #FFF8E1; border: 1px solid var(--unab-gold); border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+.prediction-section h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; }
+.prediction-options { display: flex; flex-direction: column; gap: 6px; }
+.prediction-option { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 8px; border-radius: 6px; transition: background var(--transition); font-size: 0.88rem; }
+.prediction-option:hover { background: rgba(200,164,0,0.1); }
+.prediction-option input[type="radio"] { accent-color: var(--unab-gold); width: 16px; height: 16px; }
+
+/* hints */
+.hints-section { margin-bottom: 16px; }
+.hint-btn {
+  background: none;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all var(--transition);
+}
+.hint-btn:hover { border-color: var(--unab-blue); color: var(--unab-blue); }
+.hint-text { display: none; background: #E3F2FD; border-radius: 6px; padding: 10px 14px; margin-top: 8px; font-size: 0.85rem; color: #0D47A1; }
+.hint-text.visible { display: block; }
+
+/* CTA Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  min-height: 44px;
+}
+.btn-primary { background: var(--unab-blue); color: #fff; }
+.btn-primary:hover { background: #002255; }
+.btn-secondary { background: #fff; color: var(--unab-blue); border-color: var(--unab-blue); }
+.btn-secondary:hover { background: var(--unab-blue); color: #fff; }
+.btn-danger { background: #fff; color: #B71C1C; border-color: #B71C1C; }
+.btn-danger:hover { background: #B71C1C; color: #fff; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 16px; }
+
+/* ===== RESULTS SECTION ===== */
+#results-section {
+  display: none;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+#results-section.visible { display: block; }
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.result-kpi {
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+}
+.result-kpi .kpi-label { font-size: 0.72rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+.result-kpi .kpi-val { font-size: 1.15rem; font-weight: 700; color: var(--unab-blue); }
+.result-kpi .kpi-delta { font-size: 0.78rem; margin-top: 2px; }
+.delta-up { color: #2E7D32; }
+.delta-down { color: #B71C1C; }
+
+.consumer-visual { margin: 20px 0; }
+.consumer-visual h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; }
+.avatar-row { display: flex; flex-wrap: wrap; gap: 6px; min-height: 40px; }
+.avatar { font-size: 1.4rem; transition: all 0.5s ease; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; }
+.avatar.leaving { opacity: 0.2; transform: translateX(8px); filter: grayscale(1); }
+.avatar.staying { background: rgba(46,125,50,0.1); }
+.avatar.waiting { background: rgba(21,101,192,0.1); }
+
+.competitor-visual { margin: 20px 0; }
+.competitor-visual h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 10px; }
+.competitor-box { background: var(--bg); border-radius: 8px; padding: 14px; font-size: 0.9rem; line-height: 1.7; }
+
+.revenue-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+.revenue-box { background: var(--bg); border-radius: 10px; padding: 16px; }
+.revenue-box .rev-label { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 6px; }
+.revenue-box .rev-val { font-size: 1.2rem; font-weight: 700; }
+.revenue-box .rev-formula { font-size: 0.78rem; color: var(--text-secondary); margin-top: 4px; }
+.revenue-arrow { display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+
+.income-result { text-align: center; padding: 14px; border-radius: 10px; margin-bottom: 16px; font-weight: 700; font-size: 1rem; }
+.income-result.up { background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; }
+.income-result.down { background: #FFEBEE; color: #B71C1C; border: 1px solid #EF9A9A; }
+.income-result.ambiguous { background: #FFF8E1; color: #E65100; border: 1px solid #FFCC02; }
+
+.feedback-box { background: #E3F2FD; border-left: 4px solid var(--unab-blue); border-radius: 0 8px 8px 0; padding: 14px 16px; margin: 16px 0; font-size: 0.9rem; line-height: 1.7; }
+.prediction-result { padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 12px; }
+.prediction-result.correct { background: #E8F5E9; color: #2E7D32; }
+.prediction-result.partial { background: #FFF8E1; color: #E65100; }
+
+/* ===== MARKET POWER METER ===== */
+#market-power-meter {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  display: none;
+}
+#market-power-meter.visible { display: block; }
+#market-power-meter h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; color: var(--unab-blue); }
+
+.power-bars { display: grid; gap: 14px; }
+.power-bar-row { display: grid; grid-template-columns: 160px 1fr 60px; align-items: center; gap: 12px; }
+.power-bar-label { font-size: 0.88rem; font-weight: 600; }
+.power-bar-track { background: var(--bg); border-radius: 999px; height: 20px; overflow: hidden; }
+.power-bar-fill { height: 100%; border-radius: 999px; transition: width 0.8s ease; }
+.power-bar-val { font-size: 0.88rem; font-weight: 700; text-align: right; }
+
+.dimensions-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 20px; }
+.dim-card { background: var(--bg); border-radius: 8px; padding: 10px; text-align: center; }
+.dim-card .dim-label { font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+.dim-dots { display: flex; justify-content: center; gap: 3px; }
+.dim-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); }
+.dim-dot.filled { background: var(--unab-blue); }
+
+/* ===== COMPARISON SECTION ===== */
+#market-comparison {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  display: none;
+}
+#market-comparison.visible { display: block; }
+#market-comparison h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 16px; color: var(--unab-blue); }
+
+.comparison-wrapper { overflow-x: auto; }
+.comparison-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.comparison-table th { background: var(--unab-blue); color: #fff; padding: 10px 14px; text-align: left; }
+.comparison-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+.comparison-table tr:nth-child(even) { background: var(--bg); }
+.power-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #fff;
+}
+.chip-low { background: var(--power-low); }
+.chip-mid { background: var(--power-mid); }
+.chip-high { background: var(--power-high); }
+
+/* elasticity visual */
+.elasticity-insight { margin-top: 16px; background: var(--bg); border-radius: 10px; padding: 16px; }
+.elasticity-insight h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 10px; }
+.elas-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 0.85rem; }
+.elas-bar-track { flex: 1; background: #ddd; border-radius: 999px; height: 10px; }
+.elas-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(to right, #2E7D32, #E65100, #B71C1C); }
+.elas-label { min-width: 80px; }
+
+/* ===== CLASSIFICATION CHALLENGE ===== */
+#classification-challenge {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  display: none;
+}
+#classification-challenge.visible { display: block; }
+#classification-challenge h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; color: var(--unab-blue); }
+#classification-challenge .challenge-desc { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px; }
+
+.classify-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.classify-slot {
+  background: var(--bg);
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  min-height: 100px;
+}
+.classify-slot h3 { font-size: 0.88rem; font-weight: 700; color: var(--unab-blue); margin-bottom: 10px; }
+.classify-select { width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.88rem; background: #fff; cursor: pointer; }
+.classify-feedback { font-size: 0.8rem; margin-top: 8px; padding: 6px 10px; border-radius: 6px; display: none; }
+.classify-feedback.correct { background: #E8F5E9; color: #2E7D32; display: block; }
+.classify-feedback.incorrect { background: #FFF3E0; color: #E65100; display: block; }
+
+.barriers-section { margin-top: 16px; background: var(--bg); border-radius: 10px; padding: 16px; }
+.barriers-section h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 10px; }
+.barrier-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.barrier-chip { padding: 4px 10px; border-radius: 20px; font-size: 0.78rem; background: var(--unab-blue); color: #fff; opacity: 0.3; }
+.barrier-chip.shown { opacity: 1; }
+
+/* ===== REVENUE CHALLENGE ===== */
+#revenue-challenge {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  display: none;
+}
+#revenue-challenge.visible { display: block; }
+#revenue-challenge h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; color: var(--unab-blue); }
+
+.challenge-markets { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 16px 0; }
+.challenge-market-card { background: var(--bg); border-radius: 10px; padding: 14px; }
+.challenge-market-card h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; }
+.mini-slider { width: 100%; margin-bottom: 8px; accent-color: var(--unab-blue); }
+.mini-results { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.8; }
+.mini-results .good { color: #2E7D32; font-weight: 600; }
+.mini-results .bad { color: #B71C1C; font-weight: 600; }
+
+/* ===== TRANSITION QUESTION ===== */
+#transition-question {
+  background: linear-gradient(135deg, var(--unab-blue) 0%, #1a4a8a 100%);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  margin-bottom: 20px;
+  display: none;
+  text-align: center;
+}
+#transition-question.visible { display: block; }
+#transition-question h2 { font-size: 1.4rem; margin-bottom: 16px; }
+.closed-question-options {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 18px 0 16px;
+}
+.closed-question-btn {
+  min-width: 150px;
+  padding: 11px 22px;
+  border: 2px solid rgba(255,255,255,.65);
+  border-radius: 8px;
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.closed-question-btn:hover,
+.closed-question-btn:focus-visible {
+  background: rgba(255,255,255,.25);
+  border-color: #fff;
+}
+.closed-question-btn.selected {
+  background: #fff;
+  color: var(--unab-blue);
+  border-color: #fff;
+  box-shadow: 0 0 0 3px rgba(255,255,255,.22);
+}
+
+.final-answer {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-top: 16px;
+  text-align: left;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  display: none;
+}
+.final-answer.visible { display: block; }
+.conditions-list { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.condition-pill {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+}
+.final-badge {
+  margin-top: 20px;
+  background: var(--unab-gold);
+  color: #000;
+  border-radius: var(--radius);
+  padding: 16px 24px;
+  display: inline-block;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* ===== ACTIVITY CONTROLS ===== */
+.activity-controls {
+  max-width: 1200px;
+  margin: 0 auto 24px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.footer-progress { font-size: 0.85rem; color: var(--text-secondary); }
+.footer-progress strong { color: var(--unab-blue); }
+
+/* ===== FOOTER — FORMATO ACTIVIDAD 1 ===== */
+footer {
+  background: var(--unab-blue);
+  color: rgba(255,255,255,.85);
+  text-align: center;
+  padding: 1.25rem;
+  font-size: .82rem;
+}
+
+/* ===== LIVE REGION ===== */
+#aria-live { position: absolute; left: -9999px; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .markets-grid { grid-template-columns: repeat(2, 1fr); }
+  .price-controls { grid-template-columns: 1fr; }
+  .dimensions-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 600px) {
+  .inst-header { padding: 12px 16px; }
+  .inst-header img { height: 40px; }
+  main { padding: 16px 10px 40px; }
+  #intro { padding: 24px 16px; }
+  #intro h2 { font-size: 1.3rem; }
+  .markets-grid { grid-template-columns: 1fr; }
+  .price-preview { grid-template-columns: repeat(2, 1fr); }
+  .revenue-comparison { grid-template-columns: 1fr; }
+  .classify-grid { grid-template-columns: 1fr; }
+  .challenge-markets { grid-template-columns: 1fr; }
+  .dimensions-grid { grid-template-columns: repeat(2, 1fr); }
+  .power-bar-row { grid-template-columns: 100px 1fr 50px; }
+  .btn { width: 100%; justify-content: center; }
+  .btn-row { flex-direction: column; }
+  .activity-controls { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ARIA live region -->
+<div id="aria-live" aria-live="polite" aria-atomic="true"></div>
+
+<!-- INSTITUTIONAL HEADER -->
+<header class="inst-header" role="banner">
+  <img
+    id="logo-img"
+    src="https://facultades.unab.cl/economiaynegocios/wp-content/uploads/2022/03/logo-fen-negro.png"
+    alt="Logo de la Facultad de Economía y Negocios de la Universidad Andrés Bello"
+    onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';"
+  >
+  <div id="logo-fallback" class="inst-header-fallback" aria-hidden="true">FEN</div>
+  <div class="inst-header-text">
+    <h1>Universidad Andrés Bello</h1>
+    <p>Facultad de Economía y Negocios</p>
+  </div>
+</header>
+
+<main>
+
+<!-- INTRO -->
+<section id="intro" aria-labelledby="intro-heading">
+  <h2 id="intro-heading">¿Quién decide el precio?</h2>
+  <div class="challenge-box" role="note">
+    <strong>Eres gerente de cuatro empresas distintas.</strong> En cada mercado intentas aumentar el precio en 20%. ¿Qué ocurrirá con tus clientes, competidores y ventas?
+  </div>
+  <p class="sub">Selecciona un mercado, mueve el slider de precio y observa cómo reaccionan compradores y competidores.</p>
+  <div class="badge-container" id="stamps-container" aria-label="Mercados completados">
+  </div>
+</section>
+
+<!-- MARKET SELECTION -->
+<section id="market-selection" aria-labelledby="market-sel-heading">
+  <h2 id="market-sel-heading">Selecciona un mercado</h2>
+  <p class="instruction">Cada tarjeta muestra las características del mercado. Haz clic para comenzar tu análisis.</p>
+  <div class="markets-grid" role="list">
+
+    <!-- TRIGO -->
+    <article class="market-card" data-market="trigo" role="listitem" tabindex="0" aria-label="Mercado de Trigo" onclick="selectMarket('trigo')" onkeydown="if(event.key==='Enter'||event.key===' ')selectMarket('trigo')">
+      <div class="market-icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="64" height="64" rx="12" fill="#FFF8E1"/>
+          <path d="M32 52 C32 52 32 28 32 14" stroke="#D4A017" stroke-width="3" stroke-linecap="round"/>
+          <ellipse cx="32" cy="14" rx="6" ry="9" fill="#D4A017" opacity="0.9"/>
+          <ellipse cx="24" cy="20" rx="5" ry="8" fill="#C8A400" opacity="0.8" transform="rotate(-20 24 20)"/>
+          <ellipse cx="40" cy="20" rx="5" ry="8" fill="#C8A400" opacity="0.8" transform="rotate(20 40 20)"/>
+          <ellipse cx="20" cy="28" rx="4" ry="7" fill="#D4A017" opacity="0.6" transform="rotate(-30 20 28)"/>
+          <ellipse cx="44" cy="28" rx="4" ry="7" fill="#D4A017" opacity="0.6" transform="rotate(30 44 28)"/>
+        </svg>
+      </div>
+      <h3>🌾 Trigo</h3>
+      <div class="market-meta">
+        <span>👥 Competidores: Muchos</span>
+        <span>🔄 Sustitutos: Muchos</span>
+        <span>⭐ Diferenciación: Muy baja</span>
+        <span>🚧 Barreras: Bajas</span>
+      </div>
+    </article>
+
+    <!-- CAFETERÍA -->
+    <article class="market-card" data-market="cafeteria" role="listitem" tabindex="0" aria-label="Mercado de Cafetería diferenciada" onclick="selectMarket('cafeteria')" onkeydown="if(event.key==='Enter'||event.key===' ')selectMarket('cafeteria')">
+      <div class="market-icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="64" height="64" rx="12" fill="#EFEBE9"/>
+          <rect x="18" y="30" width="28" height="18" rx="4" fill="#6F4E37"/>
+          <rect x="22" y="26" width="20" height="8" rx="3" fill="#8D6E63"/>
+          <ellipse cx="32" cy="22" rx="8" ry="4" fill="#A1887F"/>
+          <path d="M44 34 Q50 30 48 38" stroke="#6F4E37" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M30 20 Q30 14 32 12" stroke="#A1887F" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3>☕ Cafetería</h3>
+      <div class="market-meta">
+        <span>👥 Competidores: Muchos</span>
+        <span>🔄 Sustitutos: Moderados</span>
+        <span>⭐ Diferenciación: Alta</span>
+        <span>🚧 Barreras: Bajas</span>
+      </div>
+    </article>
+
+    <!-- TELEFONÍA -->
+    <article class="market-card" data-market="telefonia" role="listitem" tabindex="0" aria-label="Mercado de Telefonía móvil" onclick="selectMarket('telefonia')" onkeydown="if(event.key==='Enter'||event.key===' ')selectMarket('telefonia')">
+      <div class="market-icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="64" height="64" rx="12" fill="#E3F2FD"/>
+          <rect x="22" y="10" width="20" height="34" rx="4" fill="#1565C0"/>
+          <rect x="25" y="14" width="14" height="20" rx="2" fill="#90CAF9"/>
+          <circle cx="32" cy="38" r="2" fill="#E3F2FD"/>
+          <path d="M14 22 Q10 28 14 34" stroke="#1565C0" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <path d="M50 22 Q54 28 50 34" stroke="#1565C0" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <path d="M10 18 Q4 28 10 38" stroke="#1565C0" stroke-width="2" opacity="0.4" stroke-linecap="round" fill="none"/>
+          <path d="M54 18 Q60 28 54 38" stroke="#1565C0" stroke-width="2" opacity="0.4" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <h3>📱 Telefonía Móvil</h3>
+      <div class="market-meta">
+        <span>👥 Competidores: Pocos</span>
+        <span>🔄 Sustitutos: Limitados</span>
+        <span>⭐ Diferenciación: Media</span>
+        <span>🚧 Barreras: Altas</span>
+      </div>
+    </article>
+
+    <!-- MEDICAMENTO -->
+    <article class="market-card" data-market="medicamento" role="listitem" tabindex="0" aria-label="Mercado de Medicamento patentado" onclick="selectMarket('medicamento')" onkeydown="if(event.key==='Enter'||event.key===' ')selectMarket('medicamento')">
+      <div class="market-icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="64" height="64" rx="12" fill="#F3E5F5"/>
+          <rect x="18" y="14" width="28" height="36" rx="8" fill="#6A1B9A"/>
+          <rect x="18" y="14" width="28" height="18" rx="8" fill="#9C27B0"/>
+          <rect x="28" y="26" width="8" height="12" rx="1" fill="#fff" opacity="0.3"/>
+          <rect x="26" y="30" width="12" height="3" rx="1" fill="#fff" opacity="0.6"/>
+          <circle cx="32" cy="20" r="4" fill="#E1BEE7"/>
+        </svg>
+      </div>
+      <h3>💊 Medicamento Patentado</h3>
+      <div class="market-meta">
+        <span>👥 Competidores: Uno</span>
+        <span>🔄 Sustitutos: Muy pocos</span>
+        <span>⭐ Diferenciación: Exclusiva</span>
+        <span>🚧 Barreras: Muy altas</span>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- PRICING DECISION -->
+<section id="pricing-decision" aria-labelledby="decision-title">
+  <div class="decision-header">
+    <div class="market-color-dot" id="decision-dot" aria-hidden="true"></div>
+    <h2 id="decision-title">Ajusta el precio</h2>
+  </div>
+  <div class="decision-context" id="decision-context" role="note"></div>
+
+  <!-- Predicción -->
+  <div class="prediction-section" id="prediction-section">
+    <h3 id="predict-heading">¿Qué crees que ocurrirá si el precio aumenta 20%?</h3>
+    <div class="prediction-options" role="radiogroup" aria-labelledby="predict-heading">
+      <label class="prediction-option"><input type="radio" name="prediction" value="all_leave"> Casi todos los clientes se irán</label>
+      <label class="prediction-option"><input type="radio" name="prediction" value="some_leave"> Algunos clientes se irán</label>
+      <label class="prediction-option"><input type="radio" name="prediction" value="competitors"> Los competidores reaccionarán estratégicamente</label>
+      <label class="prediction-option"><input type="radio" name="prediction" value="most_stay"> La mayoría seguirá comprando</label>
+      <label class="prediction-option"><input type="radio" name="prediction" value="depends"> El resultado dependerá de otros factores</label>
+    </div>
+  </div>
+
+  <!-- Diferenciación cafetería -->
+  <div class="diff-section" id="diff-section">
+    <h3>Selecciona los factores de diferenciación de tu cafetería:</h3>
+    <div class="diff-options" role="group" aria-label="Factores de diferenciación">
+      <button class="diff-tag" data-diff="ubicacion" onclick="toggleDiff(this)">📍 Ubicación</button>
+      <button class="diff-tag" data-diff="calidad" onclick="toggleDiff(this)">✨ Calidad</button>
+      <button class="diff-tag" data-diff="marca" onclick="toggleDiff(this)">🏷️ Marca</button>
+      <button class="diff-tag" data-diff="atencion" onclick="toggleDiff(this)">👋 Atención</button>
+      <button class="diff-tag" data-diff="ambiente" onclick="toggleDiff(this)">🎨 Ambiente</button>
+      <button class="diff-tag" data-diff="fidelizacion" onclick="toggleDiff(this)">🎁 Fidelización</button>
+    </div>
+    <p class="diff-level" id="diff-level-text" aria-live="polite">Diferenciación seleccionada: <strong>Baja</strong> (selecciona más factores para aumentar la lealtad)</p>
+  </div>
+
+  <!-- Controles de precio -->
+  <div class="price-controls">
+    <div class="slider-group">
+      <label for="price-slider">Aumento de precio (%)</label>
+      <div class="slider-wrap">
+        <input type="range" id="price-slider" min="0" max="40" step="5" value="20" aria-valuemin="0" aria-valuemax="40" aria-valuenow="20" aria-label="Porcentaje de aumento de precio" oninput="syncSlider(this)">
+        <span class="slider-value" id="slider-val-display">20%</span>
+        <input type="number" class="number-input-alt" id="price-number" min="0" max="40" step="5" value="20" aria-label="Ingresa el porcentaje de aumento" oninput="syncNumber(this)">
+      </div>
+    </div>
+    <div class="price-preview" aria-live="polite">
+      <div class="preview-item">
+        <div class="label">Precio inicial</div>
+        <div class="value" id="prev-p0">—</div>
+      </div>
+      <div class="preview-item">
+        <div class="label">Nuevo precio</div>
+        <div class="value increase" id="prev-p1">—</div>
+      </div>
+      <div class="preview-item">
+        <div class="label">Variación</div>
+        <div class="value increase" id="prev-pct">+20%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Oligopolio -->
+  <div class="oligopoly-section" id="oligopoly-section">
+    <h3>¿Cómo reaccionarán tus competidores en telefonía?</h3>
+    <div class="reaction-options" role="group" aria-label="Opciones de reacción de competidores">
+      <button class="reaction-btn" data-reaction="A" onclick="selectReaction(this)">A: Mantienen precios</button>
+      <button class="reaction-btn" data-reaction="B" onclick="selectReaction(this)">B: Imitan el aumento</button>
+      <button class="reaction-btn" data-reaction="C" onclick="selectReaction(this)">C: Lanzan promociones</button>
+    </div>
+  </div>
+
+  <!-- Pistas -->
+  <div class="hints-section">
+    <button class="hint-btn" onclick="showHint()" aria-expanded="false" id="hint-toggle-btn">💡 Solicitar pista</button>
+    <div class="hint-text" id="hint-text" role="note" aria-label="Pista"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" id="confirm-btn" onclick="confirmDecision()" aria-label="Confirmar aumento de precio y ver resultados">
+      ✅ Confirmar decisión
+    </button>
+    <button class="btn btn-secondary" onclick="resetCurrentMarket()" aria-label="Restablecer controles del mercado actual">
+      🔄 Reiniciar este mercado
+    </button>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results-section" aria-labelledby="results-heading" aria-live="polite">
+  <h2 id="results-heading" style="font-size:1.2rem;font-weight:700;margin-bottom:16px;color:var(--unab-blue);">📊 Resultados del mercado</h2>
+
+  <div id="prediction-result-box" class="prediction-result"></div>
+
+  <div class="results-grid" id="results-kpis" aria-label="Indicadores de resultado"></div>
+
+  <div class="revenue-comparison" aria-label="Comparación de ingreso total">
+    <div class="revenue-box">
+      <div class="rev-label">Ingreso inicial (IT₀)</div>
+      <div class="rev-val" id="res-it0">—</div>
+      <div class="rev-formula" id="res-formula0">P₀ × Q₀</div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:center;font-size:1.8rem;" aria-hidden="true">→</div>
+    <div class="revenue-box">
+      <div class="rev-label">Ingreso final (IT₁)</div>
+      <div class="rev-val" id="res-it1">—</div>
+      <div class="rev-formula" id="res-formula1">P₁ × Q₁</div>
+    </div>
+  </div>
+
+  <div class="income-result" id="income-result" role="status"></div>
+
+  <div class="consumer-visual">
+    <h3>👥 Reacción de compradores</h3>
+    <div class="avatar-row" id="avatar-row" aria-label="Compradores que permanecen o se van" role="img"></div>
+    <p id="avatar-description" style="font-size:0.82rem;color:var(--text-secondary);margin-top:6px;"></p>
+  </div>
+
+  <div class="competitor-visual">
+    <h3>🏢 Reacción de competidores</h3>
+    <div class="competitor-box" id="competitor-box"></div>
+  </div>
+
+  <div class="feedback-box" id="feedback-box" role="note"></div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="nextMarket()" id="next-market-btn">Siguiente mercado →</button>
+    <button class="btn btn-secondary" onclick="goToComparison()" id="show-comparison-btn" style="display:none">Ver comparación de mercados</button>
+  </div>
+</section>
+
+<!-- MARKET POWER METER -->
+<section id="market-power-meter" aria-labelledby="power-heading">
+  <h2 id="power-heading">⚡ Medidor de poder de mercado</h2>
+  <div class="power-bars" id="power-bars" aria-label="Niveles de poder de mercado por mercado"></div>
+  <div class="dimensions-grid" id="dimensions-grid" aria-label="Dimensiones del poder de mercado"></div>
+</section>
+
+<!-- COMPARISON -->
+<section id="market-comparison" aria-labelledby="compare-heading">
+  <h2 id="compare-heading">📋 Panel comparativo de estructuras</h2>
+  <div class="comparison-wrapper">
+    <table class="comparison-table" aria-label="Comparación de estructuras de mercado">
+      <caption class="sr-only">Comparación de cuatro estructuras de mercado por competidores, sustitutos, diferenciación, barreras y poder de mercado</caption>
+      <thead>
+        <tr>
+          <th scope="col">Mercado</th>
+          <th scope="col">Competidores</th>
+          <th scope="col">Sustitutos</th>
+          <th scope="col">Diferenciación</th>
+          <th scope="col">Barreras</th>
+          <th scope="col">Estructura</th>
+          <th scope="col">Poder</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:var(--trigo)">🌾 Trigo</strong></td>
+          <td>Muchos</td>
+          <td>Muchos</td>
+          <td>Muy baja</td>
+          <td>Bajas</td>
+          <td>Competencia perfecta</td>
+          <td><span class="power-chip chip-low" aria-label="Poder muy bajo">Muy bajo (5)</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--cafe)">☕ Cafetería</strong></td>
+          <td>Muchos</td>
+          <td>Moderados</td>
+          <td>Alta</td>
+          <td>Bajas</td>
+          <td>Comp. monopolística</td>
+          <td><span class="power-chip chip-mid" aria-label="Poder medio">Medio (40)</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--telefonia)">📱 Telefonía</strong></td>
+          <td>Pocos</td>
+          <td>Limitados</td>
+          <td>Media</td>
+          <td>Altas</td>
+          <td>Oligopolio</td>
+          <td><span class="power-chip chip-high" aria-label="Poder alto">Alto (65)</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--medicamento)">💊 Medicamento</strong></td>
+          <td>Uno</td>
+          <td>Muy pocos</td>
+          <td>Exclusiva</td>
+          <td>Muy altas</td>
+          <td>Monopolio</td>
+          <td><span class="power-chip chip-high" aria-label="Poder muy alto">Muy alto (90)</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="elasticity-insight">
+    <h3>Mayor poder de mercado ⟺ Demanda menos elástica</h3>
+    <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:12px;">Cuanto menos sensible sea la demanda de una empresa al precio, mayor capacidad tendrá para elevarlo sin perder demasiadas ventas.</p>
+    <div class="elas-row">
+      <span class="elas-label" style="color:var(--trigo)">🌾 Trigo</span>
+      <div class="elas-bar-track"><div class="elas-bar-fill" style="width:95%;background:#B71C1C;" role="meter" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100" aria-label="Elasticidad muy alta (demanda muy sensible)"></div></div>
+      <span style="font-size:0.78rem">Muy elástica</span>
+    </div>
+    <div class="elas-row">
+      <span class="elas-label" style="color:var(--cafe)">☕ Cafetería</span>
+      <div class="elas-bar-track"><div class="elas-bar-fill" style="width:60%;background:#E65100;" role="meter" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" aria-label="Elasticidad media"></div></div>
+      <span style="font-size:0.78rem">Moderada</span>
+    </div>
+    <div class="elas-row">
+      <span class="elas-label" style="color:var(--telefonia)">📱 Telefonía</span>
+      <div class="elas-bar-track"><div class="elas-bar-fill" style="width:35%;background:#1565C0;" role="meter" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="Elasticidad moderada-baja"></div></div>
+      <span style="font-size:0.78rem">Moderada-baja</span>
+    </div>
+    <div class="elas-row">
+      <span class="elas-label" style="color:var(--medicamento)">💊 Medicamento</span>
+      <div class="elas-bar-track"><div class="elas-bar-fill" style="width:10%;background:#2E7D32;" role="meter" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" aria-label="Elasticidad muy baja (demanda inelástica)"></div></div>
+      <span style="font-size:0.78rem">Inelástica</span>
+    </div>
+  </div>
+</section>
+
+<!-- CLASSIFICATION CHALLENGE -->
+<section id="classification-challenge" aria-labelledby="classify-heading">
+  <h2 id="classify-heading">🎯 Desafío: Clasifica las estructuras</h2>
+  <p class="challenge-desc">Asigna cada mercado a su estructura de mercado correcta. Recibirás retroalimentación formativa.</p>
+
+  <div class="classify-grid" id="classify-grid">
+    <div class="classify-slot">
+      <h3>🌾 Trigo</h3>
+      <select class="classify-select" id="classify-trigo" aria-label="Estructura de mercado para el trigo" onchange="checkClassify('trigo',this.value)">
+        <option value="">-- Selecciona --</option>
+        <option value="perfecta">Competencia perfecta</option>
+        <option value="monopolistica">Competencia monopolística</option>
+        <option value="oligopolio">Oligopolio</option>
+        <option value="monopolio">Monopolio</option>
+      </select>
+      <div class="classify-feedback" id="fb-trigo"></div>
+    </div>
+    <div class="classify-slot">
+      <h3>☕ Cafetería</h3>
+      <select class="classify-select" id="classify-cafeteria" aria-label="Estructura de mercado para cafetería" onchange="checkClassify('cafeteria',this.value)">
+        <option value="">-- Selecciona --</option>
+        <option value="perfecta">Competencia perfecta</option>
+        <option value="monopolistica">Competencia monopolística</option>
+        <option value="oligopolio">Oligopolio</option>
+        <option value="monopolio">Monopolio</option>
+      </select>
+      <div class="classify-feedback" id="fb-cafeteria"></div>
+    </div>
+    <div class="classify-slot">
+      <h3>📱 Telefonía Móvil</h3>
+      <select class="classify-select" id="classify-telefonia" aria-label="Estructura de mercado para telefonía" onchange="checkClassify('telefonia',this.value)">
+        <option value="">-- Selecciona --</option>
+        <option value="perfecta">Competencia perfecta</option>
+        <option value="monopolistica">Competencia monopolística</option>
+        <option value="oligopolio">Oligopolio</option>
+        <option value="monopolio">Monopolio</option>
+      </select>
+      <div class="classify-feedback" id="fb-telefonia"></div>
+    </div>
+    <div class="classify-slot">
+      <h3>💊 Medicamento Patentado</h3>
+      <select class="classify-select" id="classify-medicamento" aria-label="Estructura de mercado para medicamento" onchange="checkClassify('medicamento',this.value)">
+        <option value="">-- Selecciona --</option>
+        <option value="perfecta">Competencia perfecta</option>
+        <option value="monopolistica">Competencia monopolística</option>
+        <option value="oligopolio">Oligopolio</option>
+        <option value="monopolio">Monopolio</option>
+      </select>
+      <div class="classify-feedback" id="fb-medicamento"></div>
+    </div>
+  </div>
+
+  <div class="barriers-section" aria-labelledby="barriers-heading">
+    <h3 id="barriers-heading">🚧 Barreras de entrada presentes</h3>
+    <div class="barrier-chips" id="barrier-chips" role="list">
+      <span class="barrier-chip shown" role="listitem">Patentes</span>
+      <span class="barrier-chip shown" role="listitem">Licencias</span>
+      <span class="barrier-chip shown" role="listitem">Infraestructura</span>
+      <span class="barrier-chip shown" role="listitem">Economías de escala</span>
+      <span class="barrier-chip shown" role="listitem">Acceso exclusivo a recursos</span>
+      <span class="barrier-chip shown" role="listitem">Regulación</span>
+      <span class="barrier-chip shown" role="listitem">Reconocimiento de marca</span>
+      <span class="barrier-chip shown" role="listitem">Redes de usuarios</span>
+    </div>
+    <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:10px;">Identifica cuáles aparecen en cada mercado — el trigo tiene pocas; el medicamento patentado tiene casi todas.</p>
+  </div>
+</section>
+
+<!-- REVENUE CHALLENGE -->
+<section id="revenue-challenge" aria-labelledby="challenge-heading">
+  <h2 id="challenge-heading">💡 Desafío: ¿Puedes aumentar el ingreso?</h2>
+  <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:16px;">Mueve el slider en cada mercado y observa en cuál puedes aumentar el precio <strong>sin reducir el ingreso total</strong>. ¿Cuál mercado pierde menos clientes?</p>
+
+  <div class="challenge-markets" id="challenge-markets" aria-label="Simulación rápida por mercado"></div>
+
+  <div class="feedback-box" id="challenge-feedback" role="note" style="display:none"></div>
+</section>
+
+<!-- CLOSED TRANSITION QUESTION -->
+<section id="transition-question" aria-labelledby="tq-heading">
+  <h2 id="tq-heading">¿Todas las empresas tienen el mismo poder para fijar precios?</h2>
+  <p style="opacity:0.85;font-size:0.9rem;margin-bottom:8px;">Selecciona una respuesta. La elección servirá como punto de partida para iniciar la clase.</p>
+  <div class="closed-question-options" role="radiogroup" aria-labelledby="tq-heading">
+    <button type="button" class="closed-question-btn" data-answer="si" role="radio" aria-checked="false" onclick="selectTransitionAnswer('si', this)">Sí</button>
+    <button type="button" class="closed-question-btn" data-answer="no" role="radio" aria-checked="false" onclick="selectTransitionAnswer('no', this)">No</button>
+  </div>
+  <div class="btn-row" style="justify-content:center;">
+    <button class="btn btn-secondary" id="show-final-answer-btn" onclick="showFinalAnswer()" disabled style="background:rgba(255,255,255,0.2);color:#fff;border-color:rgba(255,255,255,0.5);">Ver análisis →</button>
+  </div>
+
+  <div class="final-answer" id="final-answer" role="note">
+    <p id="final-choice-summary" style="margin-bottom:12px;"></p>
+    <p><strong>Una empresa puede influir sobre el precio cuando:</strong></p>
+    <div class="conditions-list" aria-label="Condiciones para influir sobre el precio">
+      <span class="condition-pill">Pocos competidores</span>
+      <span class="condition-pill">Producto diferenciado</span>
+      <span class="condition-pill">Pocos sustitutos</span>
+      <span class="condition-pill">Barreras de entrada</span>
+      <span class="condition-pill">Costos de cambio</span>
+      <span class="condition-pill">Control de patente o tecnología</span>
+      <span class="condition-pill">Demanda inelástica</span>
+    </div>
+    <p style="margin-top:14px;">El <strong>poder de mercado</strong> no depende solo del tamaño de la empresa, sino de la <strong>estructura del mercado</strong>: la disponibilidad de sustitutos, la diferenciación, el número de competidores, las barreras de entrada y la reacción estratégica de otras empresas.</p>
+  </div>
+
+  <div id="final-badge" style="display:none;text-align:center;margin-top:20px;">
+    <div class="final-badge" role="status" aria-live="polite">
+      🏅 Insignia: <strong>Analista de Estructuras de Mercado</strong>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ACTIVITY CONTROLS -->
+<div class="activity-controls" role="region" aria-label="Controles de la actividad">
+  <div class="footer-progress">
+    Mercados analizados: <strong id="footer-progress">0 / 4</strong>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+    <button class="btn btn-danger" onclick="resetAll()" aria-label="Reiniciar toda la actividad desde el principio">
+      🔄 Reiniciar actividad
+    </button>
+    <button class="btn btn-secondary" onclick="scrollToSection('transition-question')" id="final-btn" style="display:none">
+      Pregunta para iniciar la clase
+    </button>
+  </div>
+</div>
+
+<footer role="contentinfo">
+  <p>Desarrollado por Julián Díaz Tautiva, PhD.</p>
+</footer>
+
+<script>
+// ===========================
+// STATE
+// ===========================
+const MARKETS = {
+  trigo: {
+    name: "🌾 Trigo",
+    color: "#D4A017",
+    colorRGB: "212,160,23",
+    p0: 1000,
+    q0: 1000,
+    elasticity: -8,
+    cvu: 600,
+    cf: 200000,
+    context: "Una empresa agrícola vende trigo estandarizado en un mercado con muchos productores. El producto es homogéneo y los compradores tienen acceso a muchos proveedores al mismo precio.",
+    hints: ["Observa cuántas alternativas tienen los compradores.", "Un producto idéntico facilita cambiar de proveedor.", "¿Puede una empresa pequeña cambiar el precio del mercado?"],
+    structure: "perfecta",
+    powerScore: 5,
+    dimensions: { competidores: 1, sustitutos: 1, diferenciacion: 1, barreras: 2, cambio: 1 },
+    feedbacks: {
+      correct: "En este mercado existen muchos sustitutos cercanos. El trigo es un producto homogéneo y los compradores cambian inmediatamente de proveedor.",
+      partial: "La diferenciación es casi inexistente: el trigo de una empresa es idéntico al de otra. La empresa individual es tomadora de precios.",
+      incorrect: "En un mercado de competencia perfecta, la empresa no controla el precio de mercado. Al subir su precio, los clientes simplemente compran a otra empresa."
+    },
+    competitorReaction: "El mercado no reacciona estratégicamente a una firma pequeña. Los demás productores de trigo mantienen el precio de mercado. No hay incentivo para reaccionar: la empresa es insignificante en el mercado total.",
+    consumerBehavior: "most_leave",
+    regulations: [],
+    message: "En un mercado competitivo, la empresa es tomadora de precios."
+  },
+  cafeteria: {
+    name: "☕ Cafetería",
+    color: "#6F4E37",
+    colorRGB: "111,78,55",
+    p0: 3000,
+    q0: 500,
+    elasticity: -2.0,
+    cvu: 1200,
+    cf: 300000,
+    context: "Tu cafetería ofrece una experiencia particular: ubicación conveniente, marca reconocida, ambiente agradable y productos diferenciados. Tienes clientes habituales y competidores cercanos.",
+    hints: ["La diferenciación puede generar lealtad.", "Algunos clientes son más sensibles al precio que otros.", "¿Cuántos factores de diferenciación has seleccionado?"],
+    structure: "monopolistica",
+    powerScore: 40,
+    dimensions: { competidores: 2, sustitutos: 3, diferenciacion: 4, barreras: 2, cambio: 2 },
+    feedbacks: {
+      correct: "La diferenciación retiene a una parte de los clientes. Tu cafetería tiene cierto poder de mercado, pero la presencia de sustitutos limita esa capacidad.",
+      partial: "Algunos consumidores son leales a tu marca y ambiente, pero otros prefieren una cafetería más barata.",
+      incorrect: "En competencia monopolística, la diferenciación otorga cierto poder de mercado. No todos los clientes se van, pero tampoco todos se quedan."
+    },
+    competitorReaction: "Las cafeterías competidoras detectan la oportunidad y pueden lanzar promociones para atraer a tus clientes más sensibles al precio. Algunas ofrecen descuentos o nuevos productos para diferenciarse.",
+    consumerBehavior: "some_leave",
+    regulations: [],
+    message: "La diferenciación permite aumentar el precio, pero la presencia de sustitutos limita esa capacidad."
+  },
+  telefonia: {
+    name: "📱 Telefonía Móvil",
+    color: "#1565C0",
+    colorRGB: "21,101,192",
+    p0: 20000,
+    q0: 10000,
+    elasticity: -1.2,
+    cvu: 8000,
+    cf: 50000000,
+    context: "El mercado nacional de telefonía móvil está compuesto por pocas empresas grandes. Existen altas barreras de entrada (infraestructura, espectro radioeléctrico) y los consumidores tienen contratos que generan costos de cambio.",
+    hints: ["En un oligopolio, los competidores reaccionan estratégicamente.", "La decisión de una empresa depende de cómo reaccionan las demás.", "Considera las tres posibles reacciones de tus rivales."],
+    structure: "oligopolio",
+    powerScore: 65,
+    dimensions: { competidores: 4, sustitutos: 3, diferenciacion: 3, barreras: 4, cambio: 4 },
+    feedbacks: {
+      A: "Al mantener sus precios, los competidores atraen parte de tus clientes. En un oligopolio, no reaccionar es también una estrategia.",
+      B: "Al imitar el aumento, el mercado sube de precio en general. La pérdida de clientes es menor porque todos pagan más.",
+      C: "La guerra comercial te perjudica: pierdes más clientes de lo esperado. En un oligopolio, las represalias son costosas para todos."
+    },
+    competitorReaction: "",
+    consumerBehavior: "oligopoly",
+    regulations: ["Contratos", "Costos de cambio", "Regulación de telecomunicaciones"],
+    message: "En un oligopolio, la decisión de una empresa depende de cómo reaccionan las demás."
+  },
+  medicamento: {
+    name: "💊 Medicamento Patentado",
+    color: "#6A1B9A",
+    colorRGB: "106,27,154",
+    p0: 50000,
+    q0: 1000,
+    elasticity: -0.3,
+    cvu: 5000,
+    cf: 10000000,
+    context: "Tu empresa posee una patente sobre un medicamento esencial sin sustitutos cercanos. Los pacientes lo necesitan y no tienen alternativa inmediata. Sin embargo, existen reguladores, aseguradoras y la presión de la opinión pública.",
+    hints: ["Una patente limita temporalmente la entrada de rivales.", "La ausencia de sustitutos mantiene la demanda aunque suba el precio.", "El poder de mercado no es ilimitado: existen reguladores y reputación."],
+    structure: "monopolio",
+    powerScore: 90,
+    dimensions: { competidores: 5, sustitutos: 5, diferenciacion: 5, barreras: 5, cambio: 4 },
+    feedbacks: {
+      correct: "La patente reduce la entrada de competidores y la ausencia de sustitutos mantiene la demanda. La empresa posee un alto poder de mercado.",
+      partial: "La mayoría de los pacientes continúa comprando. El ingreso total puede aumentar, aunque el acceso se reduce para pacientes de bajos ingresos.",
+      incorrect: "La demanda inelástica significa que subir el precio no aleja a muchos compradores. El poder de mercado de una patente es elevado pero no ilimitado."
+    },
+    competitorReaction: "No existe rival directo inmediato. Sin embargo, pueden aparecer presiones regulatorias (fijación de precio máximo), limitaciones de cobertura de seguros, licencias obligatorias y la amenaza de genéricos al vencer la patente.",
+    consumerBehavior: "most_stay",
+    regulations: ["Regulación de precios", "Reputación", "Cobertura de seguros", "Compras públicas", "Licencias obligatorias", "Vencimiento de patente", "Genéricos futuros"],
+    message: "La ausencia de sustitutos y las barreras de entrada aumentan el poder de mercado."
+  }
+};
+
+const CLASSIFY_ANSWERS = {
+  trigo: { correct: "perfecta", feedback_correct: "✅ Correcto. El trigo se comercia en un mercado altamente competitivo: muchos productores, producto homogéneo y libre entrada. La empresa es tomadora de precios.", feedback_incorrect: "En el mercado de trigo hay muchos productores vendiendo un producto idéntico. Esto corresponde a competencia perfecta o mercado altamente competitivo." },
+  cafeteria: { correct: "monopolistica", feedback_correct: "✅ Correcto. La cafetería opera en competencia monopolística: muchos competidores, pero con diferenciación de producto que otorga cierto poder de mercado.", feedback_incorrect: "La cafetería tiene muchos competidores, pero sus productos son similares, no idénticos. La diferenciación (marca, ambiente, ubicación) es la clave: competencia monopolística." },
+  telefonia: { correct: "oligopolio", feedback_correct: "✅ Correcto. La telefonía móvil es un oligopolio: pocas empresas con altas barreras de entrada y decisiones estratégicamente interdependientes.", feedback_incorrect: "En telefonía móvil hay pocos competidores con alta interdependencia estratégica: cada empresa debe considerar cómo reaccionarán las demás. Esto es un oligopolio." },
+  medicamento: { correct: "monopolio", feedback_correct: "✅ Correcto. La patente crea un monopolio temporal: un solo proveedor relevante, sin sustitutos cercanos y barreras muy altas.", feedback_incorrect: "Una empresa con patente exclusiva y sin sustitutos cercanos es un monopolio protegido. La patente crea barreras de entrada legales y tecnológicas." }
+};
+
+let state = {
+  activeMarket: null,
+  completedMarkets: [],
+  results: {},
+  diffSelected: [],
+  oligoReaction: null,
+  confirmed: false,
+  hintIdx: 0,
+  hintShown: false,
+  allDone: false,
+  finalChoice: null
+};
+
+// ===========================
+// HELPERS
+// ===========================
+function fmt(n) {
+  return "$" + Math.round(n).toLocaleString("es-CL");
+}
+function fmtPct(n) {
+  return (n >= 0 ? "+" : "") + n.toFixed(1) + "%";
+}
+function announce(msg) {
+  const el = document.getElementById("aria-live");
+  el.textContent = "";
+  setTimeout(() => { el.textContent = msg; }, 100);
+}
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function show(id) { document.getElementById(id).classList.add("visible"); document.getElementById(id).style.display = ""; }
+function hide(id) { document.getElementById(id).classList.remove("visible"); document.getElementById(id).style.display = "none"; }
+
+// ===========================
+// MARKET SELECTION
+// ===========================
+function selectMarket(marketKey) {
+  state.activeMarket = marketKey;
+  state.confirmed = false;
+  state.diffSelected = [];
+  state.oligoReaction = null;
+  state.hintIdx = 0;
+  state.hintShown = false;
+
+  // Update card active state
+  document.querySelectorAll(".market-card").forEach(c => {
+    c.classList.toggle("active", c.dataset.market === marketKey);
+  });
+
+  const m = MARKETS[marketKey];
+
+  // Header
+  document.getElementById("decision-title").textContent = "Ajusta el precio – " + m.name;
+  const dot = document.getElementById("decision-dot");
+  dot.style.background = m.color;
+  dot.setAttribute("aria-label", "Color del mercado " + m.name);
+
+  document.getElementById("decision-context").textContent = m.context;
+
+  // Reset slider
+  const slider = document.getElementById("price-slider");
+  slider.value = 20;
+  document.getElementById("price-number").value = 20;
+  updatePricePreview(20, marketKey);
+
+  // Reset prediction
+  document.querySelectorAll('input[name="prediction"]').forEach(r => r.checked = false);
+
+  // Show/hide oligopoly
+  const oligoSection = document.getElementById("oligopoly-section");
+  if (marketKey === "telefonia") {
+    oligoSection.classList.add("visible");
+    document.querySelectorAll(".reaction-btn").forEach(b => b.classList.remove("selected"));
+    state.oligoReaction = null;
+  } else {
+    oligoSection.classList.remove("visible");
+  }
+
+  // Show/hide diff section
+  const diffSection = document.getElementById("diff-section");
+  if (marketKey === "cafeteria") {
+    diffSection.classList.add("visible");
+    document.querySelectorAll(".diff-tag").forEach(t => t.classList.remove("selected"));
+    updateDiffLevel();
+  } else {
+    diffSection.classList.remove("visible");
+  }
+
+  // Hints
+  document.getElementById("hint-text").classList.remove("visible");
+  document.getElementById("hint-text").textContent = "";
+  document.getElementById("hint-toggle-btn").setAttribute("aria-expanded", "false");
+
+  // Show pricing section
+  show("pricing-decision");
+  hide("results-section");
+
+  scrollToSection("pricing-decision");
+  announce("Mercado seleccionado: " + m.name + ". Ajusta el precio y confirma tu decisión.");
+}
+
+// ===========================
+// SLIDER / NUMBER SYNC
+// ===========================
+function syncSlider(el) {
+  const pct = parseInt(el.value);
+  document.getElementById("price-number").value = pct;
+  el.setAttribute("aria-valuenow", pct);
+  document.getElementById("slider-val-display").textContent = pct + "%";
+  updatePricePreview(pct, state.activeMarket);
+}
+
+function syncNumber(el) {
+  let v = parseInt(el.value) || 0;
+  v = Math.max(0, Math.min(40, v));
+  v = Math.round(v / 5) * 5;
+  document.getElementById("price-slider").value = v;
+  document.getElementById("price-slider").setAttribute("aria-valuenow", v);
+  document.getElementById("slider-val-display").textContent = v + "%";
+  el.value = v;
+  updatePricePreview(v, state.activeMarket);
+}
+
+function updatePricePreview(pct, marketKey) {
+  if (!marketKey) return;
+  const m = MARKETS[marketKey];
+  const p1 = m.p0 * (1 + pct / 100);
+  document.getElementById("prev-p0").textContent = fmt(m.p0);
+  document.getElementById("prev-p1").textContent = fmt(p1);
+  document.getElementById("prev-pct").textContent = "+" + pct + "%";
+}
+
+// ===========================
+// DIFFERENTIATION (CAFETERIA)
+// ===========================
+function toggleDiff(btn) {
+  btn.classList.toggle("selected");
+  state.diffSelected = Array.from(document.querySelectorAll(".diff-tag.selected")).map(b => b.dataset.diff);
+  updateDiffLevel();
+}
+
+function updateDiffLevel() {
+  const n = state.diffSelected.length;
+  let level = "Baja";
+  if (n >= 5) level = "Muy alta";
+  else if (n >= 3) level = "Alta";
+  else if (n >= 1) level = "Moderada";
+  document.getElementById("diff-level-text").innerHTML = `Diferenciación seleccionada: <strong>${level}</strong> (${n}/6 factores seleccionados)`;
+}
+
+function getDiffBonus() {
+  const n = state.diffSelected.length;
+  // Each diff factor reduces churn by ~3%
+  return n * 0.03;
+}
+
+// ===========================
+// OLIGOPOLY REACTION
+// ===========================
+function selectReaction(btn) {
+  document.querySelectorAll(".reaction-btn").forEach(b => b.classList.remove("selected"));
+  btn.classList.add("selected");
+  state.oligoReaction = btn.dataset.reaction;
+}
+
+// ===========================
+// HINTS
+// ===========================
+function showHint() {
+  if (!state.activeMarket) return;
+  const hints = MARKETS[state.activeMarket].hints;
+  const hint = hints[state.hintIdx % hints.length];
+  const hintEl = document.getElementById("hint-text");
+  hintEl.textContent = hint;
+  hintEl.classList.add("visible");
+  document.getElementById("hint-toggle-btn").setAttribute("aria-expanded", "true");
+  state.hintIdx++;
+  announce("Pista: " + hint);
+}
+
+// ===========================
+// CALCULATE RESULTS
+// ===========================
+function calcResults(marketKey, pct) {
+  const m = MARKETS[marketKey];
+  let elas = m.elasticity;
+
+  // Cafeteria: modify elasticity by differentiation
+  if (marketKey === "cafeteria") {
+    const bonus = getDiffBonus();
+    elas = elas + (Math.abs(elas) * bonus); // less negative = more loyal
+  }
+
+  const deltaPct = pct / 100;
+  const p0 = m.p0, q0 = m.q0;
+  const p1 = p0 * (1 + deltaPct);
+
+  let q1, effectivePct;
+
+  if (marketKey === "trigo") {
+    // Very high elasticity: nearly all clients leave
+    q1 = Math.max(0, q0 * (1 + elas * deltaPct));
+  } else if (marketKey === "telefonia") {
+    // Depends on reaction
+    const reaction = state.oligoReaction || "A";
+    if (reaction === "A") { q1 = q0 * (1 + elas * 1.5 * deltaPct); }
+    else if (reaction === "B") { q1 = q0 * (1 + elas * 0.4 * deltaPct); }
+    else { q1 = q0 * (1 + elas * 2.0 * deltaPct); }
+    q1 = Math.max(0, q1);
+  } else {
+    q1 = Math.max(0, q0 * (1 + elas * deltaPct));
+  }
+
+  const it0 = p0 * q0;
+  const it1 = p1 * q1;
+  const profit0 = (p0 - m.cvu) * q0 - m.cf;
+  const profit1 = (p1 - m.cvu) * q1 - m.cf;
+  const clientLoss = Math.max(0, q0 - q1);
+  const clientLossPct = q0 > 0 ? (clientLoss / q0) * 100 : 0;
+  const deltaIT = ((it1 - it0) / it0) * 100;
+
+  return { p0, p1, q0, q1: Math.round(q1), it0, it1, profit0, profit1, clientLoss: Math.round(clientLoss), clientLossPct, deltaIT };
+}
+
+// ===========================
+// CONFIRM DECISION
+// ===========================
+function confirmDecision() {
+  if (!state.activeMarket) { announce("Selecciona un mercado primero."); return; }
+  if (state.activeMarket === "telefonia" && !state.oligoReaction) {
+    announce("Por favor selecciona una reacción de los competidores para telefonía móvil.");
+    document.getElementById("oligopoly-section").focus();
+    return;
+  }
+
+  const pct = parseInt(document.getElementById("price-slider").value);
+  const marketKey = state.activeMarket;
+  const m = MARKETS[marketKey];
+  const r = calcResults(marketKey, pct);
+  state.results[marketKey] = r;
+
+  if (!state.completedMarkets.includes(marketKey)) {
+    state.completedMarkets.push(marketKey);
+    document.querySelector(`.market-card[data-market="${marketKey}"]`).classList.add("completed");
+  }
+
+  state.confirmed = true;
+  updateFooterProgress();
+
+  // Show results
+  renderResults(marketKey, pct, r);
+  show("results-section");
+
+  // Update power meter
+  updatePowerMeter(marketKey);
+  show("market-power-meter");
+
+  // If all done, show comparison and rest
+  if (state.completedMarkets.length === 4) {
+    state.allDone = true;
+    document.getElementById("next-market-btn").style.display = "none";
+    document.getElementById("show-comparison-btn").style.display = "";
+    setTimeout(() => goToComparison(), 800);
+  }
+
+  scrollToSection("results-section");
+  announce("Resultados calculados para " + m.name + ". Precio inicial " + fmt(r.p0) + ", nuevo precio " + fmt(r.p1) + ". Ingreso cambió " + fmtPct(r.deltaIT) + ".");
+}
+
+// ===========================
+// RENDER RESULTS
+// ===========================
+function renderResults(marketKey, pct, r) {
+  const m = MARKETS[marketKey];
+
+  // Prediction result
+  const predInput = document.querySelector('input[name="prediction"]:checked');
+  const pred = predInput ? predInput.value : null;
+  const predBox = document.getElementById("prediction-result-box");
+  if (pred) {
+    const predMap = {
+      trigo: ["all_leave"],
+      cafeteria: ["some_leave"],
+      telefonia: ["competitors", "depends"],
+      medicamento: ["most_stay"]
+    };
+    const isCorrect = predMap[marketKey] && predMap[marketKey].includes(pred);
+    predBox.className = "prediction-result " + (isCorrect ? "correct" : "partial");
+    predBox.textContent = isCorrect
+      ? "✅ Tu predicción fue acertada."
+      : "🔍 Veamos qué ocurrió realmente — compara tu predicción con los resultados.";
+    predBox.style.display = "block";
+  } else {
+    predBox.style.display = "none";
+  }
+
+  // KPIs
+  const kpiContainer = document.getElementById("results-kpis");
+  const lossClass = r.clientLossPct > 50 ? "delta-down" : r.clientLossPct < 10 ? "delta-up" : "";
+  kpiContainer.innerHTML = `
+    <div class="result-kpi">
+      <div class="kpi-label">Precio inicial</div>
+      <div class="kpi-val">${fmt(r.p0)}</div>
+    </div>
+    <div class="result-kpi">
+      <div class="kpi-label">Nuevo precio</div>
+      <div class="kpi-val" style="color:#B71C1C">${fmt(r.p1)}</div>
+      <div class="kpi-delta delta-down">+${pct}%</div>
+    </div>
+    <div class="result-kpi">
+      <div class="kpi-label">Cantidad inicial</div>
+      <div class="kpi-val">${r.q0.toLocaleString("es-CL")}</div>
+    </div>
+    <div class="result-kpi">
+      <div class="kpi-label">Cantidad final</div>
+      <div class="kpi-val">${r.q1.toLocaleString("es-CL")}</div>
+      <div class="kpi-delta ${r.q1 < r.q0 ? 'delta-down' : 'delta-up'}">${fmtPct(((r.q1-r.q0)/r.q0)*100)}</div>
+    </div>
+    <div class="result-kpi">
+      <div class="kpi-label">Clientes perdidos</div>
+      <div class="kpi-val ${lossClass}">${r.clientLoss.toLocaleString("es-CL")}</div>
+      <div class="kpi-delta ${lossClass}">${r.clientLossPct.toFixed(1)}%</div>
+    </div>
+    <div class="result-kpi">
+      <div class="kpi-label">Beneficio estimado</div>
+      <div class="kpi-val" style="color:${r.profit1 > r.profit0 ? '#2E7D32' : '#B71C1C'}">${fmt(r.profit1)}</div>
+      <div class="kpi-delta ${r.profit1 > r.profit0 ? 'delta-up' : 'delta-down'}">${fmtPct(r.profit0 !== 0 ? ((r.profit1-r.profit0)/Math.abs(r.profit0))*100 : 0)}</div>
+    </div>
+  `;
+
+  // Revenue comparison
+  document.getElementById("res-it0").textContent = fmt(r.it0);
+  document.getElementById("res-it1").textContent = fmt(r.it1);
+  document.getElementById("res-formula0").textContent = `${fmt(r.p0)} × ${r.q0.toLocaleString("es-CL")}`;
+  document.getElementById("res-formula1").textContent = `${fmt(r.p1)} × ${r.q1.toLocaleString("es-CL")}`;
+
+  const incomeEl = document.getElementById("income-result");
+  if (r.deltaIT > 1) {
+    incomeEl.className = "income-result up";
+    incomeEl.textContent = `📈 El ingreso total AUMENTÓ ${fmtPct(r.deltaIT)} (de ${fmt(r.it0)} a ${fmt(r.it1)})`;
+  } else if (r.deltaIT < -1) {
+    incomeEl.className = "income-result down";
+    incomeEl.textContent = `📉 El ingreso total CAYÓ ${fmtPct(r.deltaIT)} (de ${fmt(r.it0)} a ${fmt(r.it1)})`;
+  } else {
+    incomeEl.className = "income-result ambiguous";
+    incomeEl.textContent = `↔️ El ingreso total se mantuvo aproximadamente igual (${fmtPct(r.deltaIT)})`;
+  }
+
+  // Consumer avatars
+  renderAvatars(marketKey, r);
+
+  // Competitor reaction
+  renderCompetitorReaction(marketKey);
+
+  // Feedback
+  renderFeedback(marketKey, r);
+
+  // Stamps
+  updateStamps();
+}
+
+function renderAvatars(marketKey, r) {
+  const row = document.getElementById("avatar-row");
+  const total = 20;
+  const staying = Math.round((r.q1 / r.q0) * total);
+  const leaving = total - staying;
+  let html = "";
+  const icons = ["🧑", "👩", "👨", "🧒", "👧"];
+
+  for (let i = 0; i < staying; i++) {
+    const ic = icons[i % icons.length];
+    let cls = "avatar staying";
+    if (marketKey === "telefonia") cls = "avatar waiting";
+    html += `<span class="${cls}" aria-hidden="true" title="Cliente que permanece">${ic}</span>`;
+  }
+  for (let i = 0; i < leaving; i++) {
+    html += `<span class="avatar leaving" aria-hidden="true" title="Cliente que se va">🚶</span>`;
+  }
+  row.innerHTML = html;
+
+  const desc = {
+    trigo: `${leaving} de cada ${total} compradores se fueron a otro proveedor inmediatamente.`,
+    cafeteria: `${leaving} de cada ${total} clientes eligieron otra cafetería; ${staying} permanecieron por lealtad.`,
+    telefonia: `${leaving} de cada ${total} clientes se plantearon cambiar. La reacción real depende de las ofertas de rivales.`,
+    medicamento: `Solo ${leaving} de cada ${total} pacientes dejaron de comprar. La mayoría no tiene alternativa.`
+  };
+  document.getElementById("avatar-description").textContent = desc[marketKey] || "";
+  row.setAttribute("aria-label", desc[marketKey]);
+}
+
+function renderCompetitorReaction(marketKey) {
+  const m = MARKETS[marketKey];
+  const box = document.getElementById("competitor-box");
+  if (marketKey === "telefonia") {
+    const r = state.oligoReaction || "A";
+    const texts = {
+      A: "🔵 Reacción A — Mantienen precios: Los competidores no suben sus precios. Aprovechan la oportunidad para captar tus clientes insatisfechos con el aumento. Resultado: pierdes cuota de mercado.",
+      B: "🟡 Reacción B — Imitan el aumento: Los rivales también suben sus precios. El precio de mercado sube en general. La pérdida de clientes es menor porque no hay alternativa más barata. Posible acuerdo tácito de precios.",
+      C: "🔴 Reacción C — Lanzan promociones: Los rivales responden con descuentos agresivos, mejores planes y ofertas especiales. Pierdes más clientes de lo esperado. Puede iniciarse una guerra comercial que perjudique a toda la industria."
+    };
+    box.innerHTML = `<strong>Reacción elegida: ${r}</strong><br><br>${texts[r]}<br><br><em style="color:var(--text-secondary);font-size:0.85rem;">💡 La decisión de una empresa en oligopolio es inseparable de la reacción esperada de sus rivales.</em>`;
+  } else if (marketKey === "medicamento" && m.regulations.length > 0) {
+    box.innerHTML = `${m.competitorReaction}<br><br><strong>Posibles límites regulatorios y reputacionales:</strong><br>${m.regulations.map(r => `• ${r}`).join("<br>")}`;
+  } else {
+    box.textContent = m.competitorReaction;
+  }
+}
+
+function renderFeedback(marketKey, r) {
+  const m = MARKETS[marketKey];
+  const box = document.getElementById("feedback-box");
+  let fb = "";
+  if (marketKey === "telefonia") {
+    fb = m.feedbacks[state.oligoReaction] || m.feedbacks.A;
+  } else if (r.clientLossPct > 60) {
+    fb = m.feedbacks.incorrect;
+  } else if (r.clientLossPct > 20) {
+    fb = m.feedbacks.partial;
+  } else {
+    fb = m.feedbacks.correct;
+  }
+  box.innerHTML = `<strong>${m.message}</strong><br><br>${fb}`;
+}
+
+// ===========================
+// POWER METER
+// ===========================
+function updatePowerMeter(marketKey) {
+  const colors = { trigo: "var(--trigo)", cafeteria: "var(--cafe)", telefonia: "var(--telefonia)", medicamento: "var(--medicamento)" };
+  const names = { trigo: "🌾 Trigo", cafeteria: "☕ Cafetería", telefonia: "📱 Telefonía", medicamento: "💊 Medicamento" };
+
+  const barsContainer = document.getElementById("power-bars");
+  let html = "";
+
+  const order = ["trigo", "cafeteria", "telefonia", "medicamento"];
+  order.forEach(k => {
+    const m = MARKETS[k];
+    const score = m.powerScore;
+    const done = state.completedMarkets.includes(k);
+    let barColor;
+    if (score <= 20) barColor = "var(--power-low)";
+    else if (score <= 60) barColor = "var(--power-mid)";
+    else barColor = "var(--power-high)";
+
+    let powerLabel = "";
+    if (score <= 20) powerLabel = "Muy bajo";
+    else if (score <= 40) powerLabel = "Bajo";
+    else if (score <= 60) powerLabel = "Medio";
+    else if (score <= 80) powerLabel = "Alto";
+    else powerLabel = "Muy alto";
+
+    html += `
+      <div class="power-bar-row" role="row">
+        <div class="power-bar-label" style="color:${colors[k]}">${names[k]}</div>
+        <div class="power-bar-track">
+          <div class="power-bar-fill" style="width:${done ? score : 0}%;background:${barColor};"
+            role="meter" aria-valuenow="${done ? score : 0}" aria-valuemin="0" aria-valuemax="100"
+            aria-label="Poder de mercado de ${names[k]}: ${done ? score + '/100 — ' + powerLabel : 'aún no analizado'}">
+          </div>
+        </div>
+        <div class="power-bar-val" style="color:${barColor}">${done ? score + "/100" : "—"}</div>
+      </div>`;
+  });
+  barsContainer.innerHTML = html;
+
+  // Dimensions for current market
+  if (marketKey) {
+    const m = MARKETS[marketKey];
+    const dimLabels = ["Competidores", "Sustitutos", "Diferenciación", "Barreras", "Costo cambio"];
+    const dimKeys = ["competidores", "sustitutos", "diferenciacion", "barreras", "cambio"];
+    let dimHtml = "";
+    dimKeys.forEach((dk, i) => {
+      const val = m.dimensions[dk];
+      let dots = "";
+      for (let d = 1; d <= 5; d++) {
+        dots += `<div class="dim-dot${d <= val ? " filled" : ""}" aria-hidden="true"></div>`;
+      }
+      dimHtml += `<div class="dim-card"><div class="dim-label">${dimLabels[i]}</div><div class="dim-dots" role="meter" aria-label="${dimLabels[i]}: ${val} de 5">${dots}</div></div>`;
+    });
+    document.getElementById("dimensions-grid").innerHTML = dimHtml;
+  }
+}
+
+// ===========================
+// STAMPS / PROGRESS
+// ===========================
+function updateStamps() {
+  const stampNames = { trigo: "🌾 Trigo", cafeteria: "☕ Cafetería", telefonia: "📱 Telefonía", medicamento: "💊 Medicamento" };
+  const container = document.getElementById("stamps-container");
+  let html = "";
+  Object.keys(stampNames).forEach(k => {
+    const done = state.completedMarkets.includes(k);
+    html += `<span class="progress-badge" style="opacity:${done ? 1 : 0.4}" aria-label="${stampNames[k]} ${done ? 'completado' : 'pendiente'}">${done ? "✅" : "⬜"} ${stampNames[k]}</span>`;
+  });
+  container.innerHTML = html;
+}
+
+function updateFooterProgress() {
+  const n = state.completedMarkets.length;
+  document.getElementById("footer-progress").textContent = n + " / 4";
+  if (n === 4) {
+    document.getElementById("final-btn").style.display = "";
+  }
+}
+
+// ===========================
+// NAVIGATION
+// ===========================
+function nextMarket() {
+  const all = ["trigo", "cafeteria", "telefonia", "medicamento"];
+  const remaining = all.filter(k => !state.completedMarkets.includes(k));
+  if (remaining.length > 0) {
+    selectMarket(remaining[0]);
+    scrollToSection("market-selection");
+  } else {
+    goToComparison();
+  }
+}
+
+function goToComparison() {
+  show("market-comparison");
+  show("classification-challenge");
+  buildRevenueChallenge();
+  show("revenue-challenge");
+  show("transition-question");
+  scrollToSection("market-comparison");
+  document.getElementById("final-btn").style.display = "";
+}
+
+// ===========================
+// CLASSIFICATION
+// ===========================
+function checkClassify(marketKey, value) {
+  if (!value) return;
+  const ans = CLASSIFY_ANSWERS[marketKey];
+  const fbEl = document.getElementById("fb-" + marketKey);
+  if (value === ans.correct) {
+    fbEl.className = "classify-feedback correct";
+    fbEl.textContent = ans.feedback_correct;
+  } else {
+    fbEl.className = "classify-feedback incorrect";
+    fbEl.textContent = ans.feedback_incorrect;
+  }
+  announce(marketKey + ": " + fbEl.textContent);
+}
+
+// ===========================
+// REVENUE CHALLENGE (mini)
+// ===========================
+function buildRevenueChallenge() {
+  const markets = ["trigo", "cafeteria", "telefonia", "medicamento"];
+  const container = document.getElementById("challenge-markets");
+  container.innerHTML = "";
+  markets.forEach(k => {
+    const m = MARKETS[k];
+    const div = document.createElement("div");
+    div.className = "challenge-market-card";
+    div.innerHTML = `
+      <h4 style="color:${m.color}">${m.name}</h4>
+      <input type="range" class="mini-slider" min="0" max="40" step="5" value="0"
+        aria-label="Ajuste de precio para ${m.name}"
+        oninput="updateMiniChallenge(this,'${k}')">
+      <div class="mini-results" id="mini-${k}">
+        <span>Aumento: <strong>0%</strong></span> |
+        <span>IT₀: <strong>${fmt(m.p0 * m.q0)}</strong></span> |
+        <span>IT₁: <strong>${fmt(m.p0 * m.q0)}</strong></span>
+      </div>`;
+    container.appendChild(div);
+  });
+  checkChallengeAnswer();
+}
+
+function updateMiniChallenge(slider, marketKey) {
+  const pct = parseInt(slider.value);
+  const m = MARKETS[marketKey];
+  const p1 = m.p0 * (1 + pct / 100);
+  const deltaQ = m.elasticity * (pct / 100);
+  const q1 = Math.max(0, m.q0 * (1 + deltaQ));
+  const it0 = m.p0 * m.q0;
+  const it1 = p1 * q1;
+  const deltaIT = ((it1 - it0) / it0) * 100;
+  const good = it1 > it0;
+  const el = document.getElementById("mini-" + marketKey);
+  el.innerHTML = `
+    <span>Aumento: <strong>+${pct}%</strong></span> |
+    <span>IT₀: <strong>${fmt(it0)}</strong></span> |
+    <span>IT₁: <strong class="${good ? 'good' : 'bad'}">${fmt(it1)}</strong></span> |
+    <span class="${good ? 'good' : 'bad'}">${fmtPct(deltaIT)}</span>`;
+  checkChallengeAnswer();
+}
+
+function checkChallengeAnswer() {
+  // Second challenge: which market loses fewest clients at 20%?
+  const m = MARKETS["medicamento"];
+  const res = calcResults("medicamento", 20);
+  const fb = document.getElementById("challenge-feedback");
+  fb.style.display = "block";
+  fb.innerHTML = `<strong>💡 Desafío 2:</strong> El mercado donde un aumento de precio genera la menor pérdida de clientes es <strong>💊 Medicamento Patentado</strong>. Con un aumento del 20%, solo pierde el <strong>${res.clientLossPct.toFixed(1)}%</strong> de clientes (elasticidad -0,3). Compara esto con el trigo, donde la pérdida sería superior al 95%. La clave está en la elasticidad de demanda.`;
+}
+
+// ===========================
+// CLOSED TRANSITION QUESTION
+// ===========================
+function selectTransitionAnswer(value, btn) {
+  state.finalChoice = value;
+  document.querySelectorAll(".closed-question-btn").forEach(option => {
+    const selected = option === btn;
+    option.classList.toggle("selected", selected);
+    option.setAttribute("aria-checked", selected ? "true" : "false");
+  });
+  document.getElementById("show-final-answer-btn").disabled = false;
+  announce("Respuesta seleccionada: " + (value === "si" ? "Sí" : "No") + ".");
+}
+
+function showFinalAnswer() {
+  if (!state.finalChoice) return;
+  const selectedText = state.finalChoice === "si" ? "Sí" : "No";
+  document.getElementById("final-choice-summary").innerHTML = `<strong>Tu respuesta inicial:</strong> ${selectedText}. Esta elección puede retomarse al comenzar la clase.`;
+  show("final-answer");
+  document.getElementById("final-badge").style.display = "block";
+  scrollToSection("final-answer");
+  announce("La empresa puede influir sobre el precio cuando enfrenta pocos competidores, ofrece un producto diferenciado, existen pocos sustitutos, los clientes enfrentan costos de cambio o existen barreras que dificultan la entrada de nuevas empresas. Insignia obtenida: Analista de Estructuras de Mercado.");
+}
+
+// ===========================
+// RESET
+// ===========================
+function resetCurrentMarket() {
+  if (!state.activeMarket) return;
+  document.getElementById("price-slider").value = 20;
+  document.getElementById("price-number").value = 20;
+  document.getElementById("slider-val-display").textContent = "20%";
+  document.querySelectorAll('input[name="prediction"]').forEach(r => r.checked = false);
+  document.querySelectorAll(".diff-tag").forEach(t => t.classList.remove("selected"));
+  document.querySelectorAll(".reaction-btn").forEach(b => b.classList.remove("selected"));
+  state.diffSelected = [];
+  state.oligoReaction = null;
+  state.hintIdx = 0;
+  document.getElementById("hint-text").classList.remove("visible");
+  updatePricePreview(20, state.activeMarket);
+  hide("results-section");
+}
+
+function resetAll() {
+  if (!confirm("¿Reiniciar toda la actividad? Se perderá el progreso actual.")) return;
+  state = { activeMarket: null, completedMarkets: [], results: {}, diffSelected: [], oligoReaction: null, confirmed: false, hintIdx: 0, hintShown: false, allDone: false, finalChoice: null };
+  document.querySelectorAll(".market-card").forEach(c => { c.classList.remove("active", "completed"); });
+  hide("pricing-decision");
+  hide("results-section");
+  hide("market-power-meter");
+  hide("market-comparison");
+  hide("classification-challenge");
+  hide("revenue-challenge");
+  hide("transition-question");
+  document.getElementById("footer-progress").textContent = "0 / 4";
+  document.getElementById("final-btn").style.display = "none";
+  document.getElementById("stamps-container").innerHTML = "";
+  document.querySelectorAll(".classify-select").forEach(s => { s.value = ""; });
+  document.querySelectorAll(".classify-feedback").forEach(f => { f.className = "classify-feedback"; f.textContent = ""; });
+  document.querySelectorAll(".closed-question-btn").forEach(option => {
+    option.classList.remove("selected");
+    option.setAttribute("aria-checked", "false");
+  });
+  document.getElementById("show-final-answer-btn").disabled = true;
+  document.getElementById("final-choice-summary").textContent = "";
+  document.getElementById("final-answer").classList.remove("visible");
+  document.getElementById("final-answer").style.display = "";
+  document.getElementById("final-badge").style.display = "none";
+  scrollToSection("intro");
+  announce("Actividad reiniciada. Selecciona un mercado para comenzar.");
+}
+
+// ===========================
+// INIT
+// ===========================
+document.addEventListener("DOMContentLoaded", function() {
+  updateStamps();
+  // Initial state: hide all optional sections
+  ["pricing-decision","results-section","market-power-meter","market-comparison","classification-challenge","revenue-challenge","transition-question"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
+  });
+});
+</script>
+</body>
+</html>

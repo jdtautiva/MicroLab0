@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Quién paga el impuesto? | Universidad Andrés Bello</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#002060;--primary-l:#003087;--primary-ll:#1D4ED8;
+  --consumer:#2563EB;--consumer-l:#DBEAFE;--consumer-ll:#93C5FD;
+  --producer:#EA580C;--producer-l:#FED7AA;--producer-ll:#FDBA74;
+  --revenue:#16A34A;--revenue-l:#DCFCE7;
+  --dwl:#DC2626;--dwl-l:#FEE2E2;
+  --tax:#7C3AED;--tax-l:#EDE9FE;
+  --bg:#F8FAFC;--card:#fff;--text:#1E293B;--muted:#64748B;--border:#E2E8F0;
+  --r:12px;--shadow:0 1px 3px rgba(0,0,0,.10),0 1px 2px rgba(0,0,0,.06);
+  --shadow-m:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06)
+}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+
+/* ---- HEADER ---- */
+.inst-header{
+  background:#fff;
+  border-bottom:4px solid var(--primary);
+  padding:1rem 2rem;
+  display:flex;
+  align-items:center;
+  gap:1.5rem;
+  flex-wrap:wrap;
+  position:sticky;
+  top:0;
+  z-index:50
+}
+.inst-header img{height:56px;width:auto;max-width:180px;object-fit:contain}
+.inst-header-fallback{
+  width:56px;height:56px;background:var(--primary);border-radius:8px;
+  display:none;align-items:center;justify-content:center;color:#fff;
+  font-weight:800;font-size:1.2rem
+}
+.inst-header-text{flex:1;min-width:180px}
+.inst-header-text h1{font-size:.95rem;font-weight:700;color:var(--primary)}
+.inst-header-text p{font-size:.8rem;color:var(--muted);margin-top:.1rem}
+.activity-title-bar{background:var(--primary-l);color:#fff;padding:.6rem 1.5rem;font-size:.95rem;font-weight:700;letter-spacing:.01em}
+
+/* ---- PROGRESS ---- */
+.prog-wrap{padding:.6rem 1.5rem .2rem;background:var(--card);border-bottom:1px solid var(--border)}
+.prog-bar-bg{background:#E2E8F0;border-radius:4px;height:6px;overflow:hidden}
+.prog-bar{height:100%;background:linear-gradient(90deg,var(--consumer),var(--tax));transition:width .5s ease;border-radius:4px}
+.prog-label{font-size:.72rem;color:var(--muted);text-align:right;margin-top:.2rem}
+
+/* ---- STEP DOTS ---- */
+.step-dots{display:flex;gap:.3rem;justify-content:center;margin:1rem 0 .5rem}
+.step-dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:all .3s}
+.step-dot.done{background:var(--revenue)}
+.step-dot.cur{background:var(--primary);transform:scale(1.35)}
+
+/* ---- MAIN ---- */
+main{max-width:900px;margin:0 auto;padding:1.5rem 1rem 3rem}
+
+/* ---- SECTIONS ---- */
+.sec{display:none;animation:fadeIn .4s ease}
+.sec.act{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ---- CARDS ---- */
+.card{background:var(--card);border-radius:var(--r);padding:1.5rem;box-shadow:var(--shadow-m);margin-bottom:1.25rem;border:1px solid var(--border)}
+.card-title{font-size:1.15rem;font-weight:800;color:var(--primary);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+
+/* ---- ANNOUNCEMENT ---- */
+.announce-box{background:linear-gradient(135deg,var(--tax-l),#F5F3FF);border:2px solid var(--tax);border-radius:var(--r);padding:1.5rem;text-align:center;margin-bottom:1.25rem}
+.tax-big{font-size:3.5rem;font-weight:900;color:var(--tax);line-height:1;display:block}
+.announce-box p{font-size:.95rem;margin-top:.5rem;color:var(--text)}
+
+/* ---- QUESTION BOX ---- */
+.q-box{background:#F0F9FF;border-left:4px solid #0EA5E9;border-radius:0 var(--r) var(--r) 0;padding:1rem 1.25rem;margin:1rem 0;font-weight:700;font-size:1rem;color:#0C4A6E}
+
+/* ---- SLIDERS ---- */
+.slider-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin:1.25rem 0}
+@media(max-width:580px){.slider-grid{grid-template-columns:1fr}}
+.sl-card{padding:1.25rem;border-radius:var(--r);border:2px solid transparent}
+.sl-card.cons{border-color:var(--consumer);background:var(--consumer-l)}
+.sl-card.prod{border-color:var(--producer);background:var(--producer-l)}
+.sl-pct{font-size:2.2rem;font-weight:900;display:block;line-height:1}
+.sl-card.cons .sl-pct{color:var(--consumer)}
+.sl-card.prod .sl-pct{color:var(--producer)}
+.sl-money{font-size:.85rem;font-weight:700;opacity:.75;margin:.25rem 0 .6rem}
+.sl-label{font-weight:700;font-size:.85rem;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center}
+.sl-num{width:72px;padding:.2rem .4rem;border:1px solid var(--border);border-radius:6px;font-size:.85rem;text-align:center;background:rgba(255,255,255,.7)}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:8px;border-radius:4px;outline:none;cursor:pointer;margin-top:.25rem}
+input[type=range].rcons{background:var(--consumer-ll)}
+input[type=range].rcons::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--consumer);box-shadow:0 2px 4px rgba(37,99,235,.4)}
+input[type=range].rcons::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--consumer);border:none}
+input[type=range].rprod{background:var(--producer-ll)}
+input[type=range].rprod::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--producer);box-shadow:0 2px 4px rgba(234,88,12,.4)}
+input[type=range].rprod::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--producer);border:none}
+
+/* ---- TAX BAR ---- */
+.tax-bar-wrap{margin:1.25rem 0}
+.tax-bar-labels{display:flex;justify-content:space-between;font-size:.75rem;font-weight:700;margin-bottom:.3rem}
+.tax-bar{height:44px;border-radius:8px;overflow:hidden;display:flex;box-shadow:var(--shadow)}
+.tb-cons{background:var(--consumer);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.85rem;transition:width .3s ease;min-width:2rem}
+.tb-prod{background:var(--producer);flex:1;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.85rem;transition:width .3s ease;min-width:2rem}
+
+/* ---- BUTTONS ---- */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.2rem;border-radius:8px;font-size:.875rem;font-weight:700;cursor:pointer;border:2px solid transparent;transition:all .2s;outline:none;text-align:center;line-height:1.3}
+.btn:focus-visible{outline:3px solid var(--consumer);outline-offset:2px}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-l);transform:translateY(-1px)}
+.btn-primary:active{transform:none}
+.btn-primary:disabled{background:#94A3B8;cursor:not-allowed;transform:none}
+.btn-consumer{background:var(--consumer);color:#fff}
+.btn-consumer:hover{background:var(--primary-ll)}
+.btn-outline{background:transparent;border-color:var(--primary);color:var(--primary)}
+.btn-outline:hover{background:var(--primary);color:#fff}
+.btn-ghost{background:transparent;color:var(--muted);border-color:var(--border)}
+.btn-ghost:hover{background:var(--bg);border-color:var(--muted);color:var(--text)}
+.btn-success{background:var(--revenue);color:#fff}
+.btn-success:hover{background:#15803D}
+.btn-tax{background:var(--tax);color:#fff}
+.btn-tax:hover{background:#6D28D9}
+.btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;align-items:center}
+@media(max-width:480px){.btn{width:100%;justify-content:center}.btn-row{flex-direction:column}}
+
+/* ---- CONCEPTS ---- */
+.concept-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+@media(max-width:580px){.concept-grid{grid-template-columns:1fr}}
+.concept-card{padding:1rem;border-radius:var(--r);border:2px solid}
+.concept-card.legal{border-color:#0EA5E9;background:#F0F9FF}
+.concept-card.econ{border-color:var(--tax);background:var(--tax-l)}
+.concept-card h3{font-size:.875rem;font-weight:800;margin-bottom:.4rem}
+.concept-card.legal h3{color:#0369A1}
+.concept-card.econ h3{color:var(--tax)}
+.concept-card p{font-size:.82rem;color:var(--muted)}
+
+/* ---- MARKET TABS ---- */
+.mkt-tabs{display:flex;gap:.5rem;margin-bottom:1.25rem;flex-wrap:wrap}
+.mkt-tab{flex:1;min-width:90px;padding:.7rem .75rem;border-radius:var(--r);border:2px solid var(--border);background:var(--card);cursor:pointer;font-weight:700;font-size:.82rem;text-align:center;transition:all .2s;position:relative}
+.mkt-tab:hover{border-color:var(--primary)}
+.mkt-tab.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.mkt-tab.done::after{content:'✓';position:absolute;top:-7px;right:-7px;background:var(--revenue);color:#fff;width:20px;height:20px;border-radius:50%;font-size:.65rem;display:flex;align-items:center;justify-content:center}
+
+/* ---- MARKET CONTEXT ---- */
+.mkt-context{background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border:2px solid var(--revenue);border-radius:var(--r);padding:1rem 1.25rem;margin:1rem 0;font-size:.88rem}
+.mkt-context.meds{background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border-color:var(--consumer)}
+.mkt-context.fast{background:linear-gradient(135deg,#FFF7ED,#FED7AA);border-color:var(--producer)}
+.mkt-context.agro{background:linear-gradient(135deg,#F0FDF4,#DCFCE7);border-color:var(--revenue)}
+.mkt-icon{font-size:2rem;display:block;margin-bottom:.4rem}
+
+/* ---- FEEDBACK ---- */
+.feedback{border-radius:var(--r);padding:1rem 1.25rem;margin:1rem 0;display:none;font-size:.88rem}
+.feedback.show{display:block;animation:fadeIn .3s ease}
+.feedback.neutral{background:#F0F9FF;border-left:4px solid #0EA5E9}
+.feedback.good{background:var(--revenue-l);border-left:4px solid var(--revenue)}
+.feedback.info{background:var(--tax-l);border-left:4px solid var(--tax)}
+.feedback.warn{background:#FFFBEB;border-left:4px solid #F59E0B}
+
+/* ---- COMPARISON ---- */
+.comp-box{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+@media(max-width:480px){.comp-box{grid-template-columns:1fr}}
+.comp-item{padding:1rem;border-radius:var(--r);background:var(--bg);border:1px solid var(--border);text-align:center}
+.comp-item label{display:block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.25rem}
+.comp-item .val{font-size:1.5rem;font-weight:900}
+.comp-item.pred .val{color:#64748B}
+.comp-item.res .val{color:var(--primary)}
+
+/* ---- PRICE WEDGE ---- */
+.wedge-row{display:flex;align-items:stretch;gap:.75rem;margin:1rem 0;flex-wrap:wrap}
+.price-box{flex:1;min-width:110px;padding:1rem;border-radius:var(--r);text-align:center;border:2px solid}
+.price-box.pb{border-color:var(--consumer);background:var(--consumer-l)}
+.price-box.ps{border-color:var(--producer);background:var(--producer-l)}
+.price-box label{display:block;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.3rem}
+.price-box.pb label{color:var(--consumer)}
+.price-box.ps label{color:var(--producer)}
+.price-box .pv{font-size:1.5rem;font-weight:900;display:block}
+.price-box.pb .pv{color:var(--consumer)}
+.price-box.ps .pv{color:var(--producer)}
+.price-box .pdiff{font-size:.72rem;color:var(--muted);margin-top:.2rem}
+.wedge-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:64px;padding:.5rem;background:var(--tax-l);border-radius:var(--r);border:2px solid var(--tax);text-align:center;gap:.25rem}
+.wedge-mid .wl{font-size:.62rem;font-weight:800;color:var(--tax);text-transform:uppercase}
+.wedge-mid .wv{font-size:1.1rem;font-weight:900;color:var(--tax)}
+
+/* ---- STATS ROW ---- */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem;margin:1rem 0}
+.stat-box{padding:.875rem;border-radius:var(--r);text-align:center;border:2px solid}
+.stat-box label{display:block;font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.25rem}
+.stat-box .sv{font-size:1.15rem;font-weight:900}
+.stat-box.rev{border-color:var(--revenue);background:var(--revenue-l)}
+.stat-box.rev label,.stat-box.rev .sv{color:var(--revenue)}
+.stat-box.dwl{border-color:var(--dwl);background:var(--dwl-l)}
+.stat-box.dwl label,.stat-box.dwl .sv{color:var(--dwl)}
+.stat-box.qty{border-color:#64748B;background:#F1F5F9}
+.stat-box.qty label,.stat-box.qty .sv{color:#475569}
+
+/* ---- SVG CHART ---- */
+.chart-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.chart-wrap svg{max-width:100%;height:auto}
+
+/* ---- COMPARISON TABLE ---- */
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:1rem 0}
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:.82rem;min-width:400px}
+.cmp-tbl th{background:var(--primary);color:#fff;padding:.7rem .75rem;text-align:left;font-weight:700;font-size:.8rem}
+.cmp-tbl td{padding:.6rem .75rem;border-bottom:1px solid var(--border)}
+.cmp-tbl tr:nth-child(even) td{background:var(--bg)}
+.cmp-tbl .hl{font-weight:700;color:var(--primary)}
+
+/* ---- MC OPTIONS ---- */
+.mc-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin:1rem 0}
+@media(max-width:480px){.mc-grid{grid-template-columns:1fr}}
+.mc-opt{padding:.875rem 1rem;border-radius:var(--r);border:2px solid var(--border);background:var(--card);cursor:pointer;font-size:.875rem;font-weight:600;text-align:left;transition:all .2s;width:100%}
+.mc-opt:hover{border-color:var(--primary);background:#EFF6FF}
+.mc-opt.sel{border-color:var(--consumer);background:var(--consumer-l);color:var(--consumer);font-weight:700}
+.mc-opt.correct{border-color:var(--revenue);background:var(--revenue-l);color:var(--revenue)}
+.mc-opt.wrong{border-color:#CBD5E1;background:#F8FAFC;color:#94A3B8}
+
+/* ---- HINTS ---- */
+.hints-panel{background:#FFFBEB;border:1px solid #F59E0B;border-radius:var(--r);padding:1rem;margin:1rem 0;display:none}
+.hints-panel.show{display:block;animation:fadeIn .3s ease}
+.hint-item{padding:.4rem 0;border-bottom:1px solid #FDE68A;font-size:.83rem;display:flex;gap:.5rem}
+.hint-item:last-child{border-bottom:none}
+
+/* ---- EXPLORER ---- */
+.expl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1rem 0}
+.expl-sl{padding:.875rem;background:var(--bg);border-radius:var(--r);border:1px solid var(--border)}
+.expl-sl label{display:flex;justify-content:space-between;font-size:.78rem;font-weight:700;margin-bottom:.4rem;color:var(--muted)}
+.expl-sl label span{color:var(--text);font-weight:800}
+input[type=range].rgen{background:#CBD5E1}
+input[type=range].rgen::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--primary);box-shadow:0 2px 4px rgba(0,32,96,.3)}
+input[type=range].rgen::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--primary);border:none}
+
+/* ---- BADGE ---- */
+.badge-wrap{text-align:center;padding:2rem 1rem}
+.badge-icon{display:inline-block;font-size:3.5rem;background:linear-gradient(135deg,#FFD700,#FFA500);border-radius:50%;width:100px;height:100px;line-height:100px;margin-bottom:1rem;box-shadow:0 4px 20px rgba(255,165,0,.4);animation:pop .5s ease-out}
+@keyframes pop{0%{transform:scale(0);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+.badge-title{font-size:1.5rem;font-weight:900;color:var(--primary);margin-bottom:.4rem}
+.badge-sub{color:var(--muted);font-size:.875rem}
+
+/* ---- CHALLENGE ---- */
+.challenge-box{background:linear-gradient(135deg,var(--tax-l),#F5F3FF);border:2px solid var(--tax);border-radius:var(--r);padding:1.25rem;margin:1rem 0}
+.challenge-box h3{color:var(--tax);font-size:1rem;margin-bottom:.4rem}
+
+/* ---- MODE TOGGLE (tax/subsidy) ---- */
+.mode-toggle{display:flex;gap:.25rem;background:var(--bg);border-radius:var(--r);padding:.25rem;border:1px solid var(--border);margin-bottom:1rem;max-width:360px}
+.mode-btn{flex:1;padding:.45rem .75rem;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-size:.8rem;transition:all .2s;background:transparent;color:var(--muted)}
+.mode-btn.active{background:var(--card);color:var(--primary);box-shadow:var(--shadow)}
+
+/* ---- SUBSIDY NOTE ---- */
+.subsidy-note{background:var(--revenue-l);border:2px solid var(--revenue);border-radius:var(--r);padding:1rem;margin:1rem 0;font-size:.875rem}
+
+/* ---- CLOSED TRANSITION QUESTION ---- */
+.transition-instruction{color:var(--muted);font-size:.84rem;margin:.75rem 0}
+
+/* ---- FOOTER ---- */
+footer{
+  background:var(--primary);
+  color:rgba(255,255,255,.85);
+  text-align:center;
+  padding:1.25rem;
+  font-size:.82rem
+}
+footer p{margin:0}
+
+/* ---- UTIL ---- */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}
+h2{font-size:1.05rem;font-weight:800;margin-bottom:.75rem;color:var(--primary)}
+h3{font-size:.95rem;font-weight:700;margin-bottom:.4rem}
+p{margin-bottom:.4rem;font-size:.9rem}
+.text-muted{color:var(--muted);font-size:.82rem}
+.text-center{text-align:center}
+.mt-1{margin-top:.5rem}.mt-2{margin-top:1rem}
+.formula-box{background:#F8FAFC;border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;font-family:monospace;font-size:.85rem;margin:.5rem 0;color:var(--text)}
+.chip{display:inline-block;padding:.2rem .6rem;border-radius:999px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.chip-cons{background:var(--consumer-l);color:var(--consumer)}
+.chip-prod{background:var(--producer-l);color:var(--producer)}
+.chip-tax{background:var(--tax-l);color:var(--tax)}
+.sep{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+:focus-visible{outline:3px solid var(--consumer);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<!-- ===== INSTITUTIONAL HEADER ===== -->
+<header class="inst-header" role="banner">
+  <img id="logo-img"
+       src="https://facultades.unab.cl/economiaynegocios/wp-content/uploads/2022/03/logo-fen-negro.png"
+       alt="Logo de la Facultad de Economía y Negocios de la Universidad Andrés Bello"
+       loading="eager"
+       onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+  <div id="logo-fallback" class="inst-header-fallback" aria-hidden="true">FEN</div>
+  <div class="inst-header-text">
+    <h1>Universidad Andrés Bello</h1>
+    <p>Facultad de Economía y Negocios</p>
+  </div>
+</header>
+<div class="activity-title-bar">Actividad Interactiva · Impuestos, subsidios e incidencia tributaria</div>
+
+<!-- ===== PROGRESS ===== -->
+<div class="prog-wrap" role="region" aria-label="Progreso de la actividad">
+  <div class="prog-bar-bg"><div class="prog-bar" id="progBar" style="width:0%"></div></div>
+  <div class="prog-label" id="progLabel">Paso 1 de 10</div>
+</div>
+
+<!-- ===== ARIA LIVE ===== -->
+<div aria-live="polite" aria-atomic="true" class="sr-only" id="liveRegion"></div>
+
+<main role="main">
+  <div class="step-dots" id="stepDots" aria-hidden="true"></div>
+
+  <!-- ========== SECTION 0: ANNOUNCEMENT + INITIAL PREDICTION ========== -->
+  <div class="sec act" id="s0" role="region" aria-labelledby="s0-title">
+    <div class="card">
+      <div class="announce-box" role="alert">
+        <span class="tax-big" aria-label="500 pesos por unidad">$500</span>
+        <p><strong>El gobierno introduce un impuesto de $500 por unidad.</strong><br>
+        La ley establece que el <em>vendedor</em> debe declarar y transferir el impuesto a la autoridad fiscal.</p>
+      </div>
+      <div class="q-box" role="heading" aria-level="2">
+        ¿Significa esto que el vendedor soporta <em>necesariamente</em> todo el costo del impuesto?
+      </div>
+      <p class="text-muted">Asume el rol de analista económico. Antes de ver los datos, realiza tu primera predicción.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title" id="s0-title">📊 Tu predicción inicial</div>
+      <p><strong>Distribuye el impuesto de $500 entre consumidores y productores.</strong></p>
+      <p class="text-muted">Usa los controles para indicar qué porcentaje crees que pagará cada grupo. La suma debe ser 100%.</p>
+
+      <div class="slider-grid" role="group" aria-label="Controles de distribución">
+        <div class="sl-card cons">
+          <div class="sl-label">
+            <span class="chip chip-cons">Consumidores</span>
+            <input type="number" class="sl-num" id="consNum0" min="0" max="100" value="50" aria-label="Porcentaje consumidores">
+          </div>
+          <span class="sl-pct" id="consPct0" aria-live="polite">50%</span>
+          <div class="sl-money" id="consMoney0">= $250</div>
+          <input type="range" class="rcons" id="consSlider0" min="0" max="100" value="50" aria-label="Porcentaje pagado por consumidores" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        </div>
+        <div class="sl-card prod">
+          <div class="sl-label">
+            <span class="chip chip-prod">Productores</span>
+            <input type="number" class="sl-num" id="prodNum0" min="0" max="100" value="50" aria-label="Porcentaje productores">
+          </div>
+          <span class="sl-pct" id="prodPct0" aria-live="polite">50%</span>
+          <div class="sl-money" id="prodMoney0">= $250</div>
+          <input type="range" class="rprod" id="prodSlider0" min="0" max="100" value="50" aria-label="Porcentaje pagado por productores" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        </div>
+      </div>
+
+      <div class="tax-bar-wrap" aria-label="Barra visual del impuesto de $500">
+        <div class="tax-bar-labels">
+          <span style="color:var(--consumer)">Consumidores</span>
+          <span style="color:var(--producer)">Productores</span>
+        </div>
+        <div class="tax-bar" role="img" aria-label="Distribución del impuesto entre grupos">
+          <div class="tb-cons" id="tbCons0" style="width:50%">50%</div>
+          <div class="tb-prod" id="tbProd0">50%</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="confirmInitialPred()" id="btnConfirmInit">
+          Confirmar predicción →
+        </button>
+        <button class="btn btn-ghost" onclick="toggleHints(0)">💡 Pistas</button>
+      </div>
+      <div class="hints-panel" id="hints0">
+        <div class="hint-item">Pregunta cuál lado puede cambiar más fácilmente su comportamiento.</div>
+        <div class="hint-item">Quien tiene menos sustitutos o alternativas suele soportar más carga.</div>
+        <div class="hint-item">La obligación legal indica quién transfiere el dinero al gobierno, no quién pierde bienestar.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SECTION 1: CONCEPTS ========== -->
+  <div class="sec" id="s1" role="region" aria-labelledby="s1-title">
+    <div class="card">
+      <div class="card-title" id="s1-title">📚 Dos tipos de incidencia tributaria</div>
+      <p>Antes de analizar los mercados, es importante distinguir dos conceptos fundamentales:</p>
+      <div class="concept-grid">
+        <div class="concept-card legal" role="article">
+          <h3>⚖️ Incidencia legal</h3>
+          <p>Indica quién está <strong>obligado por ley</strong> a declarar o transferir el impuesto al gobierno.</p>
+          <p>En este caso: el <strong>vendedor</strong>.</p>
+        </div>
+        <div class="concept-card econ" role="article">
+          <h3>💸 Incidencia económica</h3>
+          <p>Indica quién experimenta <strong>realmente</strong> la reducción de bienestar provocada por el impuesto.</p>
+          <p>Puede ser muy diferente de la incidencia legal.</p>
+        </div>
+      </div>
+      <div class="feedback show info">
+        <strong>Clave:</strong> Que el vendedor <em>entregue</em> el impuesto al gobierno no significa que él lo <em>pague</em> económicamente. El costo real depende de quién puede evitar más fácilmente el impuesto ajustando su comportamiento.
+      </div>
+      <hr class="sep">
+      <h3>La fórmula simplificada de incidencia</h3>
+      <p class="text-muted">Para fines didácticos usaremos esta aproximación:</p>
+      <div class="formula-box">
+        Participación consumidores = Es / (Es + |Ed|)<br>
+        Participación productores  = |Ed| / (Es + |Ed|)
+      </div>
+      <p class="text-muted">Donde <strong>Es</strong> es la elasticidad de la oferta y <strong>|Ed|</strong> es el valor absoluto de la elasticidad de la demanda. A mayor elasticidad relativa, <em>menor</em> carga soportada.</p>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="goTo(2)">Analizar mercados →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SECTION 2: MARKETS (shared wrapper) ========== -->
+  <div class="sec" id="s2" role="region" aria-labelledby="s2-title">
+    <div class="card">
+      <div class="card-title" id="s2-title">🏪 Tres mercados, un mismo impuesto</div>
+      <p>El impuesto de <strong class="chip chip-tax">$500</strong> es idéntico en los tres mercados. Lo que cambia es cómo se <em>distribuye</em> la carga según las elasticidades.</p>
+      <div class="mkt-tabs" role="tablist" aria-label="Selección de mercado">
+        <button class="mkt-tab active" id="tab-0" role="tab" aria-selected="true" aria-controls="mkt-panel" onclick="selectMarket(0)">💊 Medicamentos</button>
+        <button class="mkt-tab" id="tab-1" role="tab" aria-selected="false" aria-controls="mkt-panel" onclick="selectMarket(1)">🍔 Comida rápida</button>
+        <button class="mkt-tab" id="tab-2" role="tab" aria-selected="false" aria-controls="mkt-panel" onclick="selectMarket(2)">🌾 Agricultura</button>
+      </div>
+    </div>
+
+    <!-- Market panel -->
+    <div id="mkt-panel" role="tabpanel">
+
+      <!-- Market context card -->
+      <div class="card" id="mktContextCard">
+        <div id="mktContextInner"></div>
+      </div>
+
+      <!-- Prediction card -->
+      <div class="card" id="mktPredCard">
+        <div class="card-title">🎯 Tu predicción para este mercado</div>
+        <p id="mktPredText"></p>
+        <div class="slider-grid" role="group" aria-label="Controles de predicción del mercado">
+          <div class="sl-card cons">
+            <div class="sl-label">
+              <span class="chip chip-cons">Consumidores</span>
+              <input type="number" class="sl-num" id="consNumM" min="0" max="100" value="50" aria-label="Porcentaje consumidores en este mercado">
+            </div>
+            <span class="sl-pct" id="consPctM">50%</span>
+            <div class="sl-money" id="consMoneyM">= $250</div>
+            <input type="range" class="rcons" id="consSliderM" min="0" max="100" value="50" aria-label="Desliza para ajustar porcentaje de consumidores">
+          </div>
+          <div class="sl-card prod">
+            <div class="sl-label">
+              <span class="chip chip-prod">Productores</span>
+              <input type="number" class="sl-num" id="prodNumM" min="0" max="100" value="50" aria-label="Porcentaje productores en este mercado">
+            </div>
+            <span class="sl-pct" id="prodPctM">50%</span>
+            <div class="sl-money" id="prodMoneyM">= $250</div>
+            <input type="range" class="rprod" id="prodSliderM" min="0" max="100" value="50" aria-label="Desliza para ajustar porcentaje de productores">
+          </div>
+        </div>
+        <div class="tax-bar-wrap">
+          <div class="tax-bar-labels">
+            <span style="color:var(--consumer)">Consumidores</span>
+            <span style="color:var(--producer)">Productores</span>
+          </div>
+          <div class="tax-bar">
+            <div class="tb-cons" id="tbConsM" style="width:50%">50%</div>
+            <div class="tb-prod" id="tbProdM">50%</div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-consumer" onclick="revealMarketResult()" id="btnReveal">Ver resultado →</button>
+          <button class="btn btn-ghost" onclick="toggleHints('m')">💡 Pistas</button>
+        </div>
+        <div class="hints-panel" id="hintsM">
+          <div class="hint-item" id="hint1m"></div>
+          <div class="hint-item">La parte más inelástica puede evitar menos el impuesto.</div>
+          <div class="hint-item">Observa la diferencia entre el precio pagado y el precio recibido.</div>
+          <div class="hint-item">La obligación legal del vendedor no determina por sí sola la carga económica.</div>
+        </div>
+      </div>
+
+      <!-- Result card (hidden until reveal) -->
+      <div class="card" id="mktResultCard" style="display:none">
+        <div class="card-title">📈 Resultado del modelo</div>
+
+        <!-- Comparison pred vs result -->
+        <div class="comp-box" id="compBox"></div>
+
+        <!-- Feedback -->
+        <div class="feedback" id="mktFeedback"></div>
+
+        <!-- Price wedge -->
+        <h3 style="margin-top:.75rem">Precios y cuña fiscal</h3>
+        <div class="wedge-row">
+          <div class="price-box pb">
+            <label>Precio pagado por consumidores (Pb)</label>
+            <span class="pv" id="rPb">—</span>
+            <span class="pdiff" id="rPbDiff"></span>
+          </div>
+          <div class="wedge-mid" aria-label="Cuña fiscal">
+            <span class="wl">Cuña</span>
+            <span class="wv">$500</span>
+            <span class="wl">= t</span>
+          </div>
+          <div class="price-box ps">
+            <label>Precio neto recibido por productores (Ps)</label>
+            <span class="pv" id="rPs">—</span>
+            <span class="pdiff" id="rPsDiff"></span>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-box qty"><label>Q₀ inicial</label><div class="sv" id="rQ0">—</div></div>
+          <div class="stat-box qty"><label>Q₁ post-imp.</label><div class="sv" id="rQ1">—</div></div>
+          <div class="stat-box rev"><label>Recaudación fiscal</label><div class="sv" id="rRev">—</div></div>
+          <div class="stat-box dwl"><label>Pérdida irrecuperable</label><div class="sv" id="rDWL">—</div></div>
+        </div>
+
+        <!-- Distribution bar -->
+        <div class="tax-bar-wrap" style="margin-top:.5rem">
+          <div class="tax-bar-labels">
+            <span style="color:var(--consumer)" id="rConsLabel">—</span>
+            <span style="color:var(--producer)" id="rProdLabel">—</span>
+          </div>
+          <div class="tax-bar">
+            <div class="tb-cons" id="rTbCons" style="width:50%"></div>
+            <div class="tb-prod" id="rTbProd"></div>
+          </div>
+        </div>
+
+        <!-- Chart -->
+        <h3 style="margin-top:1rem">Gráfico oferta-demanda</h3>
+        <div class="chart-wrap" role="img" aria-label="Gráfico de oferta y demanda con cuña fiscal">
+          <svg id="mktSvg" viewBox="0 0 560 380" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+        </div>
+        <p class="text-muted" id="chartDesc" style="font-size:.75rem;margin-top:.25rem"></p>
+
+        <div class="btn-row" style="margin-top:1rem">
+          <button class="btn btn-primary" id="btnNextMkt" onclick="nextMarket()">Siguiente mercado →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SECTION 3: REFLECTION QUESTION ========== -->
+  <div class="sec" id="s3" role="region" aria-labelledby="s3-title">
+    <div class="card">
+      <div class="card-title" id="s3-title">🤔 Pregunta de reflexión</div>
+      <div class="q-box">¿Qué grupo tiene más posibilidades de evitar el impuesto cambiando su comportamiento?</div>
+      <div class="mc-grid" role="group" aria-label="Opciones de respuesta">
+        <button class="mc-opt" onclick="selectMC(this,false)" aria-pressed="false">👥 Consumidores</button>
+        <button class="mc-opt" onclick="selectMC(this,false)" aria-pressed="false">🏭 Productores</button>
+        <button class="mc-opt" onclick="selectMC(this,false)" aria-pressed="false">🤝 Ambos por igual</button>
+        <button class="mc-opt" onclick="selectMC(this,true)" aria-pressed="false">🎯 Depende del mercado</button>
+      </div>
+      <div class="feedback" id="mcFeedback"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btnMCNext" onclick="goTo(4)" style="display:none">Ver comparación →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SECTION 4: MARKET COMPARISON ========== -->
+  <div class="sec" id="s4" role="region" aria-labelledby="s4-title">
+    <div class="card">
+      <div class="card-title" id="s4-title">📋 Comparación de los tres mercados</div>
+      <p>El impuesto legal es <strong>idéntico</strong> en los tres casos. La carga económica, sin embargo, se distribuye de manera muy diferente.</p>
+      <div class="tbl-scroll">
+        <table class="cmp-tbl" aria-label="Comparación de incidencia tributaria entre mercados">
+          <thead>
+            <tr>
+              <th>Mercado</th>
+              <th>Ed</th>
+              <th>Es</th>
+              <th>Carga consumidores</th>
+              <th>Carga productores</th>
+              <th>Lado más inelástico</th>
+            </tr>
+          </thead>
+          <tbody id="cmpTableBody"></tbody>
+        </table>
+      </div>
+      <div class="feedback show info" style="margin-top:1rem">
+        <strong>Conclusión:</strong> El lado del mercado que responde <em>menos</em> a los cambios de precio (el más inelástico) soporta una mayor proporción de la carga tributaria.
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="goTo(5)">Modo exploratorio →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SECTION 5: EXPLORATORY + CHALLENGE ========== -->
+  <div class="sec" id="s5" role="region" aria-labelledby="s5-title">
+    <!-- Mode toggle tax / subsidy -->
+    <div class="card">
+      <div class="card-title" id="s5-title">🔬 Modo exploratorio</div>
+      <div class="mode-toggle" role="group" aria-label="Modo: impuesto o subsidio">
+        <button class="mode-btn active" id="modeTax" onclick="setMode('tax')">📈 Impuesto</button>
+        <button class="mode-btn" id="modeSub" onclick="setMode('subsidy')">📉 Subsidio</button>
+      </div>
+      <div id="subsidyNote" class="subsidy-note" style="display:none">
+        <strong>Modo subsidio:</strong> La distribución del <em>beneficio</em> de un subsidio también depende de las elasticidades relativas. El lado más inelástico capta una mayor proporción del beneficio.
+      </div>
+      <p>Ajusta las elasticidades y el monto del <span id="modeLabel">impuesto</span> para ver cómo cambia la incidencia en tiempo real.</p>
+      <div class="expl-grid" role="group" aria-label="Parámetros del modo exploratorio">
+        <div class="expl-sl">
+          <label>Elasticidad demanda |Ed| <span id="explEdVal">0.8</span></label>
+          <input type="range" class="rgen" id="explEd" min="0.1" max="3" step="0.1" value="0.8" aria-label="Elasticidad de la demanda" aria-valuemin="0.1" aria-valuemax="3" aria-valuenow="0.8" oninput="updateExplorer()">
+        </div>
+        <div class="expl-sl">
+          <label>Elasticidad oferta Es <span id="explEsVal">0.8</span></label>
+          <input type="range" class="rgen" id="explEs" min="0.1" max="3" step="0.1" value="0.8" aria-label="Elasticidad de la oferta" oninput="updateExplorer()">
+        </div>
+        <div class="expl-sl">
+          <label>Monto <span id="explTaxLabel">impuesto</span> $<span id="explTaxVal">500</span></label>
+          <input type="range" class="rgen" id="explTax" min="0" max="2000" step="50" value="500" aria-label="Monto del impuesto o subsidio" oninput="updateExplorer()">
+        </div>
+      </div>
+
+      <!-- Explorer results -->
+      <div id="explResults">
+        <div class="tax-bar-wrap">
+          <div class="tax-bar-labels">
+            <span style="color:var(--consumer)" id="explConsLabel">Consumidores 50%</span>
+            <span style="color:var(--producer)" id="explProdLabel">Productores 50%</span>
+          </div>
+          <div class="tax-bar">
+            <div class="tb-cons" id="explTbCons" style="width:50%">50%</div>
+            <div class="tb-prod" id="explTbProd">50%</div>
+          </div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-box qty"><label>Carga consumidores</label><div class="sv" id="explCLoad">$250</div></div>
+          <div class="stat-box qty"><label>Carga productores</label><div class="sv" id="explPLoad">$250</div></div>
+          <div class="stat-box rev"><label>Recaudación / Beneficio</label><div class="sv" id="explRev">—</div></div>
+          <div class="stat-box dwl"><label>Pérdida / Ganancia efic.</label><div class="sv" id="explDWL">—</div></div>
+        </div>
+        <div class="chart-wrap" role="img" aria-label="Gráfico exploratorio de oferta y demanda">
+          <svg id="explSvg" viewBox="0 0 560 340" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Challenge -->
+    <div class="card">
+      <div class="challenge-box">
+        <h3>🏆 Desafío: distribución 50/50</h3>
+        <p>Ajusta las elasticidades hasta lograr que consumidores y productores soporten <strong>exactamente 50% del impuesto</strong>.</p>
+        <p class="text-muted">Pista: la condición esperada es <strong>|Ed| = Es</strong></p>
+      </div>
+      <div id="challengeResult" class="feedback" style="display:none"></div>
+      <p class="text-muted" style="margin-top:.5rem" id="challengeProgress"></p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goTo(6)">Pregunta para iniciar la clase →</button>
+    </div>
+  </div>
+
+  <!-- ========== SECTION 6: CLOSED CLASS-START QUESTION ========== -->
+  <div class="sec" id="s6" role="region" aria-labelledby="s6-title">
+    <div class="card">
+      <div class="card-title" id="s6-title">💬 Pregunta para iniciar la clase</div>
+      <div class="q-box" role="heading" aria-level="2">
+        ¿La obligación legal de pagar un impuesto determina quién soporta su costo económico?
+      </div>
+      <p class="transition-instruction">Selecciona una opción. Conservaremos tu respuesta como punto de partida para la discusión en clase.</p>
+      <div class="mc-grid" id="transitionChoices" role="radiogroup" aria-label="Respuesta a la pregunta para iniciar la clase">
+        <button class="mc-opt final-choice" type="button" role="radio" aria-checked="false" onclick="selectTransitionAnswer('Sí', this)">Sí</button>
+        <button class="mc-opt final-choice" type="button" role="radio" aria-checked="false" onclick="selectTransitionAnswer('No', this)">No</button>
+      </div>
+      <div class="feedback info" id="transitionNote" style="display:none;margin-top:1rem" role="status" aria-live="polite"></div>
+    </div>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn btn-primary" id="btnFinalBadge" onclick="goTo(7)" style="display:none">Ver resumen final →</button>
+    </div>
+  </div>
+
+  <!-- ========== SECTION 7: FINAL BADGE + SUMMARY ========== -->
+  <div class="sec" id="s7" role="region" aria-labelledby="s7-title">
+    <div class="card text-center">
+      <div class="badge-wrap" role="img" aria-label="Insignia obtenida">
+        <div class="badge-icon">🏅</div>
+        <div class="badge-title">Analista de Incidencia Tributaria</div>
+        <div class="badge-sub">Has completado la actividad sobre impuestos e incidencia tributaria</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" id="s7-title">🎓 Lo que aprendiste</div>
+      <div class="concept-grid">
+        <div class="concept-card legal">
+          <h3>⚖️ Incidencia legal ≠ económica</h3>
+          <p>Quien entrega el impuesto al gobierno no necesariamente lo soporta.</p>
+        </div>
+        <div class="concept-card econ">
+          <h3>📊 Elasticidades relativas</h3>
+          <p>La parte más inelástica del mercado absorbe la mayor carga tributaria.</p>
+        </div>
+      </div>
+      <div class="tbl-scroll" style="margin-top:1rem">
+        <table class="cmp-tbl" aria-label="Resumen final de los tres mercados">
+          <thead>
+            <tr>
+              <th>Mercado</th>
+              <th>Carga consumidores</th>
+              <th>Carga productores</th>
+              <th>Razón principal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>💊 Medicamentos</strong></td>
+              <td class="hl" id="sum0c">—</td>
+              <td id="sum0p">—</td>
+              <td>Demanda muy inelástica (pocos sustitutos)</td>
+            </tr>
+            <tr>
+              <td><strong>🍔 Comida rápida</strong></td>
+              <td id="sum1c">—</td>
+              <td class="hl" id="sum1p">—</td>
+              <td>Demanda elástica (muchos sustitutos)</td>
+            </tr>
+            <tr>
+              <td><strong>🌾 Agricultura</strong></td>
+              <td id="sum2c">—</td>
+              <td class="hl" id="sum2p">—</td>
+              <td>Oferta muy inelástica (producción fija)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="feedback show good" style="margin-top:1rem">
+        <strong>Mensaje clave:</strong> La persona obligada legalmente a entregar el impuesto no necesariamente soporta su costo económico. La carga se distribuye entre consumidores y productores según su capacidad relativa para ajustar cantidades y evitar el impuesto.
+      </div>
+      <div class="btn-row" style="justify-content:center">
+        <button class="btn btn-outline" onclick="resetActivity()">🔄 Reiniciar actividad</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer role="contentinfo">
+  <p>Desarrollado por Julián Díaz Tautiva, PhD.</p>
+</footer>
+
+<script>
+// ===== STATE =====
+const MARKETS = [
+  {
+    name:'Medicamentos', icon:'💊', tab:0,
+    ctx:'meds', label:'medicamentos',
+    context:'Un medicamento esencial tiene pocos sustitutos y es necesario para los pacientes.',
+    elasticity:'La demanda es relativamente <strong>inelástica</strong>: los compradores reducen poco la cantidad comprada cuando el precio sube.',
+    Ed:0.2, Es:1.0, P0:1000, Q0:100,
+    hint1:'Los medicamentos tienen pocos sustitutos, así que los pacientes no pueden cambiar fácilmente su comportamiento.',
+    msg:'Como los compradores tienen pocas alternativas, reaccionan poco al aumento del precio y soportan una mayor parte de la carga.'
+  },
+  {
+    name:'Comida rápida', icon:'🍔', tab:1,
+    ctx:'fast', label:'comida rápida',
+    context:'Existen muchas cadenas, restaurantes y alternativas de alimentación.',
+    elasticity:'La demanda es relativamente <strong>elástica</strong>: los consumidores pueden cambiar de producto o establecimiento con facilidad.',
+    Ed:1.5, Es:0.8, P0:1000, Q0:100,
+    hint1:'Los consumidores de comida rápida pueden elegir entre muchas alternativas si el precio sube.',
+    msg:'La presencia de sustitutos permite que los consumidores eviten el aumento de precio, por lo que los vendedores absorben una mayor parte del impuesto.'
+  },
+  {
+    name:'Productos agrícolas', icon:'🌾', tab:2,
+    ctx:'agro', label:'productos agrícolas',
+    context:'Los agricultores ya sembraron y cosecharon parte de su producción y no pueden ajustar rápidamente la cantidad ofrecida.',
+    elasticity:'La oferta es relativamente <strong>inelástica</strong> en el corto plazo: los productores no pueden reducir rápidamente la cantidad producida.',
+    Ed:0.8, Es:0.2, P0:1000, Q0:100,
+    hint1:'Los agricultores ya plantaron: no pueden reducir fácilmente su producción.',
+    msg:'Como los productores no pueden ajustar rápidamente la cantidad, el precio neto que reciben cae de manera importante.'
+  }
+];
+const TAX = 500;
+let state = {
+  step:0,
+  initPred:50,
+  currentMarket:0,
+  marketStep:0, // 0=pred, 1=result
+  marketsCompleted:[false,false,false],
+  marketPreds:[50,50,50],
+  explMode:'tax',
+  transitionChoice:null
+};
+
+function calcIncidence(Ed,Es,t){
+  const Ec = Es/(Es+Math.abs(Ed));
+  const Ep = Math.abs(Ed)/(Es+Math.abs(Ed));
+  return {Ec,Ep,cLoad:t*Ec,pLoad:t*Ep};
+}
+function calcMarket(m,t){
+  const {Ed,Es,P0,Q0}=m;
+  const {Ec,Ep,cLoad,pLoad}=calcIncidence(Ed,Es,t);
+  const b=P0/(Math.abs(Ed)*Q0);
+  const d=P0/(Es*Q0);
+  const dQ=t/(b+d);
+  const Q1=Math.max(0,Q0-dQ);
+  const Pb=P0+cLoad;
+  const Ps=P0-pLoad;
+  const Rev=t*Q1;
+  const DWL=0.5*t*(Q0-Q1);
+  return {Ec,Ep,cLoad,pLoad,Pb,Ps,Q0,Q1,Rev,DWL,P0,t};
+}
+
+// ===== STEP MANAGEMENT =====
+const TOTAL_STEPS=10;
+function goTo(step){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('act'));
+  const mapping={0:'s0',1:'s1',2:'s2',3:'s3',4:'s4',5:'s5',6:'s6',7:'s7'};
+  const secId=mapping[step]||'s0';
+  const el=document.getElementById(secId);
+  if(el){el.classList.add('act');el.scrollIntoView({behavior:'smooth',block:'start'});}
+  state.step=step;
+  updateProgress(step);
+  renderDots(step);
+  announce(`Sección ${step+1} de ${TOTAL_STEPS}`);
+  if(step===4) renderComparisonTable();
+  if(step===5){updateExplorer();}
+  if(step===7) renderFinalSummary();
+}
+function updateProgress(step){
+  const pct=Math.round((step/7)*100);
+  document.getElementById('progBar').style.width=pct+'%';
+  document.getElementById('progLabel').textContent=`Paso ${step+1} de 10`;
+}
+function renderDots(cur){
+  const c=document.getElementById('stepDots');
+  c.innerHTML='';
+  for(let i=0;i<8;i++){
+    const d=document.createElement('div');
+    d.className='step-dot'+(i<cur?' done':i===cur?' cur':'');
+    c.appendChild(d);
+  }
+}
+function announce(msg){
+  const lr=document.getElementById('liveRegion');
+  lr.textContent='';
+  setTimeout(()=>lr.textContent=msg,50);
+}
+
+// ===== SLIDER SYNC =====
+function initSliderPair(sliderId,numId,pctId,moneyId,tbId,othSlider,othNum,othPct,othMoney,othTb,tax){
+  const slider=document.getElementById(sliderId);
+  const num=document.getElementById(numId);
+  const pct=document.getElementById(pctId);
+  const money=document.getElementById(moneyId);
+  const tb=document.getElementById(tbId);
+  const osl=document.getElementById(othSlider);
+  const onum=document.getElementById(othNum);
+  const opct=document.getElementById(othPct);
+  const omoney=document.getElementById(othMoney);
+  const otb=document.getElementById(othTb);
+
+  function update(v){
+    v=Math.max(0,Math.min(100,Math.round(v)));
+    const ov=100-v;
+    slider.value=v;num.value=v;
+    pct.textContent=v+'%';money.textContent='= $'+Math.round(tax*v/100).toLocaleString('es-CL');
+    tb.style.width=v+'%';tb.textContent=v+'%';
+    osl.value=ov;onum.value=ov;
+    opct.textContent=ov+'%';omoney.textContent='= $'+Math.round(tax*ov/100).toLocaleString('es-CL');
+    otb.textContent=ov+'%';
+    slider.setAttribute('aria-valuenow',v);
+    osl.setAttribute('aria-valuenow',ov);
+    return v;
+  }
+  slider.addEventListener('input',()=>update(+slider.value));
+  num.addEventListener('input',()=>update(+num.value));
+  osl.addEventListener('input',()=>update(100-(+osl.value)));
+  onum.addEventListener('input',()=>update(100-(+onum.value)));
+  return {get:()=>+slider.value, set:(v)=>update(v)};
+}
+
+let pair0, pairM;
+window.addEventListener('DOMContentLoaded',()=>{
+  pair0=initSliderPair('consSlider0','consNum0','consPct0','consMoney0','tbCons0',
+                        'prodSlider0','prodNum0','prodPct0','prodMoney0','tbProd0',500);
+  pairM=initSliderPair('consSliderM','consNumM','consPctM','consMoneyM','tbConsM',
+                        'prodSliderM','prodNumM','prodPctM','prodMoneyM','tbProdM',500);
+  goTo(0);
+  selectMarket(0);
+  updateExplorer();
+});
+
+// ===== SECTION 0: INITIAL PREDICTION =====
+function confirmInitialPred(){
+  state.initPred=pair0.get();
+  goTo(1);
+}
+
+// ===== SECTION 2: MARKETS =====
+function selectMarket(idx){
+  state.currentMarket=idx;
+  state.marketStep=state.marketsCompleted[idx]?1:0;
+  // Update tabs
+  document.querySelectorAll('.mkt-tab').forEach((t,i)=>{
+    t.classList.toggle('active',i===idx);
+    t.classList.toggle('done',state.marketsCompleted[i]);
+    t.setAttribute('aria-selected',i===idx?'true':'false');
+  });
+  renderMarketContext(idx);
+  pairM.set(50);
+  const rc=document.getElementById('mktResultCard');
+  const pc=document.getElementById('mktPredCard');
+  if(state.marketsCompleted[idx]){
+    rc.style.display='block';
+    renderMarketResult(idx);
+  } else {
+    rc.style.display='none';
+  }
+}
+
+function renderMarketContext(idx){
+  const m=MARKETS[idx];
+  const inner=document.getElementById('mktContextInner');
+  const card=document.getElementById('mktContextCard');
+  card.className='card mkt-context '+m.ctx;
+  inner.innerHTML=`
+    <span class="mkt-icon">${m.icon}</span>
+    <h2>${m.name}</h2>
+    <p><strong>Contexto:</strong> ${m.context}</p>
+    <p><strong>Característica económica:</strong> ${m.elasticity}</p>
+    <p class="text-muted">Ed = ${m.Ed} &nbsp;·&nbsp; Es = ${m.Es}</p>
+  `;
+  document.getElementById('mktPredText').textContent=`¿Cómo se distribuirá el impuesto de $500 en el mercado de ${m.label}?`;
+  document.getElementById('hint1m').textContent=m.hint1;
+}
+
+function revealMarketResult(){
+  const idx=state.currentMarket;
+  state.marketPreds[idx]=pairM.get();
+  state.marketsCompleted[idx]=true;
+  document.querySelectorAll('.mkt-tab')[idx].classList.add('done');
+  renderMarketResult(idx);
+  document.getElementById('mktResultCard').style.display='block';
+  document.getElementById('mktResultCard').scrollIntoView({behavior:'smooth',block:'start'});
+  // Check if all done
+  const allDone=state.marketsCompleted.every(Boolean);
+  const btn=document.getElementById('btnNextMkt');
+  if(allDone) btn.textContent='Ver pregunta de reflexión →';
+}
+
+function renderMarketResult(idx){
+  const m=MARKETS[idx];
+  const r=calcMarket(m,TAX);
+  const pred=state.marketPreds[idx];
+  const resPct=Math.round(r.Ec*100);
+  // Comparison
+  const cb=document.getElementById('compBox');
+  cb.innerHTML=`
+    <div class="comp-item pred"><label>Tu predicción (consumidores)</label><div class="val">${pred}%</div></div>
+    <div class="comp-item res"><label>Resultado del modelo (consumidores)</label><div class="val">${resPct}%</div></div>
+  `;
+  // Feedback
+  const diff=Math.abs(pred-resPct);
+  const fb=document.getElementById('mktFeedback');
+  let fbClass='neutral', fbText='';
+  if(diff<=10){fbClass='good';fbText=`<strong>¡Muy cerca!</strong> Tu predicción supuso ${pred}% para consumidores. El modelo indica ${resPct}% porque ${m.msg.toLowerCase()}`;}
+  else{fbText=`Tu predicción supuso ${pred}% para consumidores. En este mercado soportan ${resPct}% porque ${m.msg.toLowerCase()}`;}
+  fb.className='feedback show '+fbClass;
+  fb.innerHTML=fbText;
+  announce(`Resultado revelado. Consumidores: ${resPct}%, Productores: ${Math.round(r.Ep*100)}%.`);
+  // Prices
+  document.getElementById('rPb').textContent='$'+r.Pb.toLocaleString('es-CL');
+  document.getElementById('rPbDiff').textContent=`↑ $${r.cLoad.toFixed(0)} más que antes`;
+  document.getElementById('rPs').textContent='$'+r.Ps.toLocaleString('es-CL');
+  document.getElementById('rPsDiff').textContent=`↓ $${r.pLoad.toFixed(0)} menos que antes`;
+  // Stats
+  document.getElementById('rQ0').textContent=r.Q0.toFixed(1)+' u.';
+  document.getElementById('rQ1').textContent=r.Q1.toFixed(1)+' u.';
+  document.getElementById('rRev').textContent='$'+r.Rev.toLocaleString('es-CL',{maximumFractionDigits:0});
+  document.getElementById('rDWL').textContent='$'+r.DWL.toLocaleString('es-CL',{maximumFractionDigits:0});
+  // Bars
+  const cp=Math.round(r.Ec*100); const pp=100-cp;
+  document.getElementById('rConsLabel').textContent=`Consumidores ${cp}% ($${Math.round(r.cLoad)})`;
+  document.getElementById('rProdLabel').textContent=`Productores ${pp}% ($${Math.round(r.pLoad)})`;
+  document.getElementById('rTbCons').style.width=cp+'%';document.getElementById('rTbCons').textContent=cp+'%';
+  document.getElementById('rTbProd').textContent=pp+'%';
+  // Chart
+  drawMarketChart('mktSvg',r,m.Ed,m.Es);
+  document.getElementById('chartDesc').textContent=`Gráfico del mercado de ${m.name}. Pb=$${Math.round(r.Pb)}, Ps=$${Math.round(r.Ps)}, Q0=${r.Q0.toFixed(1)}, Q1=${r.Q1.toFixed(1)}, Recaudación=$${Math.round(r.Rev)}, Pérdida irrecuperable=$${Math.round(r.DWL)}.`;
+  // Update summary table
+  updateSummaryRow(idx,cp,pp);
+}
+
+function nextMarket(){
+  const allDone=state.marketsCompleted.every(Boolean);
+  if(allDone) goTo(3);
+  else{
+    const next=state.marketsCompleted.findIndex(v=>!v);
+    if(next>=0) selectMarket(next);
+  }
+}
+
+// ===== SECTION 3: REFLECTION MC =====
+function selectMC(btn,correct){
+  document.querySelectorAll('.mc-opt').forEach(b=>{
+    b.className='mc-opt '+(b===btn?(correct?'correct':'sel'):'wrong');
+    b.setAttribute('aria-pressed',b===btn?'true':'false');
+  });
+  const fb=document.getElementById('mcFeedback');
+  if(correct){
+    fb.className='feedback show good';
+    fb.innerHTML='<strong>¡Correcto!</strong> Depende del mercado y de las elasticidades relativas. La parte más inelástica siempre soporta más carga, sin importar quién pague legalmente.';
+  } else {
+    fb.className='feedback show neutral';
+    fb.innerHTML='La respuesta varía según el mercado. Depende de las elasticidades relativas: la parte más inelástica soporta más carga independientemente de quién entregue el impuesto al gobierno.';
+  }
+  document.getElementById('btnMCNext').style.display='';
+  announce(correct?'Respuesta correcta. Puedes continuar.':'La respuesta esperada es: depende del mercado. Puedes continuar.');
+}
+
+// ===== COMPARISON TABLE =====
+function renderComparisonTable(){
+  const tbody=document.getElementById('cmpTableBody');
+  tbody.innerHTML='';
+  MARKETS.forEach((m,i)=>{
+    const r=calcIncidence(m.Ed,m.Es,TAX);
+    const cp=Math.round(r.Ec*100), pp=100-cp;
+    const inelastic=cp>=pp?'Demanda':'Oferta';
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><strong>${m.icon} ${m.name}</strong></td>
+      <td>${m.Ed}</td><td>${m.Es}</td>
+      <td class="${cp>=pp?'hl':''}">${cp}% ($${Math.round(r.cLoad)})</td>
+      <td class="${pp>cp?'hl':''}">${pp}% ($${Math.round(r.pLoad)})</td>
+      <td>${inelastic}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function updateSummaryRow(idx,cp,pp){
+  const ids=[['sum0c','sum0p'],['sum1c','sum1p'],['sum2c','sum2p']];
+  const [cid,pid]=ids[idx];
+  const sc=document.getElementById(cid), sp=document.getElementById(pid);
+  if(sc) sc.textContent=cp+'%';
+  if(sp) sp.textContent=pp+'%';
+}
+
+// ===== EXPLORER =====
+let explMode='tax';
+function setMode(m){
+  explMode=m;state.explMode=m;
+  document.getElementById('modeTax').classList.toggle('active',m==='tax');
+  document.getElementById('modeSub').classList.toggle('active',m==='subsidy');
+  document.getElementById('subsidyNote').style.display=m==='subsidy'?'':'none';
+  const lbl=m==='tax'?'impuesto':'subsidio';
+  document.getElementById('modeLabel').textContent=lbl;
+  document.getElementById('explTaxLabel').textContent=lbl;
+  updateExplorer();
+}
+function updateExplorer(){
+  const Ed=+document.getElementById('explEd').value;
+  const Es=+document.getElementById('explEs').value;
+  const tv=+document.getElementById('explTax').value;
+  document.getElementById('explEdVal').textContent=Ed.toFixed(1);
+  document.getElementById('explEsVal').textContent=Es.toFixed(1);
+  document.getElementById('explTaxVal').textContent=tv;
+  const r=calcIncidence(Ed,Es,tv);
+  const cp=Math.round(r.Ec*100),pp=100-cp;
+  document.getElementById('explTbCons').style.width=cp+'%';
+  document.getElementById('explTbCons').textContent=cp+'%';
+  document.getElementById('explTbProd').textContent=pp+'%';
+  document.getElementById('explConsLabel').textContent=`Consumidores ${cp}% ($${Math.round(r.cLoad)})`;
+  document.getElementById('explProdLabel').textContent=`Productores ${pp}% ($${Math.round(r.pLoad)})`;
+  document.getElementById('explCLoad').textContent='$'+Math.round(r.cLoad).toLocaleString('es-CL');
+  document.getElementById('explPLoad').textContent='$'+Math.round(r.pLoad).toLocaleString('es-CL');
+  // Calc Q
+  const m={Ed,Es,P0:1000,Q0:100};
+  const res=calcMarket(m,tv);
+  const mode=explMode;
+  document.getElementById('explRev').textContent=(mode==='subsidy'?'~':'')+'$'+Math.round(res.Rev).toLocaleString('es-CL',{maximumFractionDigits:0});
+  document.getElementById('explDWL').textContent='$'+Math.round(res.DWL).toLocaleString('es-CL',{maximumFractionDigits:0});
+  drawMarketChart('explSvg',res,Ed,Es,mode==='subsidy');
+  // Challenge
+  const diff=Math.abs(r.Ec-0.5);
+  const cr=document.getElementById('challengeResult');
+  const cp2=document.getElementById('challengeProgress');
+  cp2.textContent=`Diferencia con 50/50: ${(diff*100).toFixed(1)} puntos porcentuales`;
+  if(diff<0.01){
+    cr.style.display='block';
+    cr.className='feedback show good';
+    cr.innerHTML='<strong>🏆 ¡Desafío completado!</strong> La carga se reparte por igual porque ambos lados responden con la misma sensibilidad relativa (|Ed| = Es = '+Es.toFixed(1)+').';
+    announce('Desafío completado. Distribución exactamente 50/50 lograda.');
+  } else {
+    cr.style.display='block';
+    cr.className='feedback neutral show';
+    cr.innerHTML=`Consumidores: <strong>${cp}%</strong> · Productores: <strong>${pp}%</strong>. ${diff<0.1?'¡Casi lo logras!':Math.abs(Ed-Es)<0.3?'Acércate igualando |Ed| y Es.':'Intenta acercar |Ed| a Es.'}`;
+  }
+  document.getElementById('explEd').setAttribute('aria-valuenow',Ed);
+  document.getElementById('explEs').setAttribute('aria-valuenow',Es);
+}
+
+// ===== SECTION 6 =====
+function selectTransitionAnswer(answer,button){
+  state.transitionChoice=answer;
+  document.querySelectorAll('#transitionChoices .final-choice').forEach(btn=>{
+    const selected=btn===button;
+    btn.classList.toggle('sel',selected);
+    btn.setAttribute('aria-checked',selected?'true':'false');
+  });
+  const note=document.getElementById('transitionNote');
+  note.style.display='block';
+  note.classList.add('show');
+  note.innerHTML=`<strong>Tu respuesta: ${answer}.</strong> Esta elección se retomará al comenzar la clase para distinguir entre incidencia legal e incidencia económica.`;
+  document.getElementById('btnFinalBadge').style.display='';
+  announce(`Respuesta seleccionada: ${answer}.`);
+}
+
+// ===== SECTION 7: FINAL =====
+function renderFinalSummary(){
+  MARKETS.forEach((m,i)=>{
+    const r=calcIncidence(m.Ed,m.Es,TAX);
+    const cp=Math.round(r.Ec*100),pp=100-cp;
+    updateSummaryRow(i,cp,pp);
+  });
+}
+
+// ===== HINTS =====
+function toggleHints(id){
+  const el=document.getElementById('hints'+id);
+  if(el){el.classList.toggle('show');}
+}
+
+// ===== RESET =====
+function resetActivity(){
+  if(!confirm('¿Seguro que deseas reiniciar la actividad?')) return;
+  state={step:0,initPred:50,currentMarket:0,marketStep:0,marketsCompleted:[false,false,false],marketPreds:[50,50,50],explMode:'tax',transitionChoice:null};
+  pair0.set(50); pairM.set(50);
+  document.getElementById('mktResultCard').style.display='none';
+  document.getElementById('mcFeedback').className='feedback';
+  document.getElementById('btnMCNext').style.display='none';
+  document.querySelectorAll('.mc-opt').forEach(b=>{b.className='mc-opt';b.setAttribute('aria-pressed','false');});
+  const transitionNote=document.getElementById('transitionNote');
+  transitionNote.style.display='none';
+  transitionNote.classList.remove('show');
+  transitionNote.innerHTML='';
+  document.getElementById('btnFinalBadge').style.display='none';
+  document.querySelectorAll('#transitionChoices .final-choice').forEach(btn=>{
+    btn.classList.remove('sel');
+    btn.setAttribute('aria-checked','false');
+  });
+  document.querySelectorAll('.mkt-tab').forEach(t=>t.classList.remove('done','active'));
+  document.getElementById('tab-0').classList.add('active');
+  document.getElementById('challengeResult').style.display='none';
+  goTo(0);
+  selectMarket(0);
+  announce('Actividad reiniciada desde el inicio.');
+}
+
+// ===== SVG CHART =====
+function drawMarketChart(svgId, r, Ed, Es, isSubsidy=false){
+  const svg=document.getElementById(svgId);
+  const W=560, H=svgId==='explSvg'?340:380;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const ml=65,mr=20,mt=30,mb=50;
+  const pw=W-ml-mr, ph=H-mt-mb;
+
+  const {P0,Pb,Ps,Q0,Q1,t}=r;
+  const Pmin=Math.max(0,Ps-P0*0.3);
+  const Pmax=Pb+P0*0.3;
+  const Qmin=0, Qmax=Q0*1.4;
+
+  function px(q){return ml+((q-Qmin)/(Qmax-Qmin))*pw}
+  function py(p){return mt+ph-((p-Pmin)/(Pmax-Pmin))*ph}
+
+  // Demand: P = P0 + Ed_slope*(Q0-Q) where Ed_slope=P0/(Ed*Q0)
+  const dem_slope=P0/(Ed*Q0);
+  function demP(q){return P0+dem_slope*(Q0-q)}
+  // Supply: P = P0 - Es_slope*(Q0-Q)
+  const sup_slope=P0/(Es*Q0);
+  function supP(q){return P0-sup_slope*(Q0-q)}
+
+  // Q range for curves
+  const qL=Qmin, qR=Qmax;
+
+  let svgHtml='';
+  // Grid
+  for(let p=Math.ceil(Pmin/200)*200;p<=Pmax;p+=200){
+    const y=py(p);
+    svgHtml+=`<line x1="${ml}" y1="${y}" x2="${W-mr}" y2="${y}" stroke="#E2E8F0" stroke-width="1"/>`;
+    svgHtml+=`<text x="${ml-5}" y="${y+4}" text-anchor="end" font-size="10" fill="#94A3B8">$${p}</text>`;
+  }
+  for(let q=0;q<=Qmax;q+=20){
+    const x=px(q);
+    svgHtml+=`<line x1="${x}" y1="${mt}" x2="${x}" y2="${mt+ph}" stroke="#E2E8F0" stroke-width="1"/>`;
+    svgHtml+=`<text x="${x}" y="${mt+ph+14}" text-anchor="middle" font-size="10" fill="#94A3B8">${q}</text>`;
+  }
+
+  // Axes
+  svgHtml+=`<line x1="${ml}" y1="${mt}" x2="${ml}" y2="${mt+ph}" stroke="#475569" stroke-width="2"/>`;
+  svgHtml+=`<line x1="${ml}" y1="${mt+ph}" x2="${W-mr}" y2="${mt+ph}" stroke="#475569" stroke-width="2"/>`;
+  svgHtml+=`<text x="${ml-45}" y="${mt+ph/2}" text-anchor="middle" font-size="12" fill="#475569" transform="rotate(-90,${ml-45},${mt+ph/2})">Precio ($)</text>`;
+  svgHtml+=`<text x="${ml+pw/2}" y="${H-6}" text-anchor="middle" font-size="12" fill="#475569">Cantidad (u)</text>`;
+
+  // Tax/subsidy wedge area: fill between Ps and Pb lines at Q1
+  if(!isSubsidy){
+    const xQ1=px(Q1), xQ0=px(Q0);
+    // Revenue rectangle
+    svgHtml+=`<rect x="${ml}" y="${py(Pb)}" width="${xQ1-ml}" height="${py(Ps)-py(Pb)}" fill="${CSS.escape?'#16A34A':'#16A34A'}" opacity="0.18"/>`;
+    // DWL triangle
+    svgHtml+=`<polygon points="${xQ1},${py(Pb)} ${xQ0},${py(P0)} ${xQ1},${py(Ps)}" fill="#DC2626" opacity="0.22"/>`;
+  } else {
+    const xQ1=px(Q1), xQ0=px(Q0);
+    // Subsidy gain area
+    svgHtml+=`<rect x="${ml}" y="${py(Pb)}" width="${xQ1-ml}" height="${py(Ps)-py(Pb)}" fill="#16A34A" opacity="0.15"/>`;
+    svgHtml+=`<polygon points="${xQ1},${py(Pb)} ${xQ0},${py(P0)} ${xQ1},${py(Ps)}" fill="#16A34A" opacity="0.12"/>`;
+  }
+
+  // Demand curve
+  const dq1=qL, dq2=qR;
+  const dp1=demP(dq1), dp2=demP(dq2);
+  svgHtml+=`<line x1="${px(dq1)}" y1="${py(Math.max(Pmin,Math.min(Pmax,dp1)))}" x2="${px(dq2)}" y2="${py(Math.max(Pmin,Math.min(Pmax,dp2)))}" stroke="#2563EB" stroke-width="2.5"/>`;
+  svgHtml+=`<text x="${px(qR)-8}" y="${py(Math.max(Pmin,Math.min(Pmax,demP(qR))))-6}" font-size="11" font-weight="bold" fill="#2563EB" text-anchor="end">D</text>`;
+
+  // Supply curve (original)
+  const sq1=qL, sq2=qR;
+  const sp1=supP(sq1), sp2=supP(sq2);
+  svgHtml+=`<line x1="${px(sq1)}" y1="${py(Math.max(Pmin,Math.min(Pmax,sp1)))}" x2="${px(sq2)}" y2="${py(Math.max(Pmin,Math.min(Pmax,sp2)))}" stroke="#EA580C" stroke-width="2.5"/>`;
+  svgHtml+=`<text x="${px(qR)-8}" y="${py(Math.max(Pmin,Math.min(Pmax,supP(qR))))+14}" font-size="11" font-weight="bold" fill="#EA580C" text-anchor="end">S</text>`;
+
+  // Supply+tax or Supply+subsidy
+  function supTaxP(q){return supP(q)+(isSubsidy?-t:t)}
+  const st1=supTaxP(qL), st2=supTaxP(qR);
+  svgHtml+=`<line x1="${px(qL)}" y1="${py(Math.max(Pmin,Math.min(Pmax,st1)))}" x2="${px(qR)}" y2="${py(Math.max(Pmin,Math.min(Pmax,st2)))}" stroke="#7C3AED" stroke-width="2" stroke-dasharray="5,4"/>`;
+  svgHtml+=`<text x="${px(qR)-8}" y="${py(Math.max(Pmin,Math.min(Pmax,supTaxP(qR))))+(isSubsidy?14:-6)}" font-size="11" font-weight="bold" fill="#7C3AED" text-anchor="end">S${isSubsidy?'-':'+'}<tspan font-size="9">t</tspan></text>`;
+
+  // Key points
+  const xQ1=px(Q1), xQ0=px(Q0);
+  // Q0 equilibrium
+  svgHtml+=`<line x1="${xQ0}" y1="${py(P0)}" x2="${xQ0}" y2="${mt+ph}" stroke="#475569" stroke-width="1" stroke-dasharray="3,3"/>`;
+  svgHtml+=`<circle cx="${xQ0}" cy="${py(P0)}" r="5" fill="#475569"/>`;
+  svgHtml+=`<text x="${xQ0}" y="${mt+ph+14}" text-anchor="middle" font-size="10" font-weight="bold" fill="#475569">Q₀</text>`;
+  // Q1
+  svgHtml+=`<line x1="${xQ1}" y1="${py(Pb)}" x2="${xQ1}" y2="${mt+ph}" stroke="#475569" stroke-width="1" stroke-dasharray="3,3"/>`;
+  svgHtml+=`<text x="${xQ1}" y="${mt+ph+14}" text-anchor="middle" font-size="10" font-weight="bold" fill="#475569">Q₁</text>`;
+  // Pb line
+  svgHtml+=`<line x1="${ml}" y1="${py(Pb)}" x2="${xQ1}" y2="${py(Pb)}" stroke="#2563EB" stroke-width="1.5" stroke-dasharray="4,3"/>`;
+  svgHtml+=`<circle cx="${xQ1}" cy="${py(Pb)}" r="5" fill="#2563EB"/>`;
+  svgHtml+=`<text x="${ml-3}" y="${py(Pb)+4}" text-anchor="end" font-size="10" font-weight="bold" fill="#2563EB">Pb</text>`;
+  // P0 line
+  svgHtml+=`<line x1="${ml}" y1="${py(P0)}" x2="${xQ0}" y2="${py(P0)}" stroke="#475569" stroke-width="1" stroke-dasharray="2,3"/>`;
+  svgHtml+=`<text x="${ml-3}" y="${py(P0)+4}" text-anchor="end" font-size="10" fill="#475569">P₀</text>`;
+  // Ps line
+  svgHtml+=`<line x1="${ml}" y1="${py(Ps)}" x2="${xQ1}" y2="${py(Ps)}" stroke="#EA580C" stroke-width="1.5" stroke-dasharray="4,3"/>`;
+  svgHtml+=`<circle cx="${xQ1}" cy="${py(Ps)}" r="5" fill="#EA580C"/>`;
+  svgHtml+=`<text x="${ml-3}" y="${py(Ps)+4}" text-anchor="end" font-size="10" font-weight="bold" fill="#EA580C">Ps</text>`;
+
+  // Wedge arrow
+  if(Math.abs(py(Pb)-py(Ps))>14){
+    const xa=xQ1+16;
+    svgHtml+=`<line x1="${xa}" y1="${py(Pb)}" x2="${xa}" y2="${py(Ps)}" stroke="#7C3AED" stroke-width="2"/>`;
+    svgHtml+=`<polygon points="${xa-4},${py(Pb)+6} ${xa+4},${py(Pb)+6} ${xa},${py(Pb)}" fill="#7C3AED"/>`;
+    svgHtml+=`<polygon points="${xa-4},${py(Ps)-6} ${xa+4},${py(Ps)-6} ${xa},${py(Ps)}" fill="#7C3AED"/>`;
+    const midY=(py(Pb)+py(Ps))/2;
+    svgHtml+=`<text x="${xa+8}" y="${midY+4}" font-size="10" fill="#7C3AED" font-weight="bold">t=$${t}</text>`;
+  }
+
+  // Legend
+  const legY=mt+8;
+  svgHtml+=`<rect x="${ml+pw-160}" y="${legY}" width="150" height="70" rx="6" fill="white" stroke="#E2E8F0"/>`;
+  svgHtml+=`<line x1="${ml+pw-152}" y1="${legY+14}" x2="${ml+pw-130}" y2="${legY+14}" stroke="#2563EB" stroke-width="2.5"/>`;
+  svgHtml+=`<text x="${ml+pw-125}" y="${legY+18}" font-size="10" fill="#1E293B">Demanda (D)</text>`;
+  svgHtml+=`<line x1="${ml+pw-152}" y1="${legY+30}" x2="${ml+pw-130}" y2="${legY+30}" stroke="#EA580C" stroke-width="2.5"/>`;
+  svgHtml+=`<text x="${ml+pw-125}" y="${legY+34}" font-size="10" fill="#1E293B">Oferta (S)</text>`;
+  svgHtml+=`<line x1="${ml+pw-152}" y1="${legY+46}" x2="${ml+pw-130}" y2="${legY+46}" stroke="#7C3AED" stroke-width="2" stroke-dasharray="5,4"/>`;
+  svgHtml+=`<text x="${ml+pw-125}" y="${legY+50}" font-size="10" fill="#1E293B">S+t</text>`;
+  if(!isSubsidy){
+    svgHtml+=`<rect x="${ml+pw-152}" y="${legY+56}" width="14" height="9" fill="#16A34A" opacity="0.5"/>`;
+    svgHtml+=`<text x="${ml+pw-132}" y="${legY+65}" font-size="9" fill="#16A34A">Recaudación</text>`;
+  }
+
+  svg.innerHTML=svgHtml;
+}
+
+// ===== INIT =====
+updateExplorer();
+</script>
+</body>
+</html>

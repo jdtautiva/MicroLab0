@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La persona más eficiente no debería hacerlo todo — UNAB</title>
+<style>
+/* ===== VARIABLES ===== */
+:root {
+  --ana: #2563eb;
+  --ana-bg: #dbeafe;
+  --ana-border: #93c5fd;
+  --bruno: #ea580c;
+  --bruno-bg: #ffedd5;
+  --bruno-border: #fdba74;
+  --bread: #d97706;
+  --juice: #16a34a;
+  --primary: #1d4ed8;
+  --primary-dark: #1e40af;
+  --success: #15803d;
+  --warning-bg: #fefce8;
+  --warning-border: #fde047;
+  --warning-text: #854d0e;
+  --bg: #f1f5f9;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --text: #1e293b;
+  --muted: #64748b;
+  --shadow: 0 2px 10px rgba(0,0,0,0.08);
+  --radius: 14px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+/* ===== FOCUS ACCESSIBILITY ===== */
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
+
+/* ===== SCREEN READER ONLY ===== */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* ===== HEADER ===== */
+.inst-header {
+  background: #fff;
+  border-bottom: 4px solid #003366;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.inst-header img {
+  height: 56px;
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.inst-header-fallback {
+  width: 56px;
+  height: 56px;
+  background: #003366;
+  border-radius: 8px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.inst-header-text h1 {
+  font-size: .95rem;
+  font-weight: 700;
+  color: #003366;
+  line-height: 1.2;
+}
+
+.inst-header-text p {
+  font-size: .8rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ===== MAIN ===== */
+main {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 28px 18px 60px;
+}
+
+/* ===== PROGRESS ===== */
+.progress-wrap {
+  margin-bottom: 28px;
+}
+
+.progress-track {
+  height: 7px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #1d4ed8, #60a5fa);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+/* ===== SECTIONS ===== */
+section { display: none; }
+section.active { display: block; animation: fadeIn 0.35s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== CARD ===== */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 26px 28px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  margin-bottom: 18px;
+}
+
+/* ===== TYPOGRAPHY ===== */
+h2 { font-size: 1.4rem; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+h3 { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+
+.question-box {
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border-left: 5px solid var(--primary);
+  padding: 16px 20px;
+  border-radius: 0 10px 10px 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e40af;
+  margin-bottom: 14px;
+}
+
+.instruction {
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 20px;
+  font-size: 0.93rem;
+}
+
+/* ===== CHARACTER CARDS ===== */
+.chars-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.char-card {
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  border: 2px solid transparent;
+}
+
+.char-card.ana  { background: var(--ana-bg);   border-color: var(--ana); }
+.char-card.bruno{ background: var(--bruno-bg); border-color: var(--bruno); }
+
+.char-avatar { font-size: 3rem; display: block; margin-bottom: 6px; }
+
+.char-name {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+.char-card.ana   .char-name { color: var(--ana); }
+.char-card.bruno .char-name { color: var(--bruno); }
+
+.prod-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 0.93rem;
+  margin-bottom: 5px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.73rem;
+  font-weight: 700;
+  margin-top: 8px;
+}
+.badge-green { background: #dcfce7; color: #15803d; }
+.badge-blue  { background: #eff6ff; color: #1d4ed8; }
+
+/* ===== DATA TABLE ===== */
+.dtable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.93rem;
+  margin: 14px 0;
+}
+
+.dtable th {
+  background: #f1f5f9;
+  padding: 10px 16px;
+  text-align: left;
+  font-weight: 700;
+  border-bottom: 2px solid var(--border);
+}
+
+.dtable td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.dtable tr:last-child td { border-bottom: none; }
+.dtable .r-ana   { background: #f0f7ff; }
+.dtable .r-bruno { background: #fff7f0; }
+.tr { text-align: right; }
+.fw { font-weight: 700; }
+.c-ana   { color: var(--ana); }
+.c-bruno { color: var(--bruno); }
+.c-bread { color: var(--bread); }
+.c-juice { color: var(--juice); }
+
+/* ===== INFO BOX ===== */
+.info-box {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 0.88rem;
+  color: #14532d;
+  margin: 14px 0;
+}
+
+.assumption-box {
+  background: #f0f4ff;
+  border: 1px solid #a5b4fc;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 0.88rem;
+  color: #312e81;
+  margin: 14px 0;
+}
+
+/* ===== STRATEGY CARDS ===== */
+.strategies-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 16px 0;
+}
+
+.strat-card {
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 14px;
+  cursor: pointer;
+  text-align: center;
+  background: var(--surface);
+  transition: all 0.2s ease;
+  position: relative;
+  user-select: none;
+}
+
+.strat-card:hover {
+  border-color: var(--primary);
+  background: #eff6ff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(29,78,216,0.15);
+}
+
+.strat-card.selected {
+  border-color: var(--primary);
+  background: #eff6ff;
+  box-shadow: 0 0 0 3px rgba(29,78,216,0.18);
+}
+
+.strat-card.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 8px; right: 11px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.strat-icon { font-size: 2.2rem; display: block; margin-bottom: 8px; }
+.strat-title { font-weight: 800; font-size: 0.93rem; color: var(--primary); margin-bottom: 4px; }
+.strat-desc  { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 22px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: var(--font);
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(29,78,216,0.28);
+}
+.btn-primary:active:not(:disabled) { transform: translateY(0); }
+
+.btn-secondary {
+  background: #f1f5f9;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover:not(:disabled) { background: #e2e8f0; }
+
+.btn-success {
+  background: var(--success);
+  color: #fff;
+}
+.btn-success:hover:not(:disabled) { background: #166534; }
+
+.btn-lg { padding: 14px 30px; font-size: 1.02rem; }
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  align-items: center;
+}
+
+/* ===== HINT BOX ===== */
+.hint-box {
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 0.88rem;
+  color: var(--warning-text);
+  display: none;
+  margin-top: 10px;
+  animation: fadeIn 0.3s ease;
+}
+.hint-box.show { display: block; }
+
+/* ===== SIMULATION RESULTS ===== */
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.res-card {
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+}
+.res-card.ana   { background: var(--ana-bg);   border: 1px solid var(--ana-border); }
+.res-card.bruno { background: var(--bruno-bg); border: 1px solid var(--bruno-border); }
+.res-total {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border: 2px solid var(--success);
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.icon-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  justify-content: center;
+  min-height: 30px;
+  margin: 6px 0;
+}
+.icon-grid span { font-size: 1.15rem; }
+
+.num-big {
+  font-size: 2.2rem;
+  font-weight: 900;
+  display: block;
+}
+
+.bar-wrap { margin: 10px 0; }
+.bar-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+.bar-track {
+  height: 14px;
+  background: var(--border);
+  border-radius: 7px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 7px;
+  transition: width 0.8s ease;
+  width: 0%;
+}
+.bar-bread { background: var(--bread); }
+.bar-juice { background: var(--juice); }
+
+/* ===== OPPORTUNITY COST ===== */
+.oc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.oc-card { border-radius: 10px; padding: 18px; }
+.oc-card.ana   { background: var(--ana-bg);   border: 1px solid var(--ana-border); }
+.oc-card.bruno { background: var(--bruno-bg); border: 1px solid var(--bruno-border); }
+
+.formula {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 10px 14px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.92rem;
+  margin: 8px 0;
+  color: #1e293b;
+}
+
+.formula .result { font-weight: 800; color: var(--primary-dark); }
+
+/* ===== COMPARATIVE ADVANTAGE ===== */
+.defs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.def-card { border-radius: 10px; padding: 16px; }
+.def-card.absolute   { background: #f0f4ff; border: 1px solid #a5b4fc; }
+.def-card.comparative{ background: #f0fdf4; border: 1px solid #86efac; }
+
+.def-title { font-weight: 800; font-size: 0.93rem; margin-bottom: 5px; }
+.def-body  { font-size: 0.82rem; color: var(--muted); }
+
+.reveal-box {
+  background: #fef9c3;
+  border: 2px solid #fde047;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin: 16px 0;
+  font-size: 0.97rem;
+  font-weight: 600;
+  color: #78350f;
+  text-align: center;
+}
+
+.connection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 12px 0;
+  padding: 14px;
+  background: #f8fafc;
+  border-radius: 12px;
+  flex-wrap: wrap;
+}
+
+.conn-item {
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  text-align: center;
+}
+.ci-ana   { background: var(--ana-bg);   color: var(--ana); }
+.ci-bruno { background: var(--bruno-bg); color: var(--bruno); }
+.ci-juice { background: #dcfce7; color: #15803d; }
+.ci-bread { background: #fef3c7; color: #92400e; }
+
+.conn-arrow { font-size: 1.4rem; color: var(--success); }
+
+.stamp {
+  display: inline-block;
+  border: 3px solid #16a34a;
+  border-radius: 7px;
+  padding: 5px 12px;
+  color: #15803d;
+  font-weight: 800;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transform: rotate(-3deg);
+  animation: stampIn 0.5s ease;
+  line-height: 1.3;
+  text-align: center;
+}
+
+@keyframes stampIn {
+  from { transform: rotate(-3deg) scale(2); opacity: 0; }
+  to   { transform: rotate(-3deg) scale(1); opacity: 1; }
+}
+
+.scenario-best td { background: #dcfce7 !important; font-weight: 700; }
+
+/* ===== ACHIEVEMENT ===== */
+.achievement {
+  background: linear-gradient(135deg, #fefce8, #fef3c7);
+  border: 2px solid #fde047;
+  border-radius: 14px;
+  padding: 22px;
+  text-align: center;
+  margin-top: 20px;
+}
+.ach-icon  { font-size: 3rem; display: block; margin-bottom: 6px; }
+.ach-title { font-size: 1.1rem; font-weight: 800; color: #92400e; }
+.ach-sub   { font-size: 0.85rem; color: #78350f; margin-top: 5px; }
+
+/* ===== EXPLORER ===== */
+.slider-section {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  margin: 16px 0;
+}
+
+.slider-group { margin-bottom: 20px; }
+
+.slider-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.slider-label { font-weight: 700; font-size: 0.88rem; }
+.slider-val   {
+  font-size: 0.82rem;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 3px 9px;
+  min-width: 130px;
+  text-align: center;
+}
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.slider-icon { font-size: 1.1rem; width: 24px; text-align: center; }
+
+input[type="range"] {
+  flex: 1;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+input[type="range"]:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(29,78,216,0.3);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: none;
+  cursor: pointer;
+}
+
+.exp-hint {
+  font-size: 0.83rem;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 10px;
+  min-height: 20px;
+}
+
+/* ===== TRADE ===== */
+.trade-context-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.trade-ctx-card {
+  border-radius: 10px;
+  padding: 14px;
+}
+.tc-ana   { background: var(--ana-bg);   border: 1px solid var(--ana-border); }
+.tc-bruno { background: var(--bruno-bg); border: 1px solid var(--bruno-border); }
+
+.tc-amount {
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin: 4px 0;
+}
+
+.tc-mini {
+  font-size: 0.78rem;
+  background: #fff;
+  border-radius: 6px;
+  padding: 5px 8px;
+  margin-top: 6px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+.range-box {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+  font-size: 0.88rem;
+}
+
+.trade-opts { display: grid; gap: 10px; margin: 14px 0; }
+
+.trade-opt {
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface);
+  transition: all 0.2s;
+}
+.trade-opt:hover {
+  border-color: var(--primary);
+  background: #eff6ff;
+}
+.trade-opt.selected {
+  border-color: var(--primary);
+  background: #eff6ff;
+}
+
+.trade-radio {
+  width: 20px; height: 20px;
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.trade-radio.checked::after {
+  content: '';
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+/* ===== FEEDBACK BOX ===== */
+.feedback {
+  padding: 14px 18px;
+  border-radius: 10px;
+  margin: 14px 0;
+  font-size: 0.9rem;
+  display: none;
+  animation: fadeIn 0.3s ease;
+  line-height: 1.6;
+}
+.feedback.show    { display: block; }
+.fb-positive      { background: #f0fdf4; border: 1px solid #86efac; color: #14532d; }
+.fb-neutral       { background: #eff6ff; border: 1px solid #93c5fd; color: #1e3a8a; }
+.fb-warning       { background: var(--warning-bg); border: 1px solid var(--warning-border); color: var(--warning-text); }
+
+/* ===== TRANSITION / FINAL ===== */
+.transition-hero {
+  background: linear-gradient(135deg, #1e40af, #1d4ed8, #2563eb);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 30px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.transition-hero h2 { color: #fff; font-size: 1.35rem; margin-bottom: 10px; }
+.transition-hero p  { font-size: 1.05rem; font-weight: 600; line-height: 1.5; }
+
+textarea {
+  width: 100%;
+  min-height: 110px;
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  padding: 12px 14px;
+  font-family: var(--font);
+  font-size: 0.93rem;
+  resize: vertical;
+  margin-top: 10px;
+  color: var(--text);
+}
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(29,78,216,0.15);
+}
+
+.final-explanation {
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border-left: 5px solid var(--primary);
+  border-radius: 0 12px 12px 0;
+  padding: 20px 22px;
+  font-size: 1rem;
+  color: #1e40af;
+  font-weight: 500;
+  line-height: 1.75;
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+
+/* ===== FINAL SUMMARY & CLASS DISCUSSION ===== */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.summary-card {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 16px;
+}
+
+.summary-card h3 {
+  color: #003366;
+  margin-bottom: 7px;
+  font-size: .94rem;
+}
+
+.summary-card p {
+  font-size: .88rem;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.summary-value {
+  display: block;
+  margin-top: 5px;
+  font-weight: 800;
+  color: var(--primary-dark);
+}
+
+.reflection-discussion {
+  background: #fff7ed;
+  border: 2px solid #fdba74;
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 18px;
+}
+
+.reflection-discussion .discussion-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #9a3412;
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 11px;
+  font-size: .75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 10px;
+}
+
+.reflection-discussion h2 {
+  color: #7c2d12;
+  margin-bottom: 8px;
+}
+
+.reflection-discussion p {
+  color: #7c2d12;
+  font-size: 1.02rem;
+  font-weight: 650;
+}
+
+.discussion-prompts {
+  margin: 12px 0 0 20px;
+  color: #7c2d12;
+  font-size: .9rem;
+}
+
+.discussion-prompts li { margin-bottom: 5px; }
+
+/* ===== FOOTER ===== */
+footer {
+  background: #003366;
+  color: rgba(255,255,255,.88);
+  text-align: center;
+  padding: 1.25rem;
+  margin-top: 20px;
+  font-size: .82rem;
+}
+
+footer p { margin: 0; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+  .inst-header { padding: .85rem 1rem; gap: .85rem; }
+  .inst-header img { height: 46px; }
+  .inst-header-fallback { width: 46px; height: 46px; }
+  .inst-header-text h1 { font-size: .9rem; }
+  .summary-grid { grid-template-columns: 1fr; }
+  main { padding: 18px 12px 50px; }
+  .card { padding: 18px 16px; }
+  h2 { font-size: 1.18rem; }
+  .chars-grid, .oc-grid, .results-grid, .defs-grid, .trade-context-grid { grid-template-columns: 1fr; }
+  .strategies-grid { grid-template-columns: 1fr; }
+  .actions { flex-direction: column; }
+  .actions .btn { width: 100%; }
+  .connection { flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  main { padding: 14px 10px 40px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ARIA live region para lectores de pantalla -->
+<div id="live" aria-live="polite" aria-atomic="true" class="sr-only" role="status"></div>
+
+<!-- ===== ENCABEZADO INSTITUCIONAL ===== -->
+<header class="inst-header" role="banner">
+  <img
+    id="logo-img"
+    src="https://facultades.unab.cl/economiaynegocios/wp-content/uploads/2022/03/logo-fen-negro.png"
+    alt="Logo de la Facultad de Economía y Negocios de la Universidad Andrés Bello"
+    loading="eager"
+    onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';"
+  >
+  <div id="logo-fallback" class="inst-header-fallback" aria-hidden="true">FEN</div>
+  <div class="inst-header-text">
+    <h1>Universidad Andrés Bello</h1>
+    <p>Facultad de Economía y Negocios</p>
+  </div>
+</header>
+
+<main role="main">
+
+  <!-- ===== BARRA DE PROGRESO ===== -->
+  <div class="progress-wrap" aria-label="Progreso de la actividad">
+    <div class="progress-track"
+         role="progressbar"
+         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+         aria-label="Progreso de la actividad">
+      <div class="progress-bar" id="pbar"></div>
+    </div>
+    <div class="progress-labels">
+      <span id="pStep">Paso 1 de 6</span>
+      <span id="pPct">0%</span>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       SECCIÓN 1 — INTRODUCCIÓN Y DATOS
+  ================================================================ -->
+  <section id="s-intro" class="active" aria-label="Introducción: datos de productividad">
+
+    <div class="card">
+      <div class="question-box" role="heading" aria-level="2">
+        🤔 Ana produce más panes y más jugos que Bruno. ¿Quién debería producir cada bien?
+      </div>
+      <p class="instruction">Revisa la productividad de cada persona, elige una estrategia de producción y observa sus consecuencias.</p>
+
+      <!-- Tarjetas de personajes -->
+      <div class="chars-grid" role="list" aria-label="Productividad por persona">
+
+        <div class="char-card ana" role="listitem" aria-label="Ana produce 10 panes y 5 jugos por hora">
+          <span class="char-avatar" role="img" aria-hidden="true">👩</span>
+          <div class="char-name">Ana</div>
+          <div class="prod-item"><span aria-hidden="true">🍞</span> <strong>10 panes</strong> por hora</div>
+          <div class="prod-item"><span aria-hidden="true">🥤</span> <strong>5 jugos</strong> por hora</div>
+          <span class="badge badge-green">⭐ Más productiva en ambos bienes</span>
+        </div>
+
+        <div class="char-card bruno" role="listitem" aria-label="Bruno produce 6 panes y 2 jugos por hora">
+          <span class="char-avatar" role="img" aria-hidden="true">👨</span>
+          <div class="char-name">Bruno</div>
+          <div class="prod-item"><span aria-hidden="true">🍞</span> <strong>6 panes</strong> por hora</div>
+          <div class="prod-item"><span aria-hidden="true">🥤</span> <strong>2 jugos</strong> por hora</div>
+          <span class="badge badge-blue">📊 Menor productividad absoluta</span>
+        </div>
+
+      </div>
+
+      <!-- Tabla de productividad -->
+      <h3>Productividad por hora</h3>
+      <table class="dtable" aria-label="Tabla de productividad de Ana y Bruno">
+        <thead>
+          <tr>
+            <th scope="col">Persona</th>
+            <th scope="col" class="tr">🍞 Panes / hora</th>
+            <th scope="col" class="tr">🥤 Jugos / hora</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="r-ana">
+            <td class="fw c-ana">👩 Ana</td>
+            <td class="tr fw">10</td>
+            <td class="tr fw">5</td>
+          </tr>
+          <tr class="r-bruno">
+            <td class="fw c-bruno">👨 Bruno</td>
+            <td class="tr fw">6</td>
+            <td class="tr fw">2</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="assumption-box">
+        💡 <strong>Supuesto:</strong> Cada persona dispone de <strong>1 hora</strong> y puede dividirla entre producir panes y jugos. La productividad por hora es constante.
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary btn-lg" onclick="goTo('s-strategy')" aria-label="Continuar para elegir una estrategia">
+        Elegir estrategia →
+      </button>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECCIÓN 2 — SELECCIÓN DE ESTRATEGIA
+  ================================================================ -->
+  <section id="s-strategy" aria-label="Selección de estrategia de producción">
+    <div class="card">
+      <h2>Elige una estrategia de producción</h2>
+      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Selecciona una opción y pulsa <em>Probar estrategia</em>. Puedes cambiar tu elección antes de confirmar.</p>
+
+      <div class="range-box" aria-label="Términos de intercambio presentados en la etapa 1">
+        <h3 style="margin-bottom:6px;">🤝 Términos de intercambio de la etapa 1</h3>
+        <p style="color:var(--muted);font-size:.86rem;margin-bottom:10px;">
+          Utiliza estos términos como referencia antes de elegir la estrategia de producción:
+        </p>
+        <div class="trade-context-grid" style="margin-bottom:12px;">
+          <div class="trade-ctx-card tc-ana">
+            <div class="fw c-ana">👩 Ana</div>
+            <div class="tc-mini" style="margin-top:4px;">
+              1 jugo = 2 panes<br>
+              <em>No aceptará menos de 2 panes por jugo.</em>
+            </div>
+          </div>
+          <div class="trade-ctx-card tc-bruno">
+            <div class="fw c-bruno">👨 Bruno</div>
+            <div class="tc-mini" style="margin-top:4px;">
+              1 jugo = 3 panes<br>
+              <em>No pagará más de 3 panes por jugo.</em>
+            </div>
+          </div>
+        </div>
+        <div class="formula" style="text-align:center;font-size:.95rem;margin-bottom:0;">
+          2 panes / jugo &lt; término de intercambio &lt; 3 panes / jugo
+        </div>
+      </div>
+
+      <div class="strategies-grid" role="group" aria-label="Opciones de estrategia de producción">
+
+        <div class="strat-card"
+             id="sc1"
+             onclick="pickStrategy(1)"
+             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickStrategy(1);}"
+             tabindex="0"
+             role="radio" aria-checked="false"
+             aria-label="Opción 1: Ana produce todo">
+          <span class="strat-icon" aria-hidden="true">👩‍🍳</span>
+          <div class="strat-title">Ana produce todo</div>
+          <div class="strat-desc">Ana divide su hora entre ambos bienes. Bruno permanece inactivo.</div>
+        </div>
+
+        <div class="strat-card"
+             id="sc2"
+             onclick="pickStrategy(2)"
+             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickStrategy(2);}"
+             tabindex="0"
+             role="radio" aria-checked="false"
+             aria-label="Opción 2: Producción mixta, cada persona produce ambos bienes">
+          <span class="strat-icon" aria-hidden="true">👫</span>
+          <div class="strat-title">Producción mixta</div>
+          <div class="strat-desc">Cada persona dedica 30 minutos a pan y 30 minutos a jugo.</div>
+        </div>
+
+        <div class="strat-card"
+             id="sc3"
+             onclick="pickStrategy(3)"
+             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickStrategy(3);}"
+             tabindex="0"
+             role="radio" aria-checked="false"
+             aria-label="Opción 3: Especialización, cada persona produce un solo bien">
+          <span class="strat-icon" aria-hidden="true">🎯</span>
+          <div class="strat-title">Especialización</div>
+          <div class="strat-desc">Cada persona produce solo un bien durante toda la hora.</div>
+        </div>
+
+      </div>
+
+      <!-- Sistema de pistas -->
+      <div style="margin-top:14px;">
+        <button class="btn btn-secondary" id="hintBtn" onclick="showHint()" aria-label="Solicitar una pista">
+          💡 Solicitar pista
+        </button>
+        <div class="hint-box" id="hintBox" role="alert" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="goTo('s-intro')">← Volver</button>
+      <button class="btn btn-primary btn-lg" id="btnProbar" onclick="probar()" disabled aria-label="Probar la estrategia seleccionada">
+        🚀 Probar estrategia
+      </button>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECCIÓN 3 — SIMULACIÓN DE PRODUCCIÓN
+  ================================================================ -->
+  <section id="s-sim" aria-label="Resultados de la simulación de producción">
+    <div class="card">
+      <h2 id="simTitle">Resultado de la estrategia</h2>
+      <p id="simDesc" style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;"></p>
+
+      <!-- Retroalimentación de la estrategia -->
+      <div class="feedback" id="fbStrategy" role="alert" aria-live="polite"></div>
+
+      <!-- Resultados individuales -->
+      <div class="results-grid" aria-label="Producción individual">
+        <div class="res-card ana" role="region" aria-label="Producción de Ana">
+          <div class="char-name c-ana" style="font-size:1rem;">👩 Ana</div>
+          <div class="icon-grid" id="igAnaBread" aria-label="Panes de Ana"></div>
+          <div style="font-size:0.82rem;color:var(--muted)">🍞 <span id="nAnaBread" class="fw">0</span> panes</div>
+          <div class="icon-grid" id="igAnaJuice" aria-label="Jugos de Ana"></div>
+          <div style="font-size:0.82rem;color:var(--muted)">🥤 <span id="nAnaJuice" class="fw">0</span> jugos</div>
+        </div>
+        <div class="res-card bruno" role="region" aria-label="Producción de Bruno">
+          <div class="char-name c-bruno" style="font-size:1rem;">👨 Bruno</div>
+          <div class="icon-grid" id="igBrunoBread" aria-label="Panes de Bruno"></div>
+          <div style="font-size:0.82rem;color:var(--muted)">🍞 <span id="nBrunoBread" class="fw">0</span> panes</div>
+          <div class="icon-grid" id="igBrunoJuice" aria-label="Jugos de Bruno"></div>
+          <div style="font-size:0.82rem;color:var(--muted)">🥤 <span id="nBrunoJuice" class="fw">0</span> jugos</div>
+        </div>
+      </div>
+
+      <!-- Total -->
+      <div class="res-total" role="region" aria-label="Producción total combinada">
+        <h3>🏭 Producción Total</h3>
+        <div style="display:flex;justify-content:center;gap:36px;margin-top:10px;flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <span class="num-big c-bread" id="nTotBread">0</span>
+            <div style="font-size:0.82rem;color:var(--muted)">🍞 panes totales</div>
+          </div>
+          <div style="text-align:center;">
+            <span class="num-big c-juice" id="nTotJuice">0</span>
+            <div style="font-size:0.82rem;color:var(--muted)">🥤 jugos totales</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barras -->
+      <div aria-label="Gráfico comparativo de producción">
+        <div class="bar-wrap">
+          <div class="bar-meta">
+            <span>🍞 Panes</span><span id="barBreadLbl">0 / 16 máximo posible</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill bar-bread" id="barBread"></div></div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar-meta">
+            <span>🥤 Jugos</span><span id="barJuiceLbl">0 / 7 máximo posible</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill bar-juice" id="barJuice"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="goTo('s-strategy')">← Volver</button>
+      <button class="btn btn-primary" onclick="goTo('s-oc')" aria-label="Continuar a calcular costos de oportunidad">
+        📊 Calcular costos de oportunidad →
+      </button>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECCIÓN 4 — COSTOS DE OPORTUNIDAD
+  ================================================================ -->
+  <section id="s-oc" aria-label="Cálculo de costos de oportunidad">
+    <div class="card">
+      <h2>📊 Costos de oportunidad</h2>
+      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">
+        El costo de oportunidad mide <strong>qué se sacrifica</strong> cuando se decide producir una unidad adicional de un bien. No siempre quien produce más tiene la ventaja en todos los frentes.
+      </p>
+
+      <div class="oc-grid">
+
+        <div class="oc-card ana" role="region" aria-label="Costos de oportunidad de Ana">
+          <div class="char-name c-ana" style="font-size:1rem;margin-bottom:10px;">👩 Ana</div>
+
+          <div class="formula">
+            CO de 1 jugo:<br>
+            10 panes ÷ 5 jugos = <span class="result">2 panes</span>
+          </div>
+          <p style="font-size:0.8rem;color:var(--muted);margin-bottom:10px;">
+            Para producir 1 jugo adicional, Ana renuncia a <strong>2 panes</strong>.
+          </p>
+
+          <div class="formula">
+            CO de 1 pan:<br>
+            5 jugos ÷ 10 panes = <span class="result">0,5 jugos</span>
+          </div>
+          <p style="font-size:0.8rem;color:var(--muted);">
+            Para producir 1 pan adicional, Ana renuncia a <strong>0,5 jugos</strong>.
+          </p>
+        </div>
+
+        <div class="oc-card bruno" role="region" aria-label="Costos de oportunidad de Bruno">
+          <div class="char-name c-bruno" style="font-size:1rem;margin-bottom:10px;">👨 Bruno</div>
+
+          <div class="formula">
+            CO de 1 jugo:<br>
+            6 panes ÷ 2 jugos = <span class="result">3 panes</span>
+          </div>
+          <p style="font-size:0.8rem;color:var(--muted);margin-bottom:10px;">
+            Para producir 1 jugo adicional, Bruno renuncia a <strong>3 panes</strong>.
+          </p>
+
+          <div class="formula">
+            CO de 1 pan:<br>
+            2 jugos ÷ 6 panes ≈ <span class="result">0,33 jugos</span>
+          </div>
+          <p style="font-size:0.8rem;color:var(--muted);">
+            Para producir 1 pan adicional, Bruno renuncia a solo <strong>0,33 jugos</strong>.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="info-box">
+        💡 <strong>Clave:</strong> La clave no es quién produce más, sino <em>quién renuncia a menos</em> para obtener una unidad adicional de cada bien.
+      </div>
+
+      <h3 style="margin-top:18px;">Comparación de costos de oportunidad</h3>
+      <div style="overflow-x:auto;">
+        <table class="dtable" aria-label="Tabla comparativa de costos de oportunidad">
+          <thead>
+            <tr>
+              <th scope="col">Bien</th>
+              <th scope="col" class="tr">CO de Ana</th>
+              <th scope="col" class="tr">CO de Bruno</th>
+              <th scope="col">Ventaja comparativa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🍞 Pan</td>
+              <td class="tr">0,5 jugos</td>
+              <td class="tr">0,33 jugos</td>
+              <td class="fw c-bruno">👨 Bruno ✓</td>
+            </tr>
+            <tr>
+              <td>🥤 Jugo</td>
+              <td class="tr">2 panes</td>
+              <td class="tr">3 panes</td>
+              <td class="fw c-ana">👩 Ana ✓</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="goTo('s-sim')">← Volver</button>
+      <button class="btn btn-primary" onclick="goTo('s-ca')" aria-label="Ver la revelación de ventaja comparativa">
+        🎯 Revelar ventaja comparativa →
+      </button>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECCIÓN 5 — VENTAJA COMPARATIVA (REVELACIÓN)
+  ================================================================ -->
+  <section id="s-ca" aria-label="Revelación de la ventaja comparativa">
+    <div class="card">
+      <h2>🎯 La revelación: ventaja comparativa</h2>
+
+      <!-- Definiciones -->
+      <div class="defs-grid">
+        <div class="def-card absolute">
+          <div class="def-title">📏 Ventaja Absoluta</div>
+          <div class="def-body" style="margin-bottom:8px;">
+            Capacidad de producir una mayor cantidad de un bien con los mismos recursos.
+          </div>
+          <div style="font-size:0.82rem;font-weight:700;color:#312e81;">
+            👩 Ana tiene ventaja absoluta en <em>ambos</em> bienes.
+          </div>
+        </div>
+        <div class="def-card comparative">
+          <div class="def-title">⚖️ Ventaja Comparativa</div>
+          <div class="def-body" style="margin-bottom:8px;">
+            Capacidad de producir un bien con un <strong>menor costo de oportunidad</strong>.
+          </div>
+          <div style="font-size:0.82rem;font-weight:700;color:#14532d;">
+            ✅ Determina la especialización eficiente.
+          </div>
+        </div>
+      </div>
+
+      <!-- Revelación -->
+      <div class="reveal-box" role="status" aria-live="polite">
+        ⚡ Aunque Ana es mejor en ambos bienes, <strong>Bruno debería especializarse en panes</strong> porque su costo de oportunidad es menor (0,33 jugos vs 0,5 jugos de Ana).
+      </div>
+
+      <!-- Conexiones con sello -->
+      <div class="connection" aria-label="Ana tiene ventaja comparativa en jugos">
+        <div class="conn-item ci-ana">👩 Ana</div>
+        <div class="conn-arrow" aria-hidden="true">→</div>
+        <div class="conn-item ci-juice">🥤 Jugos<br><small>sacrifica solo 2 panes</small></div>
+        <div class="stamp" aria-label="Sello de ventaja comparativa en jugos">Ventaja<br>comparativa</div>
+      </div>
+
+      <div class="connection" aria-label="Bruno tiene ventaja comparativa en panes">
+        <div class="conn-item ci-bruno">👨 Bruno</div>
+        <div class="conn-arrow" aria-hidden="true">→</div>
+        <div class="conn-item ci-bread">🍞 Panes<br><small>sacrifica solo 0,33 jugos</small></div>
+        <div class="stamp" aria-label="Sello de ventaja comparativa en panes">Ventaja<br>comparativa</div>
+      </div>
+
+      <!-- Comparación de escenarios -->
+      <h3 style="margin-top:22px;">Comparación de los 3 escenarios</h3>
+      <div style="overflow-x:auto;">
+        <table class="dtable" aria-label="Tabla comparativa de los tres escenarios de producción">
+          <thead>
+            <tr>
+              <th scope="col">Escenario</th>
+              <th scope="col" class="tr">🍞 Panes</th>
+              <th scope="col" class="tr">🥤 Jugos</th>
+              <th scope="col">Observación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>A: Solo Ana produce</strong></td>
+              <td class="tr">5</td>
+              <td class="tr">2,5</td>
+              <td>Capacidad de Bruno desaprovechada</td>
+            </tr>
+            <tr>
+              <td><strong>B: Producción mixta</strong></td>
+              <td class="tr">8</td>
+              <td class="tr">3,5</td>
+              <td>Mejor, pero sin optimizar</td>
+            </tr>
+            <tr class="scenario-best">
+              <td>⭐ <strong>C: Especialización</strong></td>
+              <td class="tr">6</td>
+              <td class="tr">5</td>
+              <td>Mayor producción de jugos y más intercambio posible</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="goTo('s-oc')">← Volver</button>
+      <button class="btn btn-primary" onclick="goTo('s-explorer')" aria-label="Explorar combinaciones con controles deslizantes">
+        🔍 Explorar producción →
+      </button>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECCIÓN 6 — MODO EXPLORATORIO
+  ================================================================ -->
+  <section id="s-explorer" aria-label="Modo exploratorio: ajusta el tiempo de cada persona">
+    <div class="card">
+      <h2>🔍 Modo Exploratorio</h2>
+      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">
+        Usa los controles para ajustar cuánto tiempo dedica cada persona a producir cada bien y observa cómo cambia la producción total.
+      </p>
+
+      <div class="slider-section">
+
+        <!-- Slider Ana -->
+        <div class="slider-group" role="group" aria-labelledby="lbl-ana">
+          <div class="slider-head">
+            <span class="slider-label c-ana" id="lbl-ana">👩 Ana — tiempo dedicado a:</span>
+            <span class="slider-val" id="anaTimeLbl" aria-live="polite">50% pan / 50% jugo</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-icon" aria-hidden="true">🍞</span>
+            <input type="range" id="sAna" min="0" max="100" value="50"
+                   aria-label="Porcentaje del tiempo de Ana dedicado a panes (el resto va a jugos)"
+                   oninput="updateExp()">
+            <span class="slider-icon" aria-hidden="true">🥤</span>
+          </div>
+        </div>
+
+        <!-- Slider Bruno -->
+        <div class="slider-group" role="group" aria-labelledby="lbl-bruno">
+          <div class="slider-head">
+            <span class="slider-label c-bruno" id="lbl-bruno">👨 Bruno — tiempo dedicado a:</span>
+            <span class="slider-val" id="brunoTimeLbl" aria-live="polite">50% pan / 50% jugo</span>
+          </div>
+          <div class="slider-row">
+            <span class="slider-icon" aria-hidden="true">🍞</span>
+            <input type="range" id="sBruno" min="0" max="100" value="50"
+                   aria-label="Porcentaje del tiempo de Bruno dedicado a panes (el resto va a jugos)"
+                   oninput="updateExp()">
+            <span class="slider-icon" aria-hidden="true">🥤</span>
+          </div>
+        </div>
+
+        <!-- Tabla en vivo -->
+        <div style="background:#fff;border-radius:10px;padding:16px;border:1px solid var(--border);"
+             aria-live="polite" aria-label="Producción resultante según configuración de los controles">
+          <h3 style="margin-bottom:12px;">Producción resultante</h3>
+          <table class="dtable" aria-label="Tabla de producción exploratoria">
+            <thead>
+              <tr>
+                <th scope="col">Persona</th>
+                <th scope="col" class="tr">🍞 Panes</th>
+                <th scope="col" class="tr">🥤 Jugos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="r-ana">
+                <td class="fw c-ana">👩 Ana</td>
+                <td class="tr" id="xAnaBread">5,0</td>
+                <td class="tr" id="xAnaJuice">2,5</td>
+              </tr>
+              <tr class="r-bruno">
+                <td class="fw c-bruno">👨 Bruno</td>
+                <td class="tr" id="xBrunoBread">3,0</td>
+                <td class="tr" id="xBrunoJuice">1,0</td>
+              </tr>
+              <tr style="background:#f0fdf4;font-weight:700;">
+                <td>🏭 Total</td>
+                <td class="tr" id="xTotBread">8,0</td>
+                <td class="tr" id="xTotJuice">3,5</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="exp-hint" id="expHint" aria-live="polite"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="goTo('s-ca')">← Volver</button>
+      <button class="btn btn-primary" onclick="goTo('s-final')" aria-label="Ir al resumen y a la reflexión final">
+        🧾 Ir al cierre y reflexión →
+      </button>
+    </div>
+  </section>
+<!-- ================================================================
+       CIERRE — RESUMEN Y REFLEXIÓN FINAL
+  ================================================================ -->
+  <section id="s-final" aria-label="Resumen de respuestas y reflexión para discusión en clase">
+
+    <div class="card" aria-labelledby="summary-title">
+      <h2 id="summary-title">🧾 Resumen de tus respuestas</h2>
+      <p style="color:var(--muted);font-size:.9rem;">
+        Revisa las decisiones tomadas durante la actividad antes de discutir la pregunta final.
+      </p>
+      <div class="summary-grid" id="finalSummary" aria-live="polite"></div>
+    </div>
+
+    <div class="reflection-discussion" role="region" aria-labelledby="reflection-title">
+      <span class="discussion-label">💬 Para discutir en clase</span>
+      <h2 id="reflection-title">Pregunta de reflexión final</h2>
+      <p>¿Por qué ser mejor en todo no significa que sea eficiente hacerlo todo?</p>
+      <ul class="discussion-prompts">
+        <li>Relacionen la respuesta con los costos de oportunidad de Ana y Bruno.</li>
+        <li>Expliquen cómo la especialización puede beneficiar a ambas personas.</li>
+        <li>Comenten qué condiciones deben cumplir los términos de intercambio.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="actions">
+        <button class="btn btn-secondary" onclick="goTo('s-explorer')">← Volver al modo exploratorio</button>
+        <button class="btn btn-primary btn-lg" onclick="showFinal()" aria-label="Mostrar la síntesis conceptual final">
+          📖 Mostrar síntesis conceptual
+        </button>
+      </div>
+
+      <div class="final-explanation" id="finalExp" role="region" aria-label="Síntesis conceptual final">
+        <strong>Porque</strong> la especialización eficiente depende de los <strong>costos de oportunidad</strong>. Una persona puede ser más productiva en todos los bienes y, aun así, beneficiarse al concentrarse en aquel en el que posee la <strong>mayor ventaja relativa</strong>. La ventaja comparativa —no la absoluta— determina quién debería producir qué. Cuando los términos de intercambio se ubican entre los costos de oportunidad de ambas partes, las dos pueden beneficiarse.
+      </div>
+    </div>
+
+    <div class="card" id="finalBadge" style="display:none;" aria-live="polite" role="status">
+      <div class="achievement">
+        <span class="ach-icon">🎓</span>
+        <div class="ach-title">¡Analista de Ventajas Comparativas!</div>
+        <p class="ach-sub">Completaste la actividad y relacionaste productividad, costo de oportunidad, especialización y términos de intercambio.</p>
+      </div>
+      <div class="actions" style="justify-content:center;margin-top:20px;">
+        <button class="btn btn-secondary btn-lg" onclick="reset()" aria-label="Reiniciar la actividad desde el principio">
+          🔄 Reiniciar actividad
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer role="contentinfo">
+  <p>Desarrollado por Julián Díaz Tautiva, PhD.</p>
+</footer>
+
+<!-- ================================================================
+     JAVASCRIPT
+================================================================ -->
+<script>
+'use strict';
+
+/* ==================== STATE ==================== */
+const S = {
+  section: 's-intro',
+  strategy: null,
+  hint: 0,
+  step: 1,
+  steps: 6
+};
+
+const HINTS = [
+  'No observes solamente quién produce más. Calcula qué debe sacrificar cada persona para producir una unidad adicional de cada bien.',
+  'Para producir un jugo, Ana renuncia a 2 panes y Bruno a 3 panes. ¿Quién sacrifica menos para producir jugo?',
+  'Para producir un pan, Bruno renuncia a solo 0,33 jugos, mientras que Ana renuncia a 0,5 jugos. ¿Quién tiene ventaja en panes?'
+];
+
+const SCENARIOS = {
+  1: {
+    title: 'Escenario A: Ana produce todo',
+    desc: 'Ana divide su hora entre ambos bienes (30 min c/u). Bruno permanece inactivo.',
+    aB: 5, aJ: 2.5, bB: 0, bJ: 0,
+    fbType: 'fb-neutral',
+    fbText: '📊 Tu elección se basa en la productividad absoluta. Ana produce más de ambos bienes, pero eso no determina por sí solo la especialización eficiente. Observa qué ocurre con la capacidad productiva de Bruno: está desaprovechada por completo.'
+  },
+  2: {
+    title: 'Escenario B: Producción mixta',
+    desc: 'Cada persona dedica 30 minutos a pan y 30 minutos a jugo.',
+    aB: 5, aJ: 2.5, bB: 3, bJ: 1,
+    fbType: 'fb-neutral',
+    fbText: '📊 Cada persona usa su tiempo en ambos bienes. La producción total es 8 panes y 3,5 jugos. ¿Podría reorganizarse la producción para obtener más de al menos uno de los bienes sin perder del otro?'
+  },
+  3: {
+    title: 'Escenario C: Especialización según ventaja comparativa',
+    desc: 'Ana produce solo jugos (1 hora). Bruno produce solo panes (1 hora).',
+    aB: 0, aJ: 5, bB: 6, bJ: 0,
+    fbType: 'fb-positive',
+    fbText: '✅ La especialización aprovecha las diferencias relativas de productividad. Se obtienen 5 jugos —más que en cualquier otro escenario— y 6 panes, con posibilidades de intercambio mutuamente beneficioso.'
+  }
+};
+
+/* ==================== NAVIGATION ==================== */
+const STEPS = {
+  's-intro': 1,
+  's-strategy': 2,
+  's-sim': 3,
+  's-oc': 4,
+  's-ca': 5,
+  's-explorer': 6,
+  's-final': 6
+};
+
+function goTo(id) {
+  document.getElementById(S.section).classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  S.section = id;
+  const step = STEPS[id] || 1;
+  S.step = step;
+  setProg(step);
+  if (id === 's-final') buildFinalSummary();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  announce('Sección: ' + id.replace('s-', ''));
+}
+
+function setProg(step) {
+  const pct = Math.round(((step - 1) / (S.steps - 1)) * 100);
+  const bar = document.getElementById('pbar');
+  bar.style.width = pct + '%';
+  bar.closest('[role="progressbar"]').setAttribute('aria-valuenow', pct);
+  document.getElementById('pStep').textContent = 'Paso ' + step + ' de ' + S.steps;
+  document.getElementById('pPct').textContent = pct + '%';
+}
+
+/* ==================== STRATEGY ==================== */
+function pickStrategy(n) {
+  [1, 2, 3].forEach(i => {
+    const c = document.getElementById('sc' + i);
+    c.classList.remove('selected');
+    c.setAttribute('aria-checked', 'false');
+  });
+  const c = document.getElementById('sc' + n);
+  c.classList.add('selected');
+  c.setAttribute('aria-checked', 'true');
+  S.strategy = n;
+  document.getElementById('btnProbar').disabled = false;
+  announce('Estrategia ' + n + ' seleccionada: ' + c.querySelector('.strat-title').textContent);
+}
+
+function probar() {
+  if (!S.strategy) return;
+  const sc = SCENARIOS[S.strategy];
+
+  document.getElementById('simTitle').textContent = sc.title;
+  document.getElementById('simDesc').textContent = sc.desc;
+
+  const fb = document.getElementById('fbStrategy');
+  fb.className = 'feedback show ' + sc.fbType;
+  fb.textContent = sc.fbText;
+
+  renderSim(sc.aB, sc.aJ, sc.bB, sc.bJ);
+  goTo('s-sim');
+}
+
+/* ==================== SIMULATION RENDERING ==================== */
+function renderSim(aB, aJ, bB, bJ) {
+  const totB = aB + bB;
+  const totJ = aJ + bJ;
+  const maxB = 16, maxJ = 7;
+
+  fillIcons('igAnaBread',  '🍞', aB);
+  fillIcons('igAnaJuice',  '🥤', aJ);
+  fillIcons('igBrunoBread','🍞', bB);
+  fillIcons('igBrunoJuice','🥤', bJ);
+
+  countUp('nAnaBread',  aB);
+  countUp('nAnaJuice',  aJ, true);
+  countUp('nBrunoBread',bB);
+  countUp('nBrunoJuice',bJ);
+  countUp('nTotBread',  totB);
+  countUp('nTotJuice',  totJ, true);
+
+  setTimeout(() => {
+    setBar('barBread', totB / maxB * 100);
+    setBar('barJuice', totJ / maxJ * 100);
+    document.getElementById('barBreadLbl').textContent = totB + ' / ' + maxB + ' máximo posible';
+    document.getElementById('barJuiceLbl').textContent = totJ + ' / ' + maxJ + ' máximo posible';
+  }, 100);
+}
+
+function fillIcons(id, icon, count) {
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  const n = Math.min(Math.floor(count), 10);
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement('span');
+    s.textContent = icon;
+    s.style.animationDelay = (i * 0.04) + 's';
+    s.style.animation = 'fadeIn 0.3s ease both';
+    el.appendChild(s);
+  }
+  if (count > 10) {
+    const s = document.createElement('span');
+    s.textContent = '+' + (count - 10);
+    s.style.fontSize = '0.75rem';
+    el.appendChild(s);
+  }
+}
+
+function countUp(id, target, isDecimal = false) {
+  const el = document.getElementById(id);
+  const steps = 20, dur = 600;
+  let cur = 0;
+  const inc = target / steps;
+  const iv = setInterval(() => {
+    cur = Math.min(cur + inc, target);
+    el.textContent = isDecimal
+      ? cur.toFixed(1).replace('.', ',')
+      : Math.round(cur);
+    if (cur >= target) {
+      clearInterval(iv);
+      el.textContent = isDecimal
+        ? target.toFixed(1).replace('.', ',')
+        : target;
+    }
+  }, dur / steps);
+}
+
+function setBar(id, pct) {
+  document.getElementById(id).style.width = Math.min(pct, 100) + '%';
+}
+
+/* ==================== HINTS ==================== */
+function showHint() {
+  const box = document.getElementById('hintBox');
+  const btn = document.getElementById('hintBtn');
+  if (S.hint < HINTS.length) {
+    box.textContent = '💡 Pista ' + (S.hint + 1) + ': ' + HINTS[S.hint];
+    box.classList.add('show');
+    S.hint++;
+    if (S.hint >= HINTS.length) {
+      btn.textContent = '✅ Sin más pistas';
+      btn.disabled = true;
+    } else {
+      btn.textContent = '💡 Siguiente pista (' + (HINTS.length - S.hint) + ' restantes)';
+    }
+    announce(box.textContent);
+  }
+}
+
+/* ==================== EXPLORER ==================== */
+function updateExp() {
+  const aPan = parseInt(document.getElementById('sAna').value) / 100;
+  const aJug = 1 - aPan;
+  const bPan = parseInt(document.getElementById('sBruno').value) / 100;
+  const bJug = 1 - bPan;
+
+  const aB = (10 * aPan).toFixed(1);
+  const aJ = (5  * aJug).toFixed(1);
+  const bB = (6  * bPan).toFixed(1);
+  const bJ = (2  * bJug).toFixed(1);
+  const tB = (parseFloat(aB) + parseFloat(bB)).toFixed(1);
+  const tJ = (parseFloat(aJ) + parseFloat(bJ)).toFixed(1);
+
+  document.getElementById('anaTimeLbl').textContent   = Math.round(aPan*100) + '% pan / ' + Math.round(aJug*100) + '% jugo';
+  document.getElementById('brunoTimeLbl').textContent = Math.round(bPan*100) + '% pan / ' + Math.round(bJug*100) + '% jugo';
+
+  document.getElementById('xAnaBread').textContent   = aB.replace('.', ',');
+  document.getElementById('xAnaJuice').textContent   = aJ.replace('.', ',');
+  document.getElementById('xBrunoBread').textContent = bB.replace('.', ',');
+  document.getElementById('xBrunoJuice').textContent = bJ.replace('.', ',');
+  document.getElementById('xTotBread').textContent   = tB.replace('.', ',');
+  document.getElementById('xTotJuice').textContent   = tJ.replace('.', ',');
+
+  const hint = document.getElementById('expHint');
+  if (aPan === 0 && bJug === 0) {
+    hint.textContent = '⭐ ¡Especialización óptima! Ana en jugos, Bruno en panes. Máxima producción de jugos (5).';
+  } else if (aPan === 1 && bPan === 1) {
+    hint.textContent = '📊 Máxima producción de panes (16), pero sin ningún jugo.';
+  } else if (tJ === '7.0' || parseFloat(tJ) >= 7) {
+    hint.textContent = '📊 Máxima producción de jugos posible. ¿A qué costo en panes?';
+  } else if (parseFloat(tJ) > 3.5 && parseFloat(tB) > 6) {
+    hint.textContent = '✅ ¡Buena combinación! Supera la producción mixta en ambos bienes.';
+  } else {
+    hint.textContent = 'Ajusta los controles para comparar distintas combinaciones.';
+  }
+}
+
+/* ==================== FINAL ==================== */
+function buildFinalSummary() {
+  const container = document.getElementById('finalSummary');
+  if (!container) return;
+
+  const strategy = S.strategy ? SCENARIOS[S.strategy] : null;
+  const strategyNames = {
+    1: 'Ana produce todo',
+    2: 'Producción mixta',
+    3: 'Especialización según ventaja comparativa'
+  };
+
+  const aPanPct = parseInt(document.getElementById('sAna').value, 10);
+  const bPanPct = parseInt(document.getElementById('sBruno').value, 10);
+  const aJugPct = 100 - aPanPct;
+  const bJugPct = 100 - bPanPct;
+
+  const aB = 10 * (aPanPct / 100);
+  const aJ = 5 * (aJugPct / 100);
+  const bB = 6 * (bPanPct / 100);
+  const bJ = 2 * (bJugPct / 100);
+  const tB = aB + bB;
+  const tJ = aJ + bJ;
+
+  const fmt = n => Number(n).toFixed(1).replace('.', ',');
+
+  const strategyResult = strategy
+    ? `${fmt(strategy.aB + strategy.bB)} panes y ${fmt(strategy.aJ + strategy.bJ)} jugos`
+    : 'No se registró una estrategia';
+
+  container.innerHTML = `
+    <div class="summary-card">
+      <h3>1. Estrategia seleccionada</h3>
+      <p>La opción elegida en el paso 2 fue:
+        <span class="summary-value">${strategy ? strategyNames[S.strategy] : 'Sin selección registrada'}</span>
+      </p>
+    </div>
+    <div class="summary-card">
+      <h3>2. Resultado de la estrategia</h3>
+      <p>La simulación produjo:
+        <span class="summary-value">${strategyResult}</span>
+      </p>
+    </div>
+    <div class="summary-card">
+      <h3>3. Ventaja comparativa identificada</h3>
+      <p>
+        <span class="summary-value">Ana: jugos · Bruno: panes</span>
+        Ana sacrifica 2 panes por jugo; Bruno sacrifica 0,33 jugos por pan.
+      </p>
+    </div>
+    <div class="summary-card">
+      <h3>4. Última combinación explorada</h3>
+      <p>
+        Ana: ${aPanPct}% pan / ${aJugPct}% jugo.<br>
+        Bruno: ${bPanPct}% pan / ${bJugPct}% jugo.
+        <span class="summary-value">Total: ${fmt(tB)} panes y ${fmt(tJ)} jugos</span>
+      </p>
+    </div>
+    <div class="summary-card">
+      <h3>5. Especialización eficiente</h3>
+      <p>
+        <span class="summary-value">Ana produce jugos y Bruno produce panes.</span>
+        Esta asignación aprovecha los menores costos de oportunidad relativos.
+      </p>
+    </div>
+    <div class="summary-card">
+      <h3>6. Términos de intercambio</h3>
+      <p>
+        Para beneficiar a ambas partes, el precio debe situarse:
+        <span class="summary-value">entre 2 y 3 panes por jugo</span>
+      </p>
+    </div>
+  `;
+}
+
+function showFinal() {
+  const exp = document.getElementById('finalExp');
+  const badge = document.getElementById('finalBadge');
+  exp.style.display = 'block';
+  badge.style.display = 'block';
+  setTimeout(() => {
+    badge.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 100);
+  announce('Explicación final mostrada. Actividad completada.');
+}
+
+/* ==================== RESET ==================== */
+function reset() {
+  S.strategy = null;
+  S.hint = 0;
+
+  [1, 2, 3].forEach(i => {
+    const sc = document.getElementById('sc' + i);
+    if (sc) { sc.classList.remove('selected'); sc.setAttribute('aria-checked', 'false'); }
+  });
+
+  document.getElementById('btnProbar').disabled = true;
+
+  const hb = document.getElementById('hintBox');
+  hb.classList.remove('show');
+  const hBtn = document.getElementById('hintBtn');
+  hBtn.textContent = '💡 Solicitar pista';
+  hBtn.disabled = false;
+  document.getElementById('fbStrategy').classList.remove('show');
+
+  document.getElementById('finalExp').style.display = 'none';
+  document.getElementById('finalBadge').style.display = 'none';
+  const summary = document.getElementById('finalSummary');
+  if (summary) summary.innerHTML = '';
+
+  document.getElementById('sAna').value = 50;
+  document.getElementById('sBruno').value = 50;
+  updateExp();
+
+  setBar('barBread', 0);
+  setBar('barJuice', 0);
+
+  goTo('s-intro');
+  setProg(1);
+  announce('Actividad reiniciada.');
+}
+
+/* ==================== ACCESSIBILITY ANNOUNCE ==================== */
+function announce(msg) {
+  const el = document.getElementById('live');
+  el.textContent = '';
+  setTimeout(() => { el.textContent = msg; }, 80);
+}
+
+/* ==================== INIT ==================== */
+setProg(1);
+updateExp();
+</script>
+</body>
+</html>
